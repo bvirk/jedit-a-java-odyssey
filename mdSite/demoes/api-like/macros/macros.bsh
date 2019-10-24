@@ -1,0 +1,35 @@
+List macroLines = new ArrayList();
+List frameLinks = new ArrayList();
+String firstFile;
+
+for (File f: hasSuffixInOrBelow(sDir()+"/macros","bsh")) {
+	if (null==firstFile)
+		firstFile=f.getName().replaceAll("\\.\\w+$",".html");
+	if (isNewerOrSolitary(f,scriptPath.replaceAll("/[^/]+$","/"),"md")) {
+		macroLines.clear();
+		macroLines.add("<!-- head=jquery.html+prettify.html+prettyClassify.js -->");
+		for (String line: readAllLines(f,false)) 
+			macroLines.add("\t".concat(line));
+		toFile(scriptPath.replaceAll("/[^/]+$","/")+f.getName().replaceAll("\\.\\w+$",".md"),macroLines);
+	}
+	String bareName = f.getName().replaceAll("\\.\\w+$","");
+	frameLinks.add("- <a href='"+bareName+".html' target='main_page'>"+bareName+"</a>");
+}
+String indexHtmlFile = scriptPath.replaceAll("/[^/]+$","/index.html");
+if( !new File(indexHtmlFile).exists())	
+	toFile(indexHtmlFile,
+		 "<!DOCTYPE html>\n"
+		+"<html>\n"
+		+"<head>\n"
+		+"<meta charset='utf-8'>\n"
+		+"<title>macros</title>\n"
+		+"</head>\n"
+		+"	<frameset cols = '200, *'>\n"
+		+"	  <frame src = 'menu.html' name = 'menu_page' />\n"
+		+"	  <frame src = '"+firstFile+"' name = 'main_page' />\n"
+		+"  </frameset>\n"
+		+"</html>\n");
+	
+String menuMdFile = scriptPath.replaceAll("/[^/]+$","/menu.md");
+if (!new File(menuMdFile).exists() || macroLines.size() >0) 
+	toFile(menuMdFile,frameLinks);

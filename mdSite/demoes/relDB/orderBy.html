@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="../../../js/jquery.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script>
+$(function() {
+	$('pre').addClass('prettyprint'); 
+	$('code').addClass('language-java'); 
+});
+                                                                                 </script>
+<title>Order by</title>
+</head>
+<body>
+<!-- head=jquery.html+prettify.html+prettyClassify.js&title=Order+by --> 
+<h2>Order by First Name</h2> 
+<table> 
+    <tbody>
+        <tr>
+            <th>Emp ID</th>
+            <th>Name Prefix</th>
+            <th>First Name</th>
+            <th>Middle Initial</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>E Mail</th>
+        </tr> 
+        <tr>
+            <td>193819</td>
+            <td>Mr.</td>
+            <td>Benjamin</td>
+            <td>R</td>
+            <td>Russell</td>
+            <td>M</td>
+            <td>benjamin.russell@charter.net</td>
+        </tr> 
+        <tr>
+            <td>940761</td>
+            <td>Ms.</td>
+            <td>Brenda</td>
+            <td>S</td>
+            <td>Robinson</td>
+            <td>F</td>
+            <td>brenda.robinson@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>380086</td>
+            <td>Mrs.</td>
+            <td>Carol</td>
+            <td>V</td>
+            <td>Murphy</td>
+            <td>F</td>
+            <td>carol.murphy@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>162402</td>
+            <td>Hon.</td>
+            <td>Diana</td>
+            <td>T</td>
+            <td>Peterson</td>
+            <td>F</td>
+            <td>diana.peterson@hotmail.co.uk</td>
+        </tr> 
+        <tr>
+            <td>408351</td>
+            <td>Drs.</td>
+            <td>Diane</td>
+            <td>I</td>
+            <td>Evans</td>
+            <td>F</td>
+            <td>diane.evans@yahoo.com</td>
+        </tr> 
+        <tr>
+            <td>477616</td>
+            <td>Hon.</td>
+            <td>Frances</td>
+            <td>B</td>
+            <td>Young</td>
+            <td>F</td>
+            <td>frances.young@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>153989</td>
+            <td>Prof.</td>
+            <td>Jack</td>
+            <td>C</td>
+            <td>Alexander</td>
+            <td>M</td>
+            <td>jack.alexander@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>428945</td>
+            <td>Dr.</td>
+            <td>Joe</td>
+            <td>W</td>
+            <td>Robinson</td>
+            <td>M</td>
+            <td>joe.robinson@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>677509</td>
+            <td>Drs.</td>
+            <td>Lois</td>
+            <td>H</td>
+            <td>Walker</td>
+            <td>F</td>
+            <td>lois.walker@hotmail.com</td>
+        </tr> 
+        <tr>
+            <td>386158</td>
+            <td>Mrs.</td>
+            <td>Melissa</td>
+            <td>Q</td>
+            <td>King</td>
+            <td>F</td>
+            <td>melissa.king@comcast.net</td>
+        </tr> 
+        <tr>
+            <td>539712</td>
+            <td>Ms.</td>
+            <td>Nancy</td>
+            <td>T</td>
+            <td>Baker</td>
+            <td>F</td>
+            <td>nancy.baker@bp.com</td>
+        </tr> 
+        <tr>
+            <td>499687</td>
+            <td>Mr.</td>
+            <td>Patrick</td>
+            <td>F</td>
+            <td>Bailey</td>
+            <td>M</td>
+            <td>patrick.bailey@aol.com</td>
+        </tr> 
+        <tr>
+            <td>231469</td>
+            <td>Mr.</td>
+            <td>Ralph</td>
+            <td>L</td>
+            <td>Flores</td>
+            <td>M</td>
+            <td>ralph.flores@yahoo.com</td>
+        </tr> 
+    </tbody>
+</table> 
+<hr> 
+<h2>Order by Gender</h2> 
+<table> 
+    <tbody>
+        <tr>
+            <th>Emp ID</th>
+            <th>Name Prefix</th>
+            <th>First Name</th>
+            <th>Middle Initial</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>E Mail</th>
+        </tr> 
+        <tr>
+            <td>677509</td>
+            <td>Drs.</td>
+            <td>Lois</td>
+            <td>H</td>
+            <td>Walker</td>
+            <td>F</td>
+            <td>lois.walker@hotmail.com</td>
+        </tr> 
+        <tr>
+            <td>940761</td>
+            <td>Ms.</td>
+            <td>Brenda</td>
+            <td>S</td>
+            <td>Robinson</td>
+            <td>F</td>
+            <td>brenda.robinson@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>386158</td>
+            <td>Mrs.</td>
+            <td>Melissa</td>
+            <td>Q</td>
+            <td>King</td>
+            <td>F</td>
+            <td>melissa.king@comcast.net</td>
+        </tr> 
+        <tr>
+            <td>408351</td>
+            <td>Drs.</td>
+            <td>Diane</td>
+            <td>I</td>
+            <td>Evans</td>
+            <td>F</td>
+            <td>diane.evans@yahoo.com</td>
+        </tr> 
+        <tr>
+            <td>539712</td>
+            <td>Ms.</td>
+            <td>Nancy</td>
+            <td>T</td>
+            <td>Baker</td>
+            <td>F</td>
+            <td>nancy.baker@bp.com</td>
+        </tr> 
+        <tr>
+            <td>380086</td>
+            <td>Mrs.</td>
+            <td>Carol</td>
+            <td>V</td>
+            <td>Murphy</td>
+            <td>F</td>
+            <td>carol.murphy@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>477616</td>
+            <td>Hon.</td>
+            <td>Frances</td>
+            <td>B</td>
+            <td>Young</td>
+            <td>F</td>
+            <td>frances.young@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>162402</td>
+            <td>Hon.</td>
+            <td>Diana</td>
+            <td>T</td>
+            <td>Peterson</td>
+            <td>F</td>
+            <td>diana.peterson@hotmail.co.uk</td>
+        </tr> 
+        <tr>
+            <td>231469</td>
+            <td>Mr.</td>
+            <td>Ralph</td>
+            <td>L</td>
+            <td>Flores</td>
+            <td>M</td>
+            <td>ralph.flores@yahoo.com</td>
+        </tr> 
+        <tr>
+            <td>153989</td>
+            <td>Prof.</td>
+            <td>Jack</td>
+            <td>C</td>
+            <td>Alexander</td>
+            <td>M</td>
+            <td>jack.alexander@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>428945</td>
+            <td>Dr.</td>
+            <td>Joe</td>
+            <td>W</td>
+            <td>Robinson</td>
+            <td>M</td>
+            <td>joe.robinson@gmail.com</td>
+        </tr> 
+        <tr>
+            <td>193819</td>
+            <td>Mr.</td>
+            <td>Benjamin</td>
+            <td>R</td>
+            <td>Russell</td>
+            <td>M</td>
+            <td>benjamin.russell@charter.net</td>
+        </tr> 
+        <tr>
+            <td>499687</td>
+            <td>Mr.</td>
+            <td>Patrick</td>
+            <td>F</td>
+            <td>Bailey</td>
+            <td>M</td>
+            <td>patrick.bailey@aol.com</td>
+        </tr> 
+    </tbody>
+</table> 
+<hr>
+</body>
+</html>

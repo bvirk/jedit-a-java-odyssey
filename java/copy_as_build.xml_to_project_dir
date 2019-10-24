@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="notRenamedYet" basedir="." >
+	<property name="main-class"  value="" />
+	<include file="../common.xml" as="common" />
+	<target name="distribute-jar"></target>
+</project>

@@ -1,0 +1,5 @@
+// da-key tip: A+s
+/**
+ *Opens scratchpad macro for editing
+ */
+jEdit.openFile(view,jEdit.getSettingsDirectory()+"/macros/scratchpad.bsh");

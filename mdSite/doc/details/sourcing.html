@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="../../css/sitev1.css" rel="stylesheet" >
+<script src="../../js/jquery.min.js" ></script>
+<style>
+a {
+	color: #000;
+	font-weight: bold; 
+	text-decoration: underline indianred;
+}
+.pictograhp {
+	font-size: 3em;
+	margin-right: 15px;
+	margin-left: 3px;
+	vertical-align: middle;
+}
+#uniPicLink {
+	
+	position:absolute;
+	border-radius: 5px;;
+	background:rgba(0,0,0,0.8);
+	padding-right:15px;
+	color:#fff;
+}</style>
+<script>
+$(function() {
+	$("a").hover(function(e) {
+			$(this).css({'font-weight': 'normal','text-decoration': 'none'});
+			titleAtt=this.title.split(";");
+			this.t=undefined;
+			if(/^[0-9A-Fa-f]{4,5}$/.test(titleAtt[0]) && titleAtt.length==2) {
+				this.t=this.title;
+				this.title="";
+				mes="<span class='pictograhp'>&#x"+titleAtt[0]+";</span>"+titleAtt[1];
+				$("body").append("<p id='uniPicLink'>"+mes+"</p>");
+				$("#uniPicLink")
+					.css("left",(e.pageX + 20) + "px")
+					.css("top",(e.pageY - 20) + "px")
+					.fadeIn("fast");
+			}
+	},function() {
+		$(this).css({'font-weight': 'bold','text-decoration': 'underline indianred'});
+		if (this.t != undefined) {
+			this.title=this.t;
+			$("#uniPicLink").remove();
+		}
+	});
+}
+);</script>
+<title>sourcing</title>
+</head>
+<body>
+
+<section class="content">
+<!-- head=sitev1.css.html+jquery.html+pictoLinks.css+pictoLinks.js&body=pagev1.html -->
+<h3>Updating global Beanshell methods</h3>
+<p>The running of</p>
+<ul>
+<li>BeanShell.runScript(..., boolean ownNamespace)</li>
+</ul>
+<p>with argument ownNameSpace being false is what happends, during start of jEdit and for subsequent changing global methods.</p>
+<p>... is context and the habit is keeping it is $JEDIT_SETTINGS/startup.</p>
+<p>It shall be mentioned that it is a replacement for a given SIGNATURE of a method that takes place - in other words - if parameters and/or return type is changed an new method will exists in conjunction with the old one - until jEdit is restarted.</p>
+<p>A trick, sometimes, when a new one is fatter, is reduce the old to a call to the new.</p>
+<p>Macro startup starts with updating - after editing a startup file, macro startup must be invoked again. Some attempts to <strong>only</strong> update occurs some times (look in status line).</p>
+
+</section>
+
+</body>
+</html>

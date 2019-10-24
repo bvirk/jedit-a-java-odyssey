@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="myduck" basedir="." >
+	<property name="classpath"  value="/usr/local/share/jEdit/5.5.0/jedit.jar" />
+	<property name="jar.todir"  value="jeditSettings/jars" />
+	<include file="../common.xml" as="common" />
+</project>

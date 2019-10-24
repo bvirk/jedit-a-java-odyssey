@@ -1,0 +1,834 @@
+void unicodePict() {
+	StringBuilder output= new StringBuilder("<!-- head=tdclassb.css&title=pictographs -->\n\n");
+	
+	output.append("\n\n### Links With Unicode Image\n\n");
+	
+	String linksFile = linksreferencesTitlesFileName();
+	Properties linksProp = new Properties();
+
+	if (new File(linksFile).exists()) {
+		output.append("<table>");
+		linksProp.load(new FileInputStream(linksFile));
+	
+		for (String href: linksProp.stringPropertyNames()) {
+			String[] codeDescr = linksProp.getProperty(href).split(";");
+			if (codeDescr.length == 2) 
+				output
+					.append("<tr><td class='b'>")
+					.append(href)
+					.append("<td class='c'>&#x")
+					.append(codeDescr[0])
+					.append(";<td class='b'>")
+					.append(codeDescr[1])
+					.append("</tr>\n");
+		}
+		output.append("</table>");
+	} else
+		output.append("<p>no Link references</p>");
+	List svLines = dsvLines(scriptPath,"pictographs");
+	String[] headLine = svLines.get(0);
+	svLines.subList(0,1).clear();
+	
+	output
+		.append("\n\n### Unicode 1F300-1F5FF\n\n") 
+		.append("<table>\n<tr><th>Pictograph<th>")
+		.append(headLine[0])
+		.append("<th>")
+		.append(headLine[1])
+		.append("<th>")
+		.append(headLine[2])
+		.append("</tr>\n");
+	
+	for (String[] items : svLines) 
+		output
+			.append("<tr><td class='c'>&#x")
+			.append(items[0])
+			.append(";<td class='b'>")
+			.append("&amp;#x")
+			.append(items[0])
+			.append(";<td class='t'>")
+			.append(items[1])
+			.append("<td class='t'>")
+			.append(items[2])
+			.append("</tr>\n");
+	output.append("</table>\n\n----\n");
+	
+	toFile(scriptPath.replaceAll("\\.\\w+$",".md"),output);
+}
+
+unicodePict();
+//bargain
+
+
+
+/***,sv,pictographs
+Hex   ,Name                                                                           ,Connotation
+1F300 ,CYCLONE                                                                        ,n/a
+1F301 ,FOGGY                                                                          ,n/a
+1F302 ,CLOSED UMBRELLA                                                                ,n/a
+1F303 ,NIGHT WITH STARS                                                               ,n/a
+1F304 ,SUNRISE OVER MOUNTAINS                                                         ,n/a
+1F305 ,SUNRISE                                                                        ,n/a
+1F306 ,CITYSCAPE AT DUSK                                                              ,n/a
+1F307 ,SUNSET OVER BUILDINGS                                                          ,n/a
+1F308 ,RAINBOW                                                                        ,n/a
+1F309 ,BRIDGE AT NIGHT                                                                ,n/a
+1F30A ,WATER WAVE                                                                     ,n/a
+1F30B ,VOLCANO                                                                        ,n/a
+1F30C ,MILKY WAY                                                                      ,n/a
+1F30D ,EARTH GLOBE EUROPE-AFRICA                                                      ,n/a
+1F30E ,EARTH GLOBE AMERICAS                                                           ,n/a
+1F30F ,EARTH GLOBE ASIA-AUSTRALIA                                                     ,n/a
+1F310 ,GLOBE WITH MERIDIANS                                                           ,n/a
+1F311 ,NEW MOON SYMBOL                                                                ,n/a
+1F312 ,WAXING CRESCENT MOON SYMBOL                                                    ,n/a
+1F313 ,FIRST QUARTER MOON SYMBOL                                                      ,n/a
+1F314 ,WAXING GIBBOUS MOON SYMBOL                                                     ,n/a
+1F315 ,FULL MOON SYMBOL                                                               ,n/a
+1F316 ,WANING GIBBOUS MOON SYMBOL                                                     ,n/a
+1F317 ,LAST QUARTER MOON SYMBOL                                                       ,n/a
+1F318 ,WANING CRESCENT MOON SYMBOL                                                    ,n/a
+1F319 ,CRESCENT MOON                                                                  ,n/a
+1F31A ,NEW MOON WITH FACE                                                             ,n/a
+1F31B ,FIRST QUARTER MOON WITH FACE                                                   ,n/a
+1F31C ,LAST QUARTER MOON WITH FACE                                                    ,n/a
+1F31D ,FULL MOON WITH FACE                                                            ,n/a
+1F31E ,SUN WITH FACE                                                                  ,n/a
+1F31F ,GLOWING STAR                                                                   ,n/a
+1F320 ,SHOOTING STAR                                                                  ,n/a
+1F321 ,THERMOMETER                                                                    ,n/a
+1F322 ,BLACK DROPLET                                                                  ,n/a
+1F323 ,WHITE SUN                                                                      ,n/a
+1F324 ,WHITE SUN WITH SMALL CLOUD                                                     ,n/a
+1F325 ,WHITE SUN BEHIND CLOUD                                                         ,n/a
+1F326 ,WHITE SUN BEHIND CLOUD WITH RAIN                                               ,n/a
+1F327 ,CLOUD WITH RAIN                                                                ,n/a
+1F328 ,CLOUD WITH SNOW                                                                ,n/a
+1F329 ,CLOUD WITH LIGHTNING                                                           ,n/a
+1F32A ,CLOUD WITH TORNADO                                                             ,n/a
+1F32B ,FOG                                                                            ,n/a
+1F32C ,WIND BLOWING FACE                                                              ,n/a
+1F32D ,HOT DOG                                                                        ,n/a
+1F32E ,TACO                                                                           ,n/a
+1F32F ,BURRITO                                                                        ,n/a
+1F330 ,CHESTNUT                                                                       ,n/a
+1F331 ,SEEDLING                                                                       ,n/a
+1F332 ,EVERGREEN TREE                                                                 ,n/a
+1F333 ,DECIDUOUS TREE                                                                 ,n/a
+1F334 ,PALM TREE                                                                      ,n/a
+1F335 ,CACTUS                                                                         ,n/a
+1F336 ,HOT PEPPER                                                                     ,n/a
+1F337 ,TULIP                                                                          ,n/a
+1F338 ,CHERRY BLOSSOM                                                                 ,n/a
+1F339 ,ROSE                                                                           ,n/a
+1F33A ,HIBISCUS                                                                       ,n/a
+1F33B ,SUNFLOWER                                                                      ,n/a
+1F33C ,BLOSSOM                                                                        ,n/a
+1F33D ,EAR OF MAIZE                                                                   ,n/a
+1F33E ,EAR OF RICE                                                                    ,n/a
+1F33F ,HERB                                                                           ,n/a
+1F340 ,FOUR LEAF CLOVER                                                               ,n/a
+1F341 ,MAPLE LEAF                                                                     ,n/a
+1F342 ,FALLEN LEAF                                                                    ,n/a
+1F343 ,LEAF FLUTTERING IN WIND                                                        ,n/a
+1F344 ,MUSHROOM                                                                       ,n/a
+1F345 ,TOMATO                                                                         ,n/a
+1F346 ,AUBERGINE                                                                      ,n/a
+1F347 ,GRAPES                                                                         ,n/a
+1F348 ,MELON                                                                          ,n/a
+1F349 ,WATERMELON                                                                     ,n/a
+1F34A ,TANGERINE                                                                      ,n/a
+1F34B ,LEMON                                                                          ,n/a
+1F34C ,BANANA                                                                         ,n/a
+1F34D ,PINEAPPLE                                                                      ,n/a
+1F34E ,RED APPLE                                                                      ,n/a
+1F34F ,GREEN APPLE                                                                    ,n/a
+1F350 ,PEAR                                                                           ,n/a
+1F351 ,PEACH                                                                          ,n/a
+1F352 ,CHERRIES                                                                       ,n/a
+1F353 ,STRAWBERRY                                                                     ,n/a
+1F354 ,HAMBURGER                                                                      ,n/a
+1F355 ,SLICE OF PIZZA                                                                 ,n/a
+1F356 ,MEAT ON BONE                                                                   ,n/a
+1F357 ,POULTRY LEG                                                                    ,n/a
+1F358 ,RICE CRACKER                                                                   ,n/a
+1F359 ,RICE BALL                                                                      ,n/a
+1F35A ,COOKED RICE                                                                    ,n/a
+1F35B ,CURRY AND RICE                                                                 ,n/a
+1F35C ,STEAMING BOWL                                                                  ,n/a
+1F35D ,SPAGHETTI                                                                      ,n/a
+1F35E ,BREAD                                                                          ,n/a
+1F35F ,FRENCH FRIES                                                                   ,n/a
+1F360 ,ROASTED SWEET POTATO                                                           ,n/a
+1F361 ,DANGO                                                                          ,n/a
+1F362 ,ODEN                                                                           ,n/a
+1F363 ,SUSHI                                                                          ,n/a
+1F364 ,FRIED SHRIMP                                                                   ,n/a
+1F365 ,FISH CAKE WITH SWIRL DESIGN                                                    ,n/a
+1F366 ,SOFT ICE CREAM                                                                 ,n/a
+1F367 ,SHAVED ICE                                                                     ,n/a
+1F368 ,ICE CREAM                                                                      ,n/a
+1F369 ,DOUGHNUT                                                                       ,n/a
+1F36A ,COOKIE                                                                         ,n/a
+1F36B ,CHOCOLATE BAR                                                                  ,n/a
+1F36C ,CANDY                                                                          ,n/a
+1F36D ,LOLLIPOP                                                                       ,n/a
+1F36E ,CUSTARD                                                                        ,n/a
+1F36F ,HONEY POT                                                                      ,n/a
+1F370 ,SHORTCAKE                                                                      ,n/a
+1F371 ,BENTO BOX                                                                      ,n/a
+1F372 ,POT OF FOOD                                                                    ,n/a
+1F373 ,COOKING                                                                        ,n/a
+1F374 ,FORK AND KNIFE                                                                 ,n/a
+1F375 ,TEACUP WITHOUT HANDLE                                                          ,n/a
+1F376 ,SAKE BOTTLE AND CUP                                                            ,n/a
+1F377 ,WINE GLASS                                                                     ,n/a
+1F378 ,COCKTAIL GLASS                                                                 ,n/a
+1F379 ,TROPICAL DRINK                                                                 ,n/a
+1F37A ,BEER MUG                                                                       ,n/a
+1F37B ,CLINKING BEER MUGS                                                             ,n/a
+1F37C ,BABY BOTTLE                                                                    ,n/a
+1F37D ,FORK AND KNIFE WITH PLATE                                                      ,n/a
+1F37E ,BOTTLE WITH POPPING CORK                                                       ,n/a
+1F37F ,POPCORN                                                                        ,n/a
+1F380 ,RIBBON                                                                         ,n/a
+1F381 ,WRAPPED PRESENT                                                                ,n/a
+1F382 ,BIRTHDAY CAKE                                                                  ,n/a
+1F383 ,JACK-O-LANTERN                                                                 ,n/a
+1F384 ,CHRISTMAS TREE                                                                 ,n/a
+1F385 ,FATHER CHRISTMAS                                                               ,n/a
+1F386 ,FIREWORKS                                                                      ,n/a
+1F387 ,FIREWORK SPARKLER                                                              ,n/a
+1F388 ,BALLOON                                                                        ,n/a
+1F389 ,PARTY POPPER                                                                   ,n/a
+1F38A ,CONFETTI BALL                                                                  ,n/a
+1F38B ,TANABATA TREE                                                                  ,n/a
+1F38C ,CROSSED FLAGS                                                                  ,n/a
+1F38D ,PINE DECORATION                                                                ,n/a
+1F38E ,JAPANESE DOLLS                                                                 ,n/a
+1F38F ,CARP STREAMER                                                                  ,n/a
+1F390 ,WIND CHIME                                                                     ,n/a
+1F391 ,MOON VIEWING CEREMONY                                                          ,n/a
+1F392 ,SCHOOL SATCHEL                                                                 ,n/a
+1F393 ,GRADUATION CAP                                                                 ,n/a
+1F394 ,HEART WITH TIP ON THE LEFT                                                     ,n/a
+1F395 ,BOUQUET OF FLOWERS                                                             ,n/a
+1F396 ,MILITARY MEDAL                                                                 ,n/a
+1F397 ,REMINDER RIBBON                                                                ,n/a
+1F398 ,MUSICAL KEYBOARD WITH JACKS                                                    ,n/a
+1F399 ,STUDIO MICROPHONE                                                              ,n/a
+1F39A ,LEVEL SLIDER                                                                   ,n/a
+1F39B ,CONTROL KNOBS                                                                  ,n/a
+1F39C ,BEAMED ASCENDING MUSICAL NOTES                                                 ,n/a
+1F39D ,BEAMED DESCENDING MUSICAL NOTES                                                ,n/a
+1F39E ,FILM FRAMES                                                                    ,n/a
+1F39F ,ADMISSION TICKETS                                                              ,n/a
+1F3A0 ,CAROUSEL HORSE                                                                 ,n/a
+1F3A1 ,FERRIS WHEEL                                                                   ,n/a
+1F3A2 ,ROLLER COASTER                                                                 ,n/a
+1F3A3 ,FISHING POLE AND FISH                                                          ,n/a
+1F3A4 ,MICROPHONE                                                                     ,n/a
+1F3A5 ,MOVIE CAMERA                                                                   ,n/a
+1F3A6 ,CINEMA                                                                         ,n/a
+1F3A7 ,HEADPHONE                                                                      ,n/a
+1F3A8 ,ARTIST PALETTE                                                                 ,n/a
+1F3A9 ,TOP HAT                                                                        ,n/a
+1F3AA ,CIRCUS TENT                                                                    ,n/a
+1F3AB ,TICKET                                                                         ,n/a
+1F3AC ,CLAPPER BOARD                                                                  ,n/a
+1F3AD ,PERFORMING ARTS                                                                ,n/a
+1F3AE ,VIDEO GAME                                                                     ,n/a
+1F3AF ,DIRECT HIT                                                                     ,n/a
+1F3B0 ,SLOT MACHINE                                                                   ,n/a
+1F3B1 ,BILLIARDS                                                                      ,n/a
+1F3B2 ,GAME DIE                                                                       ,n/a
+1F3B3 ,BOWLING                                                                        ,n/a
+1F3B4 ,FLOWER PLAYING CARDS                                                           ,n/a
+1F3B5 ,MUSICAL NOTE                                                                   ,n/a
+1F3B6 ,MULTIPLE MUSICAL NOTES                                                         ,n/a
+1F3B7 ,SAXOPHONE                                                                      ,n/a
+1F3B8 ,GUITAR                                                                         ,n/a
+1F3B9 ,MUSICAL KEYBOARD                                                               ,n/a
+1F3BA ,TRUMPET                                                                        ,n/a
+1F3BB ,VIOLIN                                                                         ,n/a
+1F3BC ,MUSICAL SCORE                                                                  ,n/a
+1F3BD ,RUNNING SHIRT WITH SASH                                                        ,n/a
+1F3BE ,TENNIS RACQUET AND BALL                                                        ,n/a
+1F3BF ,SKI AND SKI BOOT                                                               ,n/a
+1F3C0 ,BASKETBALL AND HOOP                                                            ,n/a
+1F3C1 ,CHEQUERED FLAG                                                                 ,n/a
+1F3C2 ,SNOWBOARDER                                                                    ,n/a
+1F3C3 ,RUNNER                                                                         ,n/a
+1F3C4 ,SURFER                                                                         ,n/a
+1F3C5 ,SPORTS MEDAL                                                                   ,n/a
+1F3C6 ,TROPHY                                                                         ,n/a
+1F3C7 ,HORSE RACING                                                                   ,n/a
+1F3C8 ,AMERICAN FOOTBALL                                                              ,n/a
+1F3C9 ,RUGBY FOOTBALL                                                                 ,n/a
+1F3CA ,SWIMMER                                                                        ,n/a
+1F3CB ,WEIGHT LIFTER                                                                  ,n/a
+1F3CC ,GOLFER                                                                         ,n/a
+1F3CD ,RACING MOTORCYCLE                                                              ,n/a
+1F3CE ,RACING CAR                                                                     ,n/a
+1F3CF ,CRICKET BAT AND BALL                                                           ,n/a
+1F3D0 ,VOLLEYBALL                                                                     ,n/a
+1F3D1 ,FIELD HOCKEY STICK AND BALL                                                    ,n/a
+1F3D2 ,ICE HOCKEY STICK AND PUCK                                                      ,n/a
+1F3D3 ,TABLE TENNIS PADDLE AND BALL                                                   ,n/a
+1F3D4 ,SNOW CAPPED MOUNTAIN                                                           ,n/a
+1F3D5 ,CAMPING                                                                        ,n/a
+1F3D6 ,BEACH WITH UMBRELLA                                                            ,n/a
+1F3D7 ,BUILDING CONSTRUCTION                                                          ,n/a
+1F3D8 ,HOUSE BUILDINGS                                                                ,n/a
+1F3D9 ,CITYSCAPE                                                                      ,n/a
+1F3DA ,DERELICT HOUSE BUILDING                                                        ,n/a
+1F3DB ,CLASSICAL BUILDING                                                             ,n/a
+1F3DC ,DESERT                                                                         ,n/a
+1F3DD ,DESERT ISLAND                                                                  ,n/a
+1F3DE ,NATIONAL PARK                                                                  ,n/a
+1F3DF ,STADIUM                                                                        ,n/a
+1F3E0 ,HOUSE BUILDING                                                                 ,n/a
+1F3E1 ,HOUSE WITH GARDEN                                                              ,n/a
+1F3E2 ,OFFICE BUILDING                                                                ,n/a
+1F3E3 ,JAPANESE POST OFFICE                                                           ,n/a
+1F3E4 ,EUROPEAN POST OFFICE                                                           ,n/a
+1F3E5 ,HOSPITAL                                                                       ,n/a
+1F3E6 ,BANK                                                                           ,n/a
+1F3E7 ,AUTOMATED TELLER MACHINE                                                       ,n/a
+1F3E8 ,HOTEL                                                                          ,n/a
+1F3E9 ,LOVE HOTEL                                                                     ,n/a
+1F3EA ,CONVENIENCE STORE                                                              ,n/a
+1F3EB ,SCHOOL                                                                         ,n/a
+1F3EC ,DEPARTMENT STORE                                                               ,n/a
+1F3ED ,FACTORY                                                                        ,n/a
+1F3EE ,IZAKAYA LANTERN                                                                ,n/a
+1F3EF ,JAPANESE CASTLE                                                                ,n/a
+1F3F0 ,EUROPEAN CASTLE                                                                ,n/a
+1F3F1 ,WHITE PENNANT                                                                  ,n/a
+1F3F2 ,BLACK PENNANT                                                                  ,n/a
+1F3F3 ,WAVING WHITE FLAG                                                              ,n/a
+1F3F4 ,WAVING BLACK FLAG                                                              ,n/a
+1F3F5 ,ROSETTE                                                                        ,n/a
+1F3F6 ,BLACK ROSETTE                                                                  ,n/a
+1F3F7 ,LABEL                                                                          ,n/a
+1F3F8 ,BADMINTON RACQUET AND SHUTTLECOCK                                              ,n/a
+1F3F9 ,BOW AND ARROW                                                                  ,n/a
+1F3FA ,AMPHORA                                                                        ,n/a
+1F3FB ,EMOJI MODIFIER FITZPATRICK TYPE-1-2                                            ,n/a
+1F3FC ,EMOJI MODIFIER FITZPATRICK TYPE-3                                              ,n/a
+1F3FD ,EMOJI MODIFIER FITZPATRICK TYPE-4                                              ,n/a
+1F3FE ,EMOJI MODIFIER FITZPATRICK TYPE-5                                              ,n/a
+1F3FF ,EMOJI MODIFIER FITZPATRICK TYPE-6                                              ,n/a
+1F400 ,RAT                                                                            ,n/a
+1F401 ,MOUSE                                                                          ,n/a
+1F402 ,OX                                                                             ,n/a
+1F403 ,WATER BUFFALO                                                                  ,n/a
+1F404 ,COW                                                                            ,n/a
+1F405 ,TIGER                                                                          ,n/a
+1F406 ,LEOPARD                                                                        ,n/a
+1F407 ,RABBIT                                                                         ,n/a
+1F408 ,CAT                                                                            ,n/a
+1F409 ,DRAGON                                                                         ,n/a
+1F40A ,CROCODILE                                                                      ,n/a
+1F40B ,WHALE                                                                          ,n/a
+1F40C ,SNAIL                                                                          ,n/a
+1F40D ,SNAKE                                                                          ,n/a
+1F40E ,HORSE                                                                          ,n/a
+1F40F ,RAM                                                                            ,n/a
+1F410 ,GOAT                                                                           ,n/a
+1F411 ,SHEEP                                                                          ,n/a
+1F412 ,MONKEY                                                                         ,n/a
+1F413 ,ROOSTER                                                                        ,n/a
+1F414 ,CHICKEN                                                                        ,n/a
+1F415 ,DOG                                                                            ,n/a
+1F416 ,PIG                                                                            ,n/a
+1F417 ,BOAR                                                                           ,n/a
+1F418 ,ELEPHANT                                                                       ,n/a
+1F419 ,OCTOPUS                                                                        ,n/a
+1F41A ,SPIRAL SHELL                                                                   ,n/a
+1F41B ,BUG                                                                            ,n/a
+1F41C ,ANT                                                                            ,n/a
+1F41D ,HONEYBEE                                                                       ,n/a
+1F41E ,LADY BEETLE                                                                    ,n/a
+1F41F ,FISH                                                                           ,n/a
+1F420 ,TROPICAL FISH                                                                  ,n/a
+1F421 ,BLOWFISH                                                                       ,n/a
+1F422 ,TURTLE                                                                         ,n/a
+1F423 ,HATCHING CHICK                                                                 ,n/a
+1F424 ,BABY CHICK                                                                     ,n/a
+1F425 ,FRONT-FACING BABY CHICK                                                        ,n/a
+1F426 ,BIRD                                                                           ,n/a
+1F427 ,PENGUIN                                                                        ,n/a
+1F428 ,KOALA                                                                          ,n/a
+1F429 ,POODLE                                                                         ,n/a
+1F42A ,DROMEDARY CAMEL                                                                ,n/a
+1F42B ,BACTRIAN CAMEL                                                                 ,n/a
+1F42C ,DOLPHIN                                                                        ,n/a
+1F42D ,MOUSE FACE                                                                     ,n/a
+1F42E ,COW FACE                                                                       ,n/a
+1F42F ,TIGER FACE                                                                     ,n/a
+1F430 ,RABBIT FACE                                                                    ,n/a
+1F431 ,CAT FACE                                                                       ,n/a
+1F432 ,DRAGON FACE                                                                    ,n/a
+1F433 ,SPOUTING WHALE                                                                 ,n/a
+1F434 ,HORSE FACE                                                                     ,n/a
+1F435 ,MONKEY FACE                                                                    ,n/a
+1F436 ,DOG FACE                                                                       ,n/a
+1F437 ,PIG FACE                                                                       ,n/a
+1F438 ,FROG FACE                                                                      ,n/a
+1F439 ,HAMSTER FACE                                                                   ,n/a
+1F43A ,WOLF FACE                                                                      ,n/a
+1F43B ,BEAR FACE                                                                      ,n/a
+1F43C ,PANDA FACE                                                                     ,n/a
+1F43D ,PIG NOSE                                                                       ,n/a
+1F43E ,PAW PRINTS                                                                     ,n/a
+1F43F ,CHIPMUNK                                                                       ,n/a
+1F440 ,EYES                                                                           ,n/a
+1F441 ,EYE                                                                            ,n/a
+1F442 ,EAR                                                                            ,n/a
+1F443 ,NOSE                                                                           ,n/a
+1F444 ,MOUTH                                                                          ,n/a
+1F445 ,TONGUE                                                                         ,n/a
+1F446 ,WHITE UP POINTING BACKHAND INDEX                                               ,n/a
+1F447 ,WHITE DOWN POINTING BACKHAND INDEX                                             ,n/a
+1F448 ,WHITE LEFT POINTING BACKHAND INDEX                                             ,n/a
+1F449 ,WHITE RIGHT POINTING BACKHAND INDEX                                            ,n/a
+1F44A ,FISTED HAND SIGN                                                               ,n/a
+1F44B ,WAVING HAND SIGN                                                               ,n/a
+1F44C ,OK HAND SIGN                                                                   ,n/a
+1F44D ,THUMBS UP SIGN                                                                 ,n/a
+1F44E ,THUMBS DOWN SIGN                                                               ,n/a
+1F44F ,CLAPPING HANDS SIGN                                                            ,n/a
+1F450 ,OPEN HANDS SIGN                                                                ,n/a
+1F451 ,CROWN                                                                          ,n/a
+1F452 ,WOMANS HAT                                                                     ,n/a
+1F453 ,EYEGLASSES                                                                     ,n/a
+1F454 ,NECKTIE                                                                        ,n/a
+1F455 ,T-SHIRT                                                                        ,n/a
+1F456 ,JEANS                                                                          ,n/a
+1F457 ,DRESS                                                                          ,n/a
+1F458 ,KIMONO                                                                         ,n/a
+1F459 ,BIKINI                                                                         ,n/a
+1F45A ,WOMANS CLOTHES                                                                 ,n/a
+1F45B ,PURSE                                                                          ,n/a
+1F45C ,HANDBAG                                                                        ,n/a
+1F45D ,POUCH                                                                          ,n/a
+1F45E ,MANS SHOE                                                                      ,n/a
+1F45F ,ATHLETIC SHOE                                                                  ,n/a
+1F460 ,HIGH-HEELED SHOE                                                               ,n/a
+1F461 ,WOMANS SANDAL                                                                  ,n/a
+1F462 ,WOMANS BOOTS                                                                   ,n/a
+1F463 ,FOOTPRINTS                                                                     ,n/a
+1F464 ,BUST IN SILHOUETTE                                                             ,n/a
+1F465 ,BUSTS IN SILHOUETTE                                                            ,n/a
+1F466 ,BOY                                                                            ,n/a
+1F467 ,GIRL                                                                           ,n/a
+1F468 ,MAN                                                                            ,n/a
+1F469 ,WOMAN                                                                          ,n/a
+1F46A ,FAMILY                                                                         ,n/a
+1F46B ,MAN AND WOMAN HOLDING HANDS                                                    ,n/a
+1F46C ,TWO MEN HOLDING HANDS                                                          ,n/a
+1F46D ,TWO WOMEN HOLDING HANDS                                                        ,n/a
+1F46E ,POLICE OFFICER                                                                 ,n/a
+1F46F ,WOMAN WITH BUNNY EARS                                                          ,n/a
+1F470 ,BRIDE WITH VEIL                                                                ,n/a
+1F471 ,PERSON WITH BLOND HAIR                                                         ,n/a
+1F472 ,MAN WITH GUA PI MAO                                                            ,n/a
+1F473 ,MAN WITH TURBAN                                                                ,n/a
+1F474 ,OLDER MAN                                                                      ,n/a
+1F475 ,OLDER WOMAN                                                                    ,n/a
+1F476 ,BABY                                                                           ,n/a
+1F477 ,CONSTRUCTION WORKER                                                            ,n/a
+1F478 ,PRINCESS                                                                       ,n/a
+1F479 ,JAPANESE OGRE                                                                  ,n/a
+1F47A ,JAPANESE GOBLIN                                                                ,n/a
+1F47B ,GHOST                                                                          ,n/a
+1F47C ,BABY ANGEL                                                                     ,n/a
+1F47D ,EXTRATERRESTRIAL ALIEN                                                         ,n/a
+1F47E ,ALIEN MONSTER                                                                  ,n/a
+1F47F ,IMP                                                                            ,n/a
+1F480 ,SKULL                                                                          ,n/a
+1F481 ,INFORMATION DESK PERSON                                                        ,n/a
+1F482 ,GUARDSMAN                                                                      ,n/a
+1F483 ,DANCER                                                                         ,n/a
+1F484 ,LIPSTICK                                                                       ,n/a
+1F485 ,NAIL POLISH                                                                    ,n/a
+1F486 ,FACE MASSAGE                                                                   ,n/a
+1F487 ,HAIRCUT                                                                        ,n/a
+1F488 ,BARBER POLE                                                                    ,n/a
+1F489 ,SYRINGE                                                                        ,n/a
+1F48A ,PILL                                                                           ,n/a
+1F48B ,KISS MARK                                                                      ,n/a
+1F48C ,LOVE LETTER                                                                    ,n/a
+1F48D ,RING                                                                           ,n/a
+1F48E ,GEM STONE                                                                      ,n/a
+1F48F ,KISS                                                                           ,n/a
+1F490 ,BOUQUET                                                                        ,n/a
+1F491 ,COUPLE WITH HEART                                                              ,n/a
+1F492 ,WEDDING                                                                        ,n/a
+1F493 ,BEATING HEART                                                                  ,n/a
+1F494 ,BROKEN HEART                                                                   ,n/a
+1F495 ,TWO HEARTS                                                                     ,n/a
+1F496 ,SPARKLING HEART                                                                ,n/a
+1F497 ,GROWING HEART                                                                  ,n/a
+1F498 ,HEART WITH ARROW                                                               ,n/a
+1F499 ,BLUE HEART                                                                     ,n/a
+1F49A ,GREEN HEART                                                                    ,n/a
+1F49B ,YELLOW HEART                                                                   ,n/a
+1F49C ,PURPLE HEART                                                                   ,n/a
+1F49D ,HEART WITH RIBBON                                                              ,n/a
+1F49E ,REVOLVING HEARTS                                                               ,n/a
+1F49F ,HEART DECORATION                                                               ,n/a
+1F4A0 ,DIAMOND SHAPE WITH A DOT INSIDE                                                ,n/a
+1F4A1 ,ELECTRIC LIGHT BULB                                                            ,n/a
+1F4A2 ,ANGER SYMBOL                                                                   ,n/a
+1F4A3 ,BOMB                                                                           ,n/a
+1F4A4 ,SLEEPING SYMBOL                                                                ,n/a
+1F4A5 ,COLLISION SYMBOL                                                               ,n/a
+1F4A6 ,SPLASHING SWEAT SYMBOL                                                         ,n/a
+1F4A7 ,DROPLET                                                                        ,n/a
+1F4A8 ,DASH SYMBOL                                                                    ,n/a
+1F4A9 ,PILE OF POO                                                                    ,n/a
+1F4AA ,FLEXED BICEPS                                                                  ,n/a
+1F4AB ,DIZZY SYMBOL                                                                   ,n/a
+1F4AC ,SPEECH BALLOON                                                                 ,n/a
+1F4AD ,THOUGHT BALLOON                                                                ,n/a
+1F4AE ,WHITE FLOWER                                                                   ,n/a
+1F4AF ,HUNDRED POINTS SYMBOL                                                          ,n/a
+1F4B0 ,MONEY BAG                                                                      ,n/a
+1F4B1 ,CURRENCY EXCHANGE                                                              ,n/a
+1F4B2 ,HEAVY DOLLAR SIGN                                                              ,n/a
+1F4B3 ,CREDIT CARD                                                                    ,n/a
+1F4B4 ,BANKNOTE WITH YEN SIGN                                                         ,n/a
+1F4B5 ,BANKNOTE WITH DOLLAR SIGN                                                      ,n/a
+1F4B6 ,BANKNOTE WITH EURO SIGN                                                        ,n/a
+1F4B7 ,BANKNOTE WITH POUND SIGN                                                       ,n/a
+1F4B8 ,MONEY WITH WINGS                                                               ,n/a
+1F4B9 ,CHART WITH UPWARDS TREND AND YEN SIGN                                          ,n/a
+1F4BA ,SEAT                                                                           ,n/a
+1F4BB ,PERSONAL COMPUTER                                                              ,n/a
+1F4BC ,BRIEFCASE                                                                      ,n/a
+1F4BD ,MINIDISC                                                                       ,n/a
+1F4BE ,FLOPPY DISK                                                                    ,n/a
+1F4BF ,OPTICAL DISC                                                                   ,n/a
+1F4C0 ,DVD                                                                            ,n/a
+1F4C1 ,FILE FOLDER                                                                    ,n/a
+1F4C2 ,OPEN FILE FOLDER                                                               ,n/a
+1F4C3 ,PAGE WITH CURL                                                                 ,n/a
+1F4C4 ,PAGE FACING UP                                                                 ,n/a
+1F4C5 ,CALENDAR                                                                       ,n/a
+1F4C6 ,TEAR-OFF CALENDAR                                                              ,n/a
+1F4C7 ,CARD INDEX                                                                     ,n/a
+1F4C8 ,CHART WITH UPWARDS TREND                                                       ,n/a
+1F4C9 ,CHART WITH DOWNWARDS TREND                                                     ,n/a
+1F4CA ,BAR CHART                                                                      ,n/a
+1F4CB ,CLIPBOARD                                                                      ,n/a
+1F4CC ,PUSHPIN                                                                        ,n/a
+1F4CD ,ROUND PUSHPIN                                                                  ,n/a
+1F4CE ,PAPERCLIP                                                                      ,n/a
+1F4CF ,STRAIGHT RULER                                                                 ,n/a
+1F4D0 ,TRIANGULAR RULER                                                               ,n/a
+1F4D1 ,BOOKMARK TABS                                                                  ,n/a
+1F4D2 ,LEDGER                                                                         ,n/a
+1F4D3 ,NOTEBOOK                                                                       ,n/a
+1F4D4 ,NOTEBOOK WITH DECORATIVE COVER                                                 ,n/a
+1F4D5 ,CLOSED BOOK                                                                    ,n/a
+1F4D6 ,OPEN BOOK                                                                      ,n/a
+1F4D7 ,GREEN BOOK                                                                     ,n/a
+1F4D8 ,BLUE BOOK                                                                      ,n/a
+1F4D9 ,ORANGE BOOK                                                                    ,n/a
+1F4DA ,BOOKS                                                                          ,n/a
+1F4DB ,NAME BADGE                                                                     ,n/a
+1F4DC ,SCROLL                                                                         ,n/a
+1F4DD ,MEMO                                                                           ,n/a
+1F4DE ,TELEPHONE RECEIVER                                                             ,n/a
+1F4DF ,PAGER                                                                          ,n/a
+1F4E0 ,FAX MACHINE                                                                    ,n/a
+1F4E1 ,SATELLITE ANTENNA                                                              ,n/a
+1F4E2 ,PUBLIC ADDRESS LOUDSPEAKER                                                     ,n/a
+1F4E3 ,CHEERING MEGAPHONE                                                             ,n/a
+1F4E4 ,OUTBOX TRAY                                                                    ,n/a
+1F4E5 ,INBOX TRAY                                                                     ,n/a
+1F4E6 ,PACKAGE                                                                        ,n/a
+1F4E7 ,E-MAIL SYMBOL                                                                  ,n/a
+1F4E8 ,INCOMING ENVELOPE                                                              ,n/a
+1F4E9 ,ENVELOPE WITH DOWNWARDS ARROW ABOVE                                            ,n/a
+1F4EA ,CLOSED MAILBOX WITH LOWERED FLAG                                               ,n/a
+1F4EB ,CLOSED MAILBOX WITH RAISED FLAG                                                ,n/a
+1F4EC ,OPEN MAILBOX WITH RAISED FLAG                                                  ,n/a
+1F4ED ,OPEN MAILBOX WITH LOWERED FLAG                                                 ,n/a
+1F4EE ,POSTBOX                                                                        ,n/a
+1F4EF ,POSTAL HORN                                                                    ,n/a
+1F4F0 ,NEWSPAPER                                                                      ,n/a
+1F4F1 ,MOBILE PHONE                                                                   ,n/a
+1F4F2 ,MOBILE PHONE WITH RIGHTWARDS ARROW AT LEFT                                     ,n/a
+1F4F3 ,VIBRATION MODE                                                                 ,n/a
+1F4F4 ,MOBILE PHONE OFF                                                               ,n/a
+1F4F5 ,NO MOBILE PHONES                                                               ,n/a
+1F4F6 ,ANTENNA WITH BARS                                                              ,n/a
+1F4F7 ,CAMERA                                                                         ,n/a
+1F4F8 ,CAMERA WITH FLASH                                                              ,n/a
+1F4F9 ,VIDEO CAMERA                                                                   ,n/a
+1F4FA ,TELEVISION                                                                     ,n/a
+1F4FB ,RADIO                                                                          ,n/a
+1F4FC ,VIDEOCASSETTE                                                                  ,n/a
+1F4FD ,FILM PROJECTOR                                                                 ,n/a
+1F4FE ,PORTABLE STEREO                                                                ,n/a
+1F4FF ,PRAYER BEADS                                                                   ,n/a
+1F500 ,TWISTED RIGHTWARDS ARROWS                                                      ,n/a
+1F501 ,CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS                          ,n/a
+1F502 ,CLOCKWISE RIGHTWARDS AND LEFTWARDS OPEN CIRCLE ARROWS WITH CIRCLED ONE OVERLAY ,n/a
+1F503 ,CLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS                             ,n/a
+1F504 ,ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS                         ,n/a
+1F505 ,LOW BRIGHTNESS SYMBOL                                                          ,n/a
+1F506 ,HIGH BRIGHTNESS SYMBOL                                                         ,n/a
+1F507 ,SPEAKER WITH CANCELLATION STROKE                                               ,n/a
+1F508 ,SPEAKER                                                                        ,n/a
+1F509 ,SPEAKER WITH ONE SOUND WAVE                                                    ,n/a
+1F50A ,SPEAKER WITH THREE SOUND WAVES                                                 ,n/a
+1F50B ,BATTERY                                                                        ,n/a
+1F50C ,ELECTRIC PLUG                                                                  ,n/a
+1F50D ,LEFT-POINTING MAGNIFYING GLASS                                                 ,n/a
+1F50E ,RIGHT-POINTING MAGNIFYING GLASS                                                ,n/a
+1F50F ,LOCK WITH INK PEN                                                              ,n/a
+1F510 ,CLOSED LOCK WITH KEY                                                           ,n/a
+1F511 ,KEY                                                                            ,n/a
+1F512 ,LOCK                                                                           ,n/a
+1F513 ,OPEN LOCK                                                                      ,n/a
+1F514 ,BELL                                                                           ,n/a
+1F515 ,BELL WITH CANCELLATION STROKE                                                  ,n/a
+1F516 ,BOOKMARK                                                                       ,n/a
+1F517 ,LINK SYMBOL                                                                    ,n/a
+1F518 ,RADIO BUTTON                                                                   ,n/a
+1F519 ,BACK WITH LEFTWARDS ARROW ABOVE                                                ,n/a
+1F51A ,END WITH LEFTWARDS ARROW ABOVE                                                 ,n/a
+1F51B ,ON WITH EXCLAMATION MARK WITH LEFT RIGHT ARROW ABOVE                           ,n/a
+1F51C ,SOON WITH RIGHTWARDS ARROW ABOVE                                               ,n/a
+1F51D ,TOP WITH UPWARDS ARROW ABOVE                                                   ,n/a
+1F51E ,NO ONE UNDER EIGHTEEN SYMBOL                                                   ,n/a
+1F51F ,KEYCAP TEN                                                                     ,n/a
+1F520 ,INPUT SYMBOL FOR LATIN CAPITAL LETTERS                                         ,n/a
+1F521 ,INPUT SYMBOL FOR LATIN SMALL LETTERS                                           ,n/a
+1F522 ,INPUT SYMBOL FOR NUMBERS                                                       ,n/a
+1F523 ,INPUT SYMBOL FOR SYMBOLS                                                       ,n/a
+1F524 ,INPUT SYMBOL FOR LATIN LETTERS                                                 ,n/a
+1F525 ,FIRE                                                                           ,n/a
+1F526 ,ELECTRIC TORCH                                                                 ,n/a
+1F527 ,WRENCH                                                                         ,n/a
+1F528 ,HAMMER                                                                         ,n/a
+1F529 ,NUT AND BOLT                                                                   ,n/a
+1F52A ,HOCHO                                                                          ,n/a
+1F52B ,PISTOL                                                                         ,n/a
+1F52C ,MICROSCOPE                                                                     ,n/a
+1F52D ,TELESCOPE                                                                      ,n/a
+1F52E ,CRYSTAL BALL                                                                   ,n/a
+1F52F ,SIX POINTED STAR WITH MIDDLE DOT                                               ,n/a
+1F530 ,JAPANESE SYMBOL FOR BEGINNER                                                   ,n/a
+1F531 ,TRIDENT EMBLEM                                                                 ,n/a
+1F532 ,BLACK SQUARE BUTTON                                                            ,n/a
+1F533 ,WHITE SQUARE BUTTON                                                            ,n/a
+1F534 ,LARGE RED CIRCLE                                                               ,n/a
+1F535 ,LARGE BLUE CIRCLE                                                              ,n/a
+1F536 ,LARGE ORANGE DIAMOND                                                           ,n/a
+1F537 ,LARGE BLUE DIAMOND                                                             ,n/a
+1F538 ,SMALL ORANGE DIAMOND                                                           ,n/a
+1F539 ,SMALL BLUE DIAMOND                                                             ,n/a
+1F53A ,UP-POINTING RED TRIANGLE                                                       ,n/a
+1F53B ,DOWN-POINTING RED TRIANGLE                                                     ,n/a
+1F53C ,UP-POINTING SMALL RED TRIANGLE                                                 ,n/a
+1F53D ,DOWN-POINTING SMALL RED TRIANGLE                                               ,n/a
+1F53E ,LOWER RIGHT SHADOWED WHITE CIRCLE                                              ,n/a
+1F53F ,UPPER RIGHT SHADOWED WHITE CIRCLE                                              ,n/a
+1F540 ,CIRCLED CROSS POMMEE                                                           ,n/a
+1F541 ,CROSS POMMEE WITH HALF-CIRCLE BELOW                                            ,n/a
+1F542 ,CROSS POMMEE                                                                   ,n/a
+1F543 ,NOTCHED LEFT SEMICIRCLE WITH THREE DOTS                                        ,n/a
+1F544 ,NOTCHED RIGHT SEMICIRCLE WITH THREE DOTS                                       ,n/a
+1F545 ,SYMBOL FOR MARKS CHAPTER                                                       ,n/a
+1F546 ,WHITE LATIN CROSS                                                              ,n/a
+1F547 ,HEAVY LATIN CROSS                                                              ,n/a
+1F548 ,CELTIC CROSS                                                                   ,n/a
+1F549 ,OM SYMBOL                                                                      ,n/a
+1F54A ,DOVE OF PEACE                                                                  ,n/a
+1F54B ,KAABA                                                                          ,n/a
+1F54C ,MOSQUE                                                                         ,n/a
+1F54D ,SYNAGOGUE                                                                      ,n/a
+1F54E ,MENORAH WITH NINE BRANCHES                                                     ,n/a
+1F54F ,BOWL OF HYGIEIA                                                                ,n/a
+1F550 ,CLOCK FACE ONE OCLOCK                                                          ,n/a
+1F551 ,CLOCK FACE TWO OCLOCK                                                          ,n/a
+1F552 ,CLOCK FACE THREE OCLOCK                                                        ,n/a
+1F553 ,CLOCK FACE FOUR OCLOCK                                                         ,n/a
+1F554 ,CLOCK FACE FIVE OCLOCK                                                         ,n/a
+1F555 ,CLOCK FACE SIX OCLOCK                                                          ,n/a
+1F556 ,CLOCK FACE SEVEN OCLOCK                                                        ,n/a
+1F557 ,CLOCK FACE EIGHT OCLOCK                                                        ,n/a
+1F558 ,CLOCK FACE NINE OCLOCK                                                         ,n/a
+1F559 ,CLOCK FACE TEN OCLOCK                                                          ,n/a
+1F55A ,CLOCK FACE ELEVEN OCLOCK                                                       ,n/a
+1F55B ,CLOCK FACE TWELVE OCLOCK                                                       ,n/a
+1F55C ,CLOCK FACE ONE-THIRTY                                                          ,n/a
+1F55D ,CLOCK FACE TWO-THIRTY                                                          ,n/a
+1F55E ,CLOCK FACE THREE-THIRTY                                                        ,n/a
+1F55F ,CLOCK FACE FOUR-THIRTY                                                         ,n/a
+1F560 ,CLOCK FACE FIVE-THIRTY                                                         ,n/a
+1F561 ,CLOCK FACE SIX-THIRTY                                                          ,n/a
+1F562 ,CLOCK FACE SEVEN-THIRTY                                                        ,n/a
+1F563 ,CLOCK FACE EIGHT-THIRTY                                                        ,n/a
+1F564 ,CLOCK FACE NINE-THIRTY                                                         ,n/a
+1F565 ,CLOCK FACE TEN-THIRTY                                                          ,n/a
+1F566 ,CLOCK FACE ELEVEN-THIRTY                                                       ,n/a
+1F567 ,CLOCK FACE TWELVE-THIRTY                                                       ,n/a
+1F568 ,RIGHT SPEAKER                                                                  ,n/a
+1F569 ,RIGHT SPEAKER WITH ONE SOUND WAVE                                              ,n/a
+1F56A ,RIGHT SPEAKER WITH THREE SOUND WAVES                                           ,n/a
+1F56B ,BULLHORN                                                                       ,n/a
+1F56C ,BULLHORN WITH SOUND WAVES                                                      ,n/a
+1F56D ,RINGING BELL                                                                   ,n/a
+1F56E ,BOOK                                                                           ,n/a
+1F56F ,CANDLE                                                                         ,n/a
+1F570 ,MANTELPIECE CLOCK                                                              ,n/a
+1F571 ,BLACK SKULL AND CROSSBONES                                                     ,n/a
+1F572 ,NO PIRACY                                                                      ,n/a
+1F573 ,HOLE                                                                           ,n/a
+1F574 ,MAN IN BUSINESS SUIT LEVITATING                                                ,n/a
+1F575 ,SLEUTH OR SPY                                                                  ,n/a
+1F576 ,DARK SUNGLASSES                                                                ,n/a
+1F577 ,SPIDER                                                                         ,n/a
+1F578 ,SPIDER WEB                                                                     ,n/a
+1F579 ,JOYSTICK                                                                       ,n/a
+1F57A ,MAN DANCING                                                                    ,n/a
+1F57B ,LEFT HAND TELEPHONE RECEIVER                                                   ,n/a
+1F57C ,TELEPHONE RECEIVER WITH PAGE                                                   ,n/a
+1F57D ,RIGHT HAND TELEPHONE RECEIVER                                                  ,n/a
+1F57E ,WHITE TOUCHTONE TELEPHONE                                                      ,n/a
+1F57F ,BLACK TOUCHTONE TELEPHONE                                                      ,n/a
+1F580 ,TELEPHONE ON TOP OF MODEM                                                      ,n/a
+1F581 ,CLAMSHELL MOBILE PHONE                                                         ,n/a
+1F582 ,BACK OF ENVELOPE                                                               ,n/a
+1F583 ,STAMPED ENVELOPE                                                               ,n/a
+1F584 ,ENVELOPE WITH LIGHTNING                                                        ,n/a
+1F585 ,FLYING ENVELOPE                                                                ,n/a
+1F586 ,PEN OVER STAMPED ENVELOPE                                                      ,n/a
+1F587 ,LINKED PAPERCLIPS                                                              ,n/a
+1F588 ,BLACK PUSHPIN                                                                  ,n/a
+1F589 ,LOWER LEFT PENCIL                                                              ,n/a
+1F58A ,LOWER LEFT BALLPOINT PEN                                                       ,n/a
+1F58B ,LOWER LEFT FOUNTAIN PEN                                                        ,n/a
+1F58C ,LOWER LEFT PAINTBRUSH                                                          ,n/a
+1F58D ,LOWER LEFT CRAYON                                                              ,n/a
+1F58E ,LEFT WRITING HAND                                                              ,n/a
+1F58F ,TURNED OK HAND SIGN                                                            ,n/a
+1F590 ,RAISED HAND WITH FINGERS SPLAYED                                               ,n/a
+1F591 ,REVERSED RAISED HAND WITH FINGERS SPLAYED                                      ,n/a
+1F592 ,REVERSED THUMBS UP SIGN                                                        ,n/a
+1F593 ,REVERSED THUMBS DOWN SIGN                                                      ,n/a
+1F594 ,REVERSED VICTORY HAND                                                          ,n/a
+1F595 ,REVERSED HAND WITH MIDDLE FINGER EXTENDED                                      ,n/a
+1F596 ,RAISED HAND WITH PART BETWEEN MIDDLE AND RING FINGERS                          ,n/a
+1F597 ,WHITE DOWN POINTING LEFT HAND INDEX                                            ,n/a
+1F598 ,SIDEWAYS WHITE LEFT POINTING INDEX                                             ,n/a
+1F599 ,SIDEWAYS WHITE RIGHT POINTING INDEX                                            ,n/a
+1F59A ,SIDEWAYS BLACK LEFT POINTING INDEX                                             ,n/a
+1F59B ,SIDEWAYS BLACK RIGHT POINTING INDEX                                            ,n/a
+1F59C ,BLACK LEFT POINTING BACKHAND INDEX                                             ,n/a
+1F59D ,BLACK RIGHT POINTING BACKHAND INDEX                                            ,n/a
+1F59E ,SIDEWAYS WHITE UP POINTING INDEX                                               ,n/a
+1F59F ,SIDEWAYS WHITE DOWN POINTING INDEX                                             ,n/a
+1F5A0 ,SIDEWAYS BLACK UP POINTING INDEX                                               ,n/a
+1F5A1 ,SIDEWAYS BLACK DOWN POINTING INDEX                                             ,n/a
+1F5A2 ,BLACK UP POINTING BACKHAND INDEX                                               ,n/a
+1F5A3 ,BLACK DOWN POINTING BACKHAND INDEX                                             ,n/a
+1F5A4 ,BLACK HEART                                                                    ,n/a
+1F5A5 ,DESKTOP COMPUTER                                                               ,n/a
+1F5A6 ,KEYBOARD AND MOUSE                                                             ,n/a
+1F5A7 ,THREE NETWORKED COMPUTERS                                                      ,n/a
+1F5A8 ,PRINTER                                                                        ,n/a
+1F5A9 ,POCKET CALCULATOR                                                              ,n/a
+1F5AA ,BLACK HARD SHELL FLOPPY DISK                                                   ,n/a
+1F5AB ,WHITE HARD SHELL FLOPPY DISK                                                   ,n/a
+1F5AC ,SOFT SHELL FLOPPY DISK                                                         ,n/a
+1F5AD ,TAPE CARTRIDGE                                                                 ,n/a
+1F5AE ,WIRED KEYBOARD                                                                 ,n/a
+1F5AF ,ONE BUTTON MOUSE                                                               ,n/a
+1F5B0 ,TWO BUTTON MOUSE                                                               ,n/a
+1F5B1 ,THREE BUTTON MOUSE                                                             ,n/a
+1F5B2 ,TRACKBALL                                                                      ,n/a
+1F5B3 ,OLD PERSONAL COMPUTER                                                          ,n/a
+1F5B4 ,HARD DISK                                                                      ,n/a
+1F5B5 ,SCREEN                                                                         ,n/a
+1F5B6 ,PRINTER ICON                                                                   ,n/a
+1F5B7 ,FAX ICON                                                                       ,n/a
+1F5B8 ,OPTICAL DISC ICON                                                              ,n/a
+1F5B9 ,DOCUMENT WITH TEXT                                                             ,n/a
+1F5BA ,DOCUMENT WITH TEXT AND PICTURE                                                 ,n/a
+1F5BB ,DOCUMENT WITH PICTURE                                                          ,n/a
+1F5BC ,FRAME WITH PICTURE                                                             ,n/a
+1F5BD ,FRAME WITH TILES                                                               ,n/a
+1F5BE ,FRAME WITH AN X                                                                ,n/a
+1F5BF ,BLACK FOLDER                                                                   ,n/a
+1F5C0 ,FOLDER                                                                         ,n/a
+1F5C1 ,OPEN FOLDER                                                                    ,n/a
+1F5C2 ,CARD INDEX DIVIDERS                                                            ,n/a
+1F5C3 ,CARD FILE BOX                                                                  ,n/a
+1F5C4 ,FILE CABINET                                                                   ,n/a
+1F5C5 ,EMPTY NOTE                                                                     ,n/a
+1F5C6 ,EMPTY NOTE PAGE                                                                ,n/a
+1F5C7 ,EMPTY NOTE PAD                                                                 ,n/a
+1F5C8 ,NOTE                                                                           ,n/a
+1F5C9 ,NOTE PAGE                                                                      ,n/a
+1F5CA ,NOTE PAD                                                                       ,n/a
+1F5CB ,EMPTY DOCUMENT                                                                 ,n/a
+1F5CC ,EMPTY PAGE                                                                     ,n/a
+1F5CD ,EMPTY PAGES                                                                    ,n/a
+1F5CE ,DOCUMENT                                                                       ,n/a
+1F5CF ,PAGE                                                                           ,n/a
+1F5D0 ,PAGES                                                                          ,n/a
+1F5D1 ,WASTEBASKET                                                                    ,n/a
+1F5D2 ,SPIRAL NOTE PAD                                                                ,n/a
+1F5D3 ,SPIRAL CALENDAR PAD                                                            ,n/a
+1F5D4 ,DESKTOP WINDOW                                                                 ,n/a
+1F5D5 ,MINIMIZE                                                                       ,n/a
+1F5D6 ,MAXIMIZE                                                                       ,n/a
+1F5D7 ,OVERLAP                                                                        ,n/a
+1F5D8 ,CLOCKWISE RIGHT AND LEFT SEMICIRCLE ARROWS                                     ,n/a
+1F5D9 ,CANCELLATION X                                                                 ,n/a
+1F5DA ,INCREASE FONT SIZE SYMBOL                                                      ,n/a
+1F5DB ,DECREASE FONT SIZE SYMBOL                                                      ,n/a
+1F5DC ,COMPRESSION                                                                    ,n/a
+1F5DD ,OLD KEY                                                                        ,n/a
+1F5DE ,ROLLED-UP NEWSPAPER                                                            ,n/a
+1F5DF ,PAGE WITH CIRCLED TEXT                                                         ,n/a
+1F5E0 ,STOCK CHART                                                                    ,n/a
+1F5E1 ,DAGGER KNIFE                                                                   ,n/a
+1F5E2 ,LIPS                                                                           ,n/a
+1F5E3 ,SPEAKING HEAD IN SILHOUETTE                                                    ,n/a
+1F5E4 ,THREE RAYS ABOVE                                                               ,n/a
+1F5E5 ,THREE RAYS BELOW                                                               ,n/a
+1F5E6 ,THREE RAYS LEFT                                                                ,n/a
+1F5E7 ,THREE RAYS RIGHT                                                               ,n/a
+1F5E8 ,LEFT SPEECH BUBBLE                                                             ,n/a
+1F5E9 ,RIGHT SPEECH BUBBLE                                                            ,n/a
+1F5EA ,TWO SPEECH BUBBLES                                                             ,n/a
+1F5EB ,THREE SPEECH BUBBLES                                                           ,n/a
+1F5EC ,LEFT THOUGHT BUBBLE                                                            ,n/a
+1F5ED ,RIGHT THOUGHT BUBBLE                                                           ,n/a
+1F5EE ,LEFT ANGER BUBBLE                                                              ,n/a
+1F5EF ,RIGHT ANGER BUBBLE                                                             ,n/a
+1F5F0 ,MOOD BUBBLE                                                                    ,n/a
+1F5F1 ,LIGHTNING MOOD BUBBLE                                                          ,n/a
+1F5F2 ,LIGHTNING MOOD                                                                 ,n/a
+1F5F3 ,BALLOT BOX WITH BALLOT                                                         ,n/a
+1F5F4 ,BALLOT SCRIPT X                                                                ,n/a
+1F5F5 ,BALLOT BOX WITH SCRIPT X                                                       ,n/a
+1F5F6 ,BALLOT BOLD SCRIPT X                                                           ,n/a
+1F5F7 ,BALLOT BOX WITH BOLD SCRIPT X                                                  ,n/a
+1F5F8 ,LIGHT CHECK MARK                                                               ,n/a
+1F5F9 ,BALLOT BOX WITH BOLD CHECK                                                     ,n/a
+1F5FA ,WORLD MAP                                                                      ,n/a
+1F5FB ,MOUNT FUJI                                                                     ,n/a
+1F5FC ,TOKYO TOWER                                                                    ,n/a
+1F5FD ,STATUE OF LIBERTY                                                              ,n/a
+1F5FE ,SILHOUETTE OF JAPAN                                                            ,n/a
+1F5FF ,MOYAI                                                                          ,n/a
+***/

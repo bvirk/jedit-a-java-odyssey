@@ -1,0 +1,165 @@
+
+/***;sv;products
+product nr ;product name                           ;supplierID
+1  ;"Chai"                             ;7
+2  ;"Chang"                            ;1
+3  ;"Aniseed Syrup"                    ;1
+4  ;"Chef Anton's Cajun Seasoning"     ;2
+5  ;"Chef Anton's Gumbo Mix"           ;2
+6  ;"Grandma's Boysenberry Spread"     ;3
+7  ;"Uncle Bob's Organic Dried Pears"  ;3
+8  ;"Northwoods Cranberry Sauce"       ;3
+9  ;"Mishi Kobe Niku"                  ;4
+10 ;"Ikura"                            ;4
+11 ;"Queso Cabrales"                   ;5
+12 ;"Queso Manchego La Pastora"        ;5
+13 ;"Konbu"                            ;6
+14 ;"Tofu"                             ;6
+15 ;"Genen Shouyu"                     ;6
+16 ;"Pavlova"                          ;7
+17 ;"Alice Mutton"                     ;7
+18 ;"Carnarvon Tigers"                 ;7
+19 ;"Teatime Chocolate Biscuits"       ;8
+20 ;"Sir Rodney's Marmalade"           ;8
+21 ;"Sir Rodney's Scones"              ;8
+22 ;"Gustaf's Knäckebröd"              ;9
+23 ;"Tunnbröd"                         ;9
+24 ;"Guaraná Fantástica"               ;10
+25 ;"NuNuCa Nuß-Nougat-Creme"          ;11
+26 ;"Gumbär Gummibärchen"              ;11
+27 ;"Schoggi Schokolade"               ;11
+28 ;"Rössle Sauerkraut"                ;12
+29 ;"Thüringer Rostbratwurst"          ;12
+30 ;"Nord-Ost Matjeshering"            ;13
+31 ;"Gorgonzola Telino"                ;14
+32 ;"Mascarpone Fabioli"               ;14
+33 ;"Geitost"                          ;15
+34 ;"Sasquatch Ale"                    ;16
+35 ;"Steeleye Stout"                   ;16
+36 ;"Inlagd Sill"                      ;17
+37 ;"Gravad lax"                       ;17
+38 ;"Côte de Blaye"                    ;18
+39 ;"Chartreuse verte"                 ;18
+40 ;"Boston Crab Meat"                 ;19
+41 ;"Jack's New England Clam Chowder"  ;19
+42 ;"Singaporean Hokkien Fried Mee"    ;20
+43 ;"Ipoh Coffee"                      ;20
+44 ;"Gula Malacca"                     ;20
+45 ;"Røgede sild"                      ;21
+46 ;"Spegesild"                        ;21
+47 ;"Zaanse koeken"                    ;22
+48 ;"Chocolade"                        ;22
+49 ;"Maxilaku"                         ;23
+50 ;"Valkoinen suklaa"                 ;23
+51 ;"Manjimup Dried Apples"            ;24
+52 ;"Filo Mix"                         ;24
+53 ;"Perth Pasties"                    ;24
+54 ;"Tourtière"                        ;25
+55 ;"Pâté chinois"                     ;25
+56 ;"Gnocchi di nonna Alice"           ;26
+57 ;"Ravioli Angelo"                   ;26
+58 ;"Escargots de Bourgogne"           ;27
+59 ;"Raclette Courdavault"             ;28
+60 ;"Camembert Pierrot"                ;28
+61 ;"Sirop d'érable"                   ;29
+62 ;"Tarte au sucre"                   ;29
+63 ;"Vegie-spread"                     ;7
+64 ;"Wimmers gute Semmelknödel"        ;12
+65 ;"Louisiana Fiery Hot Pepper Sauce" ;2
+66 ;"Louisiana Hot Spiced Okra"        ;2
+67 ;"Laughing Lumberjack Lager"        ;16
+68 ;"Scottish Longbreads"              ;8
+69 ;"Gudbrandsdalsost"                 ;15
+70 ;"Outback Lager"                    ;7
+71 ;"Fløtemysost"                      ;15
+72 ;"Mozzarella di Giovanni"           ;14
+73 ;"Röd Kaviar"                       ;17
+74 ;"Longlife Tofu"                    ;4
+75 ;"Rhönbräu Klosterbier"             ;12
+76 ;"Lakkalikööri"                     ;23
+77 ;"Original Frankfurter grüne Soße"  ;12
+***/
+
+
+/***;sv;suppliers
+supplierID ;business name                            ; contact person
+1          ;"Exotic Liquids"                         ;"Charlotte Cooper"
+2          ;"New Orleans Cajun Delights"             ;"Shelley Burke"
+3          ;"Grandma Kelly's Homestead"              ;"Regina Murphy"
+4          ;"Tokyo Traders"                          ;"Yoshi Nagase"
+5          ;"Cooperativa de Quesos 'Las Cabras'"     ;"Antonio del Valle Saavedra "
+6          ;"Mayumi's"                               ;"Mayumi Ohno"
+7          ;"Pavlova, Ltd."                          ;"Ian Devling"
+8          ;"Specialty Biscuits, Ltd."               ;"Peter Wilson"
+9          ;"PB Knäckebröd AB"                       ;"Lars Peterson"
+10         ;"Refrescos Americanas LTDA"              ;"Carlos Diaz"
+11         ;"Heli Süßwaren GmbH & Co. KG"            ;"Petra Winkler"
+12         ;"Plutzer Lebensmittelgroßmärkte AG"      ;"Martin Bein"
+13         ;"Nord-Ost-Fisch Handelsgesellschaft mbH" ;"Sven Petersen"
+14         ;"Formaggi Fortini s.r.l."                ;"Elio Rossi"
+15         ;"Norske Meierier"                        ;"Beate Vileid"
+16         ;"Bigfoot Breweries"                      ;"Cheryl Saylor"
+17         ;"Svensk Sjöföda AB"                      ;"Michael Björn"
+18         ;"Aux joyeux ecclésiastiques"             ;"Guylène Nodier"
+19         ;"New England Seafood Cannery"            ;"Robb Merchant"
+20         ;"Leka Trading"                           ;"Chandra Leka"
+21         ;"Lyngbysild"                             ;"Niels Petersen"
+22         ;"Zaanse Snoepfabriek"                    ;"Dirk Luchte"
+23         ;"Karkki Oy"                              ;"Anne Heikkonen"
+24         ;"G'day, Mate"                            ;"Wendy Mackenzie"
+25         ;"Ma Maison"                              ;"Jean-Guy Lauzon"
+26         ;"Pasta Buttini s.r.l."                   ;"Giovanni Giudici"
+27         ;"Escargots Nouveaux"                     ;"Marie Delamare"
+28         ;"Gai pâturage"                           ;"Eliane Noz"
+29         ;"Forêts d'érables"                       ;"Chantal Goulet"
+***/
+
+List svJoin(fileName, String tableHasOne, tableHasMany, String equalField) {
+	int keyIndex(List l,List fields) {
+		List line0 = Arrays.asList(l.get(0));
+		fields.addAll(line0);
+		l.subList(0,1).clear();
+		return line0.contains(equalField) ? line0.indexOf(equalField) : -1;
+	}
+	bObj() {
+		String[] concat(String[] a, String[] b) {
+			String[] both = Arrays.copyOf(a, a.length + b.length);
+			System.arraycopy(b, 0, both, a.length, b.length);
+			return both;
+		}
+		return this;
+	}
+	
+	List fldsList = new ArrayList();
+	List oneLines = dsvLines(fileName,tableHasOne); 
+	Map oneMap = new TreeMap();
+	int keyIx = keyIndex(oneLines,fldsList);	
+	if (keyIx != -1) {
+		for (String [] items : oneLines)
+			oneMap.put(items[keyIx],items);
+	 
+		List manyLines = dsvLines(fileName,tableHasMany);
+		foreignKeyIx = keyIndex(manyLines,fldsList);
+		List records = new ArrayList();
+		records.add(toArray(fldsList));
+		if (foreignKeyIx != -1) {
+			records.addAll(
+				Beam(manyLines)
+					.filter(oneMap,foreignKeyIx,"item-> arg1.containsKey(item[arg2])")
+					.map(oneMap,foreignKeyIx,bObj(),"item->arg3.concat(arg1.get(item[arg2]),item)")
+					.toList());
+		}
+		return records;
+	}
+}
+
+StringBuilder output= new StringBuilder("<!-- head=jquery.html+prettify.html+prettyClassify.js&title=join -->\n\n<table>\n");
+
+String itemKind="<th>";
+for (String[] items : svJoin(scriptPath,"suppliers","products","supplierID")) {
+	output.append("<tr>"+itemKind+String.join(itemKind,items)+"</tr>"+"\n");
+	itemKind = "<td>";
+}
+
+toFile(scriptPath.replaceAll("\\.\\w+$",".md"),output+"</table>");
+

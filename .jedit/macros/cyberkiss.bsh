@@ -1,0 +1,277 @@
+// key tip: S+F10
+// BROWSER TYPE AND INSTALLATION PLACE DEPENDT -LOOK AT void browseThat(String url)
+import java.util.stream.Collectors;
+/**
+ * Package name importer, Api and startup function help and cyberkisses. Place carret 
+ * in front of, or select word(s) to be used. If carret is after a space clipboard 
+ * is used
+
+ * 
+ * This function and meant to be edited together with presentSelection for sending
+ * stupid requests of, in terms of sending dialog resources, simple art.  
+ */
+void cyberkiss() {
+	String text;
+	List words = backWordsOrSelected(view,true);
+	if (words.get(0).endsWith(" ") || words.get(0).length()==0)
+		text=getClipboard();
+	else
+		text = words.get(1);
+	if (null != text) {
+		presentSelection(Arrays.asList(new String[]{
+			 "import"
+			,"api-help"
+			,"beanshell source"
+			,"java keyword"
+			,"duckduckgo"
+			,"google"
+			,"en-da"
+			,"da-en"
+			,"en.wiki"
+			,"da.wiki"
+			,"da.glosbe"
+			,"en.glosbe"
+			,"thesaurus"
+			,"findvej"
+			,"phone"
+			,"md file"
+			}),text);
+	}
+}
+
+/**
+ * Pops up actionsDialog, which is a shortcut key prefixed list.
+ *
+ * @param menues list to choose an action item from
+ * @param kiss paramter to chosen action
+ */
+void presentSelection(List menues, String kiss) {
+	command(String choice) {
+		switch (choice) {
+			case "import":
+				doImport(kiss);
+				break;
+			case "api-help":
+				apiHelp(kiss);
+				break;
+			case "beanshell source":
+				if (!foundStartupFunction(kiss,view))
+					view.getStatus().setMessage(funcName+" ?");
+				//else
+					//p(buffer.getName());
+				break;
+			case "java keyword":
+				url = javaKeywordUrl(kiss);
+				if (url.size() > 1)
+					if (url.size() == 2) 
+						browseThat(url.get(0));
+					else {
+						actionsDialog(this,numSeqSplitLast(url),view);
+					}
+				else
+					view.getStatus().setMessage(kiss+" ?" );
+				break;
+			case "duckduckgo":
+				browseThat("https://duckduckgo.com/?q="+kiss.replaceAll(" ","+").replaceAll(":","%3a"));
+				break;
+			case "google":
+				browseThat("https://google.dk/search?q="+kiss.replaceAll(" ","+").replaceAll(":","%3a"));
+				break;
+			case "findvej":
+				browseThat("https://findvej.dk/"+kiss);
+				break;
+			case "phone":
+				browseThat("https://118.dk/search/go?what="+kiss);
+				break;
+			case "en-da":
+				browseThat("https://translate.google.com/#en/da/"+kiss.replaceAll(" ","%20"));
+				break;
+			case "da-en":
+				browseThat("https://translate.google.com/#da/en/"+kiss.replaceAll(" ","%20"));
+				break;
+			case "en.wiki":
+				browseThat("https://duckduckgo.com/?q=site%3Aen.wikipedia.org+"+kiss.replaceAll(" ","+"));
+				break;
+			case "da.wiki":
+				browseThat("https://duckduckgo.com/?q=site%3Ada.wikipedia.org+"+kiss.replaceAll(" ","+"));
+				break;
+			case "da.glosbe":
+				browseThat("https://da.glosbe.com/da/en/"+kiss);
+				break;
+			case "en.glosbe":
+				browseThat("https://en.glosbe.com/en/da/"+kiss);
+				break;
+			case "thesaurus":
+				browseThat("https://www.thesaurus.com/browse/"+kiss);
+				break;
+			case "md file":
+				openMdFileInBaseDir(kiss);
+				break;
+			default:
+				browseThat(choice);
+		}
+	}
+	actionsDialog(this,NumSeq(menues,kiss),view);
+}
+
+/**
+ * Alternativ to browser historic
+ *
+ * @param keyword in the java language
+ * @return url descibing the keyword
+ */
+List javaKeywordUrl(String keyword) { 
+	List urls = Arrays.stream(new String[] {
+		 "if=n0/if"
+		,"else=n0/if"
+		,"switch=n0/switch"
+		,"while=n0/while"
+		,"do=n0/while"
+		,"for=n0/for"
+		,"break=n0/branch"
+		,"continue=n0/branch"
+		,"return=n0/branch"
+		,"default=n0/switch"
+		,"case=n0/switch"
+		,"instanceof=n0/op2"
+		,"catch=e0/catch"
+		,"finally=e0/finally"
+		,"throw=e0/throwing"
+		,"try=e0/try"
+		,"assert=https://docs.oracle.com/javase/7/docs/technotes/guides/language/assert"
+		,"new=https://docs.oracle.com/javase/tutorial/java/javaOO/objectcreation"
+		,"enum=http://tutorials.jenkov.com/java/enums"
+		,"enum=https://howtodoinjava.com/java/enum/guide-for-understanding-enum-in-java/"
+		}).filter(Predicate(keyword,"item-> item.startsWith(arg1+´=´)")).map(Mapper(
+			 "item->item.replaceAll(´^\\w+?=´,´´)"
+			+".replaceAll(´^n0/´,´https://docs.oracle.com/javase/tutorial/java/nutsandbolts/´)"
+			+".replaceAll(´^e0/´,´https://docs.oracle.com/javase/tutorial/essential/exceptions/´)"
+			+".replaceAll(´([^/])$´,´$1.html´)"
+			)).collect(Collectors.toList());
+		urls.add(keyword);
+		return urls;
+}
+
+
+numSeqSplitLast(List keyWTrailedUrls) {
+	String keyW = keyWTrailedUrls.remove(keyWTrailedUrls.size()-1);
+	return NumSeq(keyWTrailedUrls,keyW); 
+ }
+
+void browseThat(String url) {
+	String[] cmd = { 
+		OperatingSystem.isUnix()
+			? "seamonkey" 
+			: OperatingSystem.isWindows()
+					? "\"C:\\Programmer\\Mozilla Firefox\\firefox.exe\""
+					: null
+		,url};
+	if (null != cmd[0])
+		Runtime.getRuntime().exec(cmd); 
+	else
+		view.getStatus().setMessage("Unsupported OS");
+}
+
+String OSUrl(String key) {
+	String [] linux = { 
+	 "rt=http://eee/java8/api/"
+	,"nashorn=https://docs.oracle.com/javase/8/docs/jdk/api/nashorn/"
+	,"jedit=file:///usr/local/share/jEdit/5.5.0/doc/api/"
+	,"jsoup-1.11.3=https://jsoup.org/apidocs/"
+	};
+	
+	String [] windows = { 
+	 "rt=file:///D:/home/da/Prtlcls-lang-stands/api/java8/api/"
+	,"jedit=file:///C:/Programmer/jEdit/doc/api/"
+	,"AbsPath=file:///D:/home/dev/devel/java/AbsPath/doc/"
+	};
+
+	String scriptIsMissingUrl() {
+		File tmpfileName = File.createTempFile("jimpstat",".html");
+		tmpfileName.deleteOnExit();
+		toFile(tmpfileName.getPath(), 
+		 "<!DOCTYPE html><meta charset=\"utf-8\"><title>Script location status</title><p>"
+		+"Shell script jimport not found</p><p>"
+		+"See the documentation for method jimport in file $JEDIT_SETTINGS/startup/utils.bsh</p>");
+		
+		return "file://"+(OperatingSystem.isWindows() ? "/" : "")+ux(tmpfileName.getPath());
+	}
+	Properties p = new Properties();
+	p.load( new StringReader(
+		String.join("\n",
+			OperatingSystem.isUnix()
+	 	 		? linux 
+	 	 		: OperatingSystem.isWindows()
+	 	 			? windows
+	 	 			: new String[]{} )));
+	 	 
+	return key.equals("scriptNotFound") ? scriptIsMissingUrl() : p.getProperty(key);
+}
+
+/**
+ * Insets import declaration.
+ *
+ * NOTE: method jimport has extern dependencies - see its dokumentation
+ *
+ * @param className which full package name import statement is inserted at line 5 in in current buffer
+ * @libray jimport
+ * @libray actionsDialog
+ */
+void doImport(String  className) {
+	final int atLineToInsert=5;
+	void command(jarClass) {
+		String[] packPath = jarClass.split(":");
+		String pacName = packPath[1].replaceAll("/",".").replaceAll("\\.class\\s*$","");
+		if (pacName.length() > 1) {
+			buffer.insert(buffer.getLineEndOffset(atLineToInsert-2),"import "+pacName+";\n");
+			view.getStatus().setMessage(jarClass.replaceAll("\\.class\\s*$",""));
+		} else
+			view.getStatus().setMessage("Nothing inserted");
+	}
+	List classes = jimport(className);
+	if (classes.size() > 0 )
+		if (classes.size() > 1)
+			actionsDialog(this, NumSeq(classes,"Classes"),view);
+		else
+			command(classes.get(0));	
+	else
+		view.getStatus().setMessage(className+" ?");
+}
+
+void openMdFileInBaseDir(String mdBareFile) {
+	fileVisitor() {
+		boolean continueVisitFile(File f) {
+			if(f.getName().equals(mdBareFile+".md"))
+				pathName = f.getPath();
+			return true;
+		}
+		return this;
+	}
+	String pathName;
+	walkFileTree(new File(mdBaseDir()),fileVisitor(),2);
+	if (null==pathName)
+		view.getStatus().setMessage(mdBareFile+" ?");
+	else
+		jEdit.openFile(view,pathName);
+}
+
+void apiHelp(String word) {
+	
+	void command(jarClass) {
+		String[] packPath = jarClass.split(":");
+		browseThat(OSUrl(packPath[0])+packPath[1].replaceAll("\\.class\\s*$",".html"));
+	}
+	List classes = jimport(word);
+	if (classes.size() > 0 )
+		if (classes.size() > 1) 
+			actionsDialog(this, NumSeq(classes,"Classes"),view);
+		else
+			command(classes.get(0));
+	else {
+		view.getStatus().setMessage(word+" ?");
+	}
+}
+
+cyberkiss();
+	
+	

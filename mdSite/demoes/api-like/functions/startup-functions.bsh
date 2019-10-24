@@ -1,0 +1,60 @@
+
+linkLine() {
+	int lineCnt=0;
+	String apply(String linkName) {
+		return (lineCnt++ == 0 ? "<!-- head=listStyleNone.css -->\n\n" : "")+ 
+		"- <a href='"+linkName+".html' target='main_page'>"+linkName+"</a>";
+	}
+	return this;
+}
+
+functions() {
+	TreeMap files = new TreeMap();
+	boolean flushed;
+
+	String uniqueFileName(String fileName) {
+		int u=0;
+		String postStr;
+		do {
+			postStr = 0 == u++ 
+				? ""
+				: Character.toString((char)(48+u));
+		} while (files.containsKey(fileName+postStr));
+		return fileName+postStr;
+	}
+	Pattern p = Pattern.compile("//\\{\\{\\{\\s*([^\\n]+)\\n([\\s\\S]+?)\\n.*//\\}\\}\\}");
+	for (File f : new File(sDir()+"/startup").listFiles()) {
+		Matcher m = p.matcher(String.join("\n",readAllLines(f,false)));
+		while(m.find()) {
+			String bareFileName = uniqueFileName(m.group(1).replaceAll("\\(.+$","").replaceAll(" ","_").replaceAll("interface_","").replaceAll("\\[\\]","array"));
+			files.put(bareFileName,f);
+			String destFile = scriptPath.replaceAll("/[^/]+$","/"+bareFileName+".md");
+			if (isNewerOrSolitary(f,new File(destFile))) {
+				flushed=true;
+				toFile(	destFile,
+					"<!-- head=jquery.html+prettify.html+prettyClassify.js -->\n\n\t"
+					+String.join("\n\t",(m.group(2)+"\n}").split("\n")));
+			}
+			
+		}
+	}
+	String indexHtmlFile = scriptPath.replaceAll("/[^/]+$","/index.html");
+	if( !new File(indexHtmlFile).exists() || flushed)	
+		toFile(indexHtmlFile,
+		 "<!DOCTYPE html>\n"
+		+"<html>\n"
+		+"<head>\n"
+		+"<meta charset='utf-8'>\n"
+		+"<title>macros</title>\n"
+		+"</head>\n"
+		+"	<frameset cols = '30%, *'>\n"
+		+"	  <frame src = 'menu.html' name = 'menu_page' />\n"
+		+"	  <frame src = '"+files.firstEntry().getKey()+".html' name = 'main_page' />\n"
+		+"  </frameset>\n"
+		+"</html>\n");
+
+	String menuMdFile = scriptPath.replaceAll("/[^/]+$","/menu.md");
+	if (!new File(menuMdFile).exists() || flushed) 
+		toFile(menuMdFile,files.keySet(),linkLine());
+}
+functions();

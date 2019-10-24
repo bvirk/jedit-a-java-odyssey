@@ -1,0 +1,238 @@
+/* :tabSize=4:indentSize=4:noTabs=false:
+ * :folding=explicit:collapseFolds=1: 
+The folding style is important for lookup facility of macro startup */ 
+
+import org.gjt.sp.jedit.bsh.XThis;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+//{{{ String implCode(String  implFunc, String iFaceMethod, String lambText)
+/**
+ * Functionality being used in implemented interface functions objects of 
+ * Predicate, Mapper, Runnable, FileVisitor
+ * Can be used, under development to inspect the sourced implCode being made on run.
+ *
+ * Following two transistion makes it easier to represent Strings and embed regular expressions.
+ *
+ *  1. The "´" char is captured to represent double quotes. A statement, in normally code 
+ * 		str= "i am a string"
+ * becomes in stringified code
+ *		"str=´i am a string´"
+ * 
+ *  2. Backslaches becomes temporarily doubled to counteract the reduction when stringing strings.
+ *     In that way they can be written like in normal code.
+ *
+ * @param implFunc is the name of the function being runned from StringReader stream.
+ * @param iFaceMethod is signature of the interface function that java 8+ has to find, eg. boolean test(item) for predicates
+ * @param lambText is like the lambda text af java 8+, perhaps with some limitation. Parentheses around call parameter is optional.
+ * as in java 8+ a single expression does not need return statement, trailed semicolon or curly brackets sourroundings.
+ * This simple emulating of lambda has no mechanism for access to variables by name of called place - those 'effective finales' in java8+
+ * The woraround is five arguments, arg1,arg2,arg3,arg4,arg5 and overloading in those implementing function definitions to convenient numbers of parameters.
+ * In other words - inside the code block of lambText, arg1-arg5 can be used to access the parameters implFunc is called with.
+ * If such a parameter is an object, it can be accessed inside the lambText code - eg. method append() of StringBuffer to return 
+ * a String value. Assignment with arg1-arg5 as lvalue won't work - the inner mechanism of references must be taken in account.
+ * @return String occurence of method which name is given from parameter implFunc
+ */
+String implCode(String  implFunc, String iFaceMethod, String lambText) {
+	String[] code = lambText.replaceAll("\\s*\\((.*)\\)\\s*->","$1->").split("->");
+	boolean hasCurlies= code[1].matches("\\s*\\{.+\\}\\s*");
+	return implFunc+"(arg1,arg2,arg3,arg4,arg5) { arg1() { return arg1; } " + iFaceMethod + "("+ code[0] + ") "
+		+ ( hasCurlies ? "" :"{ return " )
+		+ code[1].replaceAll("\\\\","\\\\\\\\").replaceAll("\"","\\\\\"").replaceAll("´","\"")
+		+ ( hasCurlies ? "": ";}" ) + " return this; }";
+} //}}}
+
+//{{{ XThis FileVisitor(arg1,arg2,arg3,arg4,arg5,lambText)
+/**
+ * Returns a FileVisitor object  which implements boolean continueVisitFile(File file) 
+ *
+ * @param argX is five arguments that also can be used as persistent values among calls of interface function 
+ * @param lambText is the interface method parmeter list and method body source with a notation of java 8  -> operation
+ */
+XThis FileVisitor(arg1,arg2,arg3,arg4,arg5,lambText) {
+	BeanShell.runScript(jEdit.getActiveView(),null
+		,new StringReader(implCode("visitorImpl","boolean continueVisitFile", lambText)),false);
+	return visitorImpl(arg1,arg2,arg3,arg4,arg5);
+}
+XThis FileVisitor(lambText) { return FileVisitor(0,0,0,0,0,lambText); }
+XThis FileVisitor(arg1,lambText) { return FileVisitor(arg1,0,0,0,0,lambText); }
+XThis FileVisitor(arg1,arg2,lambText) { return FileVisitor(arg1,arg2,0,0,0,lambText); } 
+XThis FileVisitor(arg1,arg2,arg3,lambText) { return FileVisitor(arg1,arg2,arg3,0,0,lambText); } //}}}
+
+//{{{ XThis Predicate(arg1,arg2,arg3,arg4,arg5,lambText)
+/**
+ * Return a Predicate object  which implements boolean test(T t) 
+ *
+ * @param argX is five arguments that also can be used as persistent values among calls of interface function 
+ * @param lambText is the interface method parmeter list and method body source with a notation of java 8  -> operation
+ * @return function object
+ */
+XThis Predicate(arg1,arg2,arg3,arg4,arg5,lambText) {
+	BeanShell.runScript(jEdit.getActiveView(),null
+		,new StringReader(implCode("predImpl","boolean test", lambText)),false);
+	return predImpl(arg1,arg2,arg3,arg4,arg5);
+}
+// overloadet
+XThis Predicate(lambText) { return Predicate(0,0,0,0,0,lambText); }
+XThis Predicate(arg1,lambText) { return Predicate(arg1,0,0,0,0,lambText); }
+XThis Predicate(arg1,arg2,lambText) { return Predicate(arg1,arg2,0,0,0,lambText); } //}}}
+
+//{{{ XThis Mapper(arg1,arg2,arg3,arg4,arg5,lambText)
+/**
+ * Returns a Mapper object which implements T apply(T t)
+ *
+ * @param argX is five arguments that also can be used as persistent values among calls of interface function 
+ * @param lambText is the interface method parmeter list and method body source with a notation of java 8  -> operation
+ * @return function object to be used for mapping Stream items to converted items.
+ */
+XThis Mapper(arg1,arg2,arg3,arg4,arg5,lambText) {
+	BeanShell.runScript(jEdit.getActiveView(),null
+		,new StringReader(implCode("mapImpl","apply", lambText)),false);
+	return mapImpl(arg1,arg2,arg3,arg4,arg5);
+}
+
+// overloadet
+XThis Mapper(lambText) { return Mapper(0,0,0,0,0,lambText); } //}}}
+
+//{{{ XThis Runnable(implCode)
+/**
+ * Returns an object which implement void run() 
+ *
+ * @param argX is five arguments that also can be used as persistent values among calls of interface function 
+ * @param lambText is the interface method parmeter list and method body source with a notation of java 8  -> operation
+ * @return function object
+ */
+XThis Runnable(arg1,arg2,arg3,arg4,arg5,lambText) {
+	BeanShell.runScript(jEdit.getActiveView(),null
+		,new StringReader(implCode("runnableImpl","void run", lambText)),false);
+	return runnableImpl(arg1,arg2,arg3,arg4,arg5);
+}
+// overloadet
+XThis Runnable(lambText) { return Runnable(0,0,0,0,0,lambText); }
+XThis Runnable(arg1,lambText) { return Runnable(arg1,0,0,0,0,lambText); } //}}}
+
+//{{{ XThis Beam(String[] strArr)
+/**
+ * Short containment of Stream for reduced typing
+ *
+ * @param strArr constructs contained Stream
+ * @return Function object containing a java.util.stream.Stream reference as the parameter it is called with. 
+ */
+XThis Beam(String[] strArr) {
+	return Beam(Arrays.asList(strArr));
+} //}}}
+
+//{{{ XThis Beam(List list)
+/**
+ * Short containment of Stream for reduced typing
+ * @param list constructs contained Stream 
+ * @return Function object containing a java.util.stream.Stream reference as the parameter it is called with. 
+ */
+XThis Beam(List list) {
+	return Beam(list.stream());
+} //}}}
+
+//{{{ XThis Beam(Stream stream)
+/**
+ * Short containment of Stream for reduced typing
+ *
+ * @param stream of type java.util.stream.Stream
+ * @return Function object containing a java.util.stream.Stream reference as the parameter it is called with. 
+ */
+XThis Beam(Stream stream) {
+	// Stream stream = list.stream();
+	XThis self = this;
+	XThis funcObj;
+	
+	XThis funcParm() { return funcObj; }
+	
+	XThis filter(arg1,arg2,arg3,arg4,arg5,String lambText) {
+		stream = stream.filter(Predicate(arg1,arg2,arg3,arg4,arg5,lambText));
+		return self;
+	}
+
+	XThis filter(arg1,arg2,String lambText) {
+		return filter(arg1,arg2,0,0,0,lambText);
+	}
+	XThis filter(arg1,arg2,arg3,String lambText) {
+		return filter(arg1,arg2,arg3,0,0,lambText);
+	}
+	XThis filter(arg1,String lambText) {
+		return filter(arg1,0,0,0,0,lambText);
+	}
+	
+	XThis filter(String lambText) {
+		return filter(0,0,0,0,0,lambText);
+	}
+	
+	XThis map(arg1,arg2,arg3,arg4,arg5,lambText) {
+		funcObj = Mapper(arg1,arg2,arg3,arg4,arg5,lambText);
+		stream = stream.map(funcObj);
+		return self;
+	}
+
+	XThis map(arg1,arg2,arg3,lambText) {
+		return map(arg1,arg2,arg3,0,0,lambText);
+	}
+	XThis map(arg1,arg2,lambText) {
+		return map(arg1,arg2,0,0,0,lambText);
+	}
+	
+	XThis map(arg1,lambText) {
+		return map(arg1,0,0,0,0,lambText);
+	}
+
+	XThis map(lambText) {
+		return map(0,0,0,0,0,lambText);
+	}
+	
+	XThis sorted() {
+		stream = stream.sorted();
+		return self;
+	}
+	long count() {
+		return stream.count();
+	}
+	List toList() {
+		return stream.collect(Collectors.toList());
+	}
+	return this;
+} //}}}
+
+//{{{ XThis Beam(File dir)
+/**
+ * stream of java.io.File objects wrapped in a Beam
+ *
+ * @param dir, the root for walking
+ * @return the Beam that holds the stream of java.io.File objects
+ */
+XThis Beam(File dir) {
+	return Beam(dir,FileVisitor(new ArrayList(),"item -> { arg1.add(item); return true; }"),-1);
+} //}}}
+
+//{{{ XThis Beam(File dir, int maxDepth)
+/**
+ * stream of java.io.File objects wrapped in a Beam
+ *
+ * @param dir, the root for walking
+ * @param maxDepth subdir descend count
+ * @return the Beam that holds the stream of java.io.File objects
+ */
+XThis Beam(File dir, maxDepth) {
+	return Beam(dir,FileVisitor(new ArrayList(),"item -> { arg1.add(item); return true; }"),maxDepth);
+} //}}}
+
+//{{{ XThis Beam(File dir, XThis fileVisitor, int maxDepth)
+/**
+ * stream of java.io.File objects wrapped in a Beam
+ *
+ * @param dir, the root for walking
+ * @param fileVisitorLambda - the source that puts java.io.File objects on the list
+ *                            that becomes the stream.
+ * @param maxDepth subdir descend 
+ * @return the Beam that holds the stream of java.io.File objects
+ */
+XThis Beam(File dir, XThis fileVisitor, int maxDepth) {
+	walkFileTree(dir,fileVisitor,maxDepth);
+	return Beam(fileVisitor.arg1());
+} //}}}

@@ -1,0 +1,193 @@
+/* :tabSize=4:indentSize=4:noTabs=false:
+ * :folding=explicit:collapseFolds=1: 
+ * The folding style is important for lookup facility of macro startup */ 
+
+ 
+/**
+ * Utilities use by plugin TxtConv, direct or by beanshell script files.
+ */
+
+//{{{ String sitePages()
+/**
+ * javascript implementation of Jedit bufferswitcher like dropdown list data.
+ *
+ * @return String of javascript of bufferswitcher data
+ */
+String sitePages() {
+	String sitePagesImpl(String baseDir, String baseUrl) { 
+		List files = Beam(new File(baseDir),FileVisitor(new ArrayList(),baseDir,baseUrl,
+			"f->{ "+
+			"if (f.getName().endsWith(´.html´)) {"+
+				"String relative = f.getPath().substring(arg2.length());"+
+				"arg1.add(relative.replaceAll(´^.+/´,´´)+´ (´+arg3+relative.replaceAll(´/[^/]+$´,´´)+´/)´);"+
+			"}"+
+			"return true; }"),1).toList(); 
+		
+		return
+			 "<script>\n"
+			+"(function( glObj) {\n"
+			+"\tglObj.pages = [\n"
+			+"\t \""+String.join("\"\n\t,\"",toArray(files))+"\"\n"
+			+"\t];\n"
+			+"}( window.myGlb = window.myGlb || {}));\n"
+			+"</script>";
+	} 
+	return sitePagesImpl(mdBaseDir(),mdBaseUrl());
+} //}}}
+
+//{{{ StringBuilder pageheading(String scriptFileName, String begPatt, String endPatt, String topLines, String leadAppend)
+/**
+ * Markdown page heading with included, pattern delimited, block of lines. Used for presenting code as markdown.   
+ *
+ * @param scriptFileName of file which pattern surounded section shall be returned 
+ * @param begPatt of lines to be returned
+ * @param endPatt of lines to be retuned
+ * @param topLines initial lines to be returned.
+ * @param leadAppend for every line - eg. use "\t" if some lines isn't prefixed   
+ * @return StringBuilder of lines of code to be shown
+ */
+StringBuilder pageheading(String scriptFileName, String begPatt, String endPatt, String topLines, String leadAppend) {
+			
+	StringBuilder lines = new StringBuilder().append(topLines).append('\n');
+	boolean inBlk=false;
+	for (String line: readAllLines(scriptFileName)) 
+		if (inBlk)
+			if (line.trim().startsWith(endPatt)) {
+				inBlk=false;
+				break;
+			} else 
+				lines.append(leadAppend).append(line).append('\n');
+		else
+			if (line.trim().startsWith(begPatt))
+				inBlk=true;
+	return lines.append("\n");
+} //}}}
+
+//{{{ String mdBaseDir()
+/**
+ * Single source of plugin txtConv basedir for markdown based site
+ *
+ * @return filesystem root path of basedir
+ */
+String mdBaseDir() { 
+	return jEdit.getProperty("options.txtconv.basedir");
+} //}}}
+
+//{{{ String mdBaseUrl()
+/**
+ * Single source of plugin txtConv baseurl for markdown based site
+ *
+ * @return filesystem root path of basedir
+ */
+String mdBaseUrl() { 
+	return jEdit.getProperty("options.txtconv.baseurl");
+} //}}}
+
+//{{{ String linksReferencesAndLinks(boolean repeatRefsAsLinks,boolean includeHashLinks, int maxDepth)
+/**
+ * First a block of Markdown link reference definitions created by traversing baseDir to a depth of parameter maxDepth (-1=unlimited). 
+ * All files with suffix md|jpg|png|gif   
+ * becomes a link reerence definition which label is the file's barename without suffix and its destination link 
+ * a baseUrl prefix to baseDir relative reference. The definitions is trailed with a link title if it appears in file 
+ * linksreferencesTitlesFileName() 
+ * After that, depent on repeatRefsAsLinks, an alhpabetic ordered markdown list of those links
+ *
+ * @param repeatRefsAsLinks makes list of markdown links follow list referenes block
+ * @param recDepthMax limits depth of recursion
+ * @return String, beeing first, lines of a  block of markdown link reference definitions, 
+ * and thereafter, depent on repeatRefsAsLinks, an alhpabetic ordered markdown list of those links  
+ */
+String linksReferencesAndLinks(boolean repeatRefsAsLinks,boolean includeHashLinks, int maxDepth) {
+	
+	fileVisitor(TreeMap files, int relpartPos,String baseUrl, boolean includeHashLinks) {
+		boolean continueVisitFile(File f) {
+			if (f.getName().matches(".+\\.(md|jpg|png|gif)")) {
+				String relative = f.getPath().substring(relpartPos);
+				boolean isMd = f.getName().endsWith(".md"); 
+				files.put(f.getName().replaceAll("\\.\\w+$",""),baseUrl
+					+ (isMd
+						? relative.replaceAll("\\.\\w+$",".html")
+						: relative));
+					if (isMd && includeHashLinks) {
+						Pattern anchors = Pattern.compile("<a[^>]+id=['\"](\\S+)['\"]");
+						Matcher m = anchors.matcher(String.join(" ",toArray(readAllLines(f.getPath()))));
+							while (m.find())
+								files.put(m.group(1),baseUrl+relative.replaceAll("\\.\\w+$",".html")+"#"+m.group(1));
+					}
+			}
+			return true;
+		}
+		return this;
+	}
+	String linkTitle(String propertyKey) {
+		String title = titles.getProperty(propertyKey);
+		return null==title 
+			? ""
+			: " '"+title+"'";
+	}
+	
+	String baseDir = mdBaseDir();
+	if (null==baseDir) {
+		jEdit.getActiveView().getStatus().setMessage("Basedir not set");
+		return "";
+	}
+	
+	
+	TreeMap files = new TreeMap();
+	Properties titles = new Properties();
+	File titlesFile = new File(linksreferencesTitlesFileName());
+	if (titlesFile.exists())
+		titles.load(new FileInputStream(titlesFile));
+	
+	walkFileTree(
+		 new File(baseDir)
+		,fileVisitor(files,baseDir.length()+1,mdBaseUrl(),includeHashLinks)
+		,maxDepth);
+	
+	StringBuilder links = new StringBuilder();
+	StringBuilder useList = new StringBuilder().append("\n\n");
+	for (String s : files.keySet()) {
+		links.append("[").append(s).append("]: ").append(files.get(s)).append(linkTitle(s)).append("\n");
+		useList.append("- [").append(s).append("]\n");
+	}
+	return links.toString()+ (repeatRefsAsLinks ? useList.append("\n").toString() : "");
+} //}}}
+
+//{{{ String linksReferencesFollowedByLinks()
+/**
+ * First a block of Markdown link reference definitions created by traversing baseDir to a depth of 1. 
+ * All files with suffix md|jpg|png|gif becomes a link reerence definition which label is the file's barename 
+ * without suffix and its destination link a baseUrl prefix to baseDir relative reference. 
+ * The definitions is trailed with a link title if it appears in file linksreferencesTitlesFileName() 
+ * After that, an alhpabetic ordered markdown list of those links
+ *
+ * @return String, beeing first, lines of a  block of markdown link reference definitions, 
+ * and thereafter an alhpabetic ordered markdown list of those links  
+ */
+String linksReferencesFollowedByLinks() {
+	return linksReferencesAndLinks(true,false,1);
+} //}}}
+
+//{{{ String linksReferences()
+/**
+ * Block of Markdown link reference definitions created by traversing baseDir to a depth of 3. 
+ * All files with suffix md|jpg|png|gif becomes a link reerence definition which label is the file's barename 
+ * without suffix and its destination link a baseUrl prefix to baseDir relative reference. 
+ * The definitions is trailed with a link title if it appears in file linksreferencesTitlesFileName() 
+ * 
+ * @return String, beeing lines of a block of markdown link reference definitions. 
+ */
+String linksReferences() {
+	return linksReferencesAndLinks(false,false,3);
+} //}}}
+
+//{{{ String linksreferencesTitlesFileName()
+/**
+ * Single source of truth demanded lookup, for adding link titles in the link references definition list
+ * generated on each markdown compilation.
+ *
+ * @return file name of titles to links in the link references definition list
+ */
+String linksreferencesTitlesFileName() {
+	return mdBaseDir()+"/linksreferencestitles.properties";
+} //}}}

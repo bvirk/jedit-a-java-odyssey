@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="../../css/sitev1.css" rel="stylesheet" >
+<script src="../../js/jquery.min.js" ></script>
+<style>
+a {
+	color: #000;
+	font-weight: bold; 
+	text-decoration: underline indianred;
+}
+.pictograhp {
+	font-size: 3em;
+	margin-right: 15px;
+	margin-left: 3px;
+	vertical-align: middle;
+}
+#uniPicLink {
+	
+	position:absolute;
+	border-radius: 5px;;
+	background:rgba(0,0,0,0.8);
+	padding-right:15px;
+	color:#fff;
+}</style>
+<script>
+$(function() {
+	$("a").hover(function(e) {
+			$(this).css({'font-weight': 'normal','text-decoration': 'none'});
+			titleAtt=this.title.split(";");
+			this.t=undefined;
+			if(/^[0-9A-Fa-f]{4,5}$/.test(titleAtt[0]) && titleAtt.length==2) {
+				this.t=this.title;
+				this.title="";
+				mes="<span class='pictograhp'>&#x"+titleAtt[0]+";</span>"+titleAtt[1];
+				$("body").append("<p id='uniPicLink'>"+mes+"</p>");
+				$("#uniPicLink")
+					.css("left",(e.pageX + 20) + "px")
+					.css("top",(e.pageY - 20) + "px")
+					.fadeIn("fast");
+			}
+	},function() {
+		$(this).css({'font-weight': 'bold','text-decoration': 'underline indianred'});
+		if (this.t != undefined) {
+			this.title=this.t;
+			$("#uniPicLink").remove();
+		}
+	});
+}
+);</script>
+<title>rendering</title>
+</head>
+<body>
+
+<section class="content">
+<!-- head=sitev1.css.html+jquery.html+pictoLinks.css+pictoLinks.js&body=pagev1.html -->
+<h3>The renering mechanism</h3>
+<ul>
+<li>... uses a querystring formatted parameterlist in a html comment in line 0 which lists adjacent sibling of head and body elements - siblings which value is content of their-by named files</li>
+<li>file names with suffix .html used as siblings must contain valid html and consists of a list of one or more elements at top level</li>
+<li>extern referenced css and js lays in basedir or remote as opposed to 'siblings' that lays in Jedit plugin directory</li>
+<li>file names with suffix .css or .js used as siblings do not have their html tags surroundings.</li>
+<li>about file names with suffix .md used as sibling(s)<ul>
+<li>must only be html body element childs.</li>
+<li>is meant to contain markdown source</li>
+<li>comes after the source that becomes first child of the body element</li>
+<li>is only meant to be used when source isn't included by other files.</li>
+</ul>
+</li>
+<li>... uses include with includes directives mechanism to include file content in file content.</li>
+<li>the final html file can consist of more additional blocks to the source than listed in querystring in line 0, due to the include directive</li>
+<li>the include directive can contain aliases for filenames</li>
+<li>one alias is sourcefile</li>
+<li>detection in the inclusion mechanism for use of sourcefile gives the possibilty to select between placing markdown conversioned html deep in a html structure or as sole body child.</li>
+<li>a querystring parameter: ´mdLead´ can contain a name of a global BeanShell method which signature is String ()</li>
+<li>within basedir, the settings of the 'markdown lead function' is the default value of mdLead if it isn't overridden by a litteral appearance in line 0.</li>
+<li>The string returned by 'running mdLead' is placed before the markdown from source.</li>
+</ul>
+
+</section>
+
+</body>
+</html>

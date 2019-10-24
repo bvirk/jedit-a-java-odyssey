@@ -1,0 +1,845 @@
+/* :tabSize=4:indentSize=4:noTabs=false:
+ * :folding=explicit:collapseFolds=1: 
+The folding style is important for lookup facility of macro startup */ 
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+
+nulSA = new String[]{};
+
+
+//{{{ String sDir()
+/**
+ * gets jEdit SettingsDirectory
+ *
+ * @return Jedit SettingsDirectory
+ */
+String sDir() {
+	return jEdit.getSettingsDirectory();
+} //}}}
+
+//{{{ String ux(String possibleBackslashed)
+/**
+ * Needed multiplatform workarounds prior certain regex manipulations
+ *
+ * @param possibleBackslashed path (windows)
+ * @return forward slashed path
+ */
+String ux(String possibleBackslashed) { 
+	return possibleBackslashed.replaceAll("\\\\","/"); 
+} //}}}
+
+//{{{ String[] toArray(Object toArrayAble)
+/**
+ * Shortcut for toArrayAble.toArray(String[]), where toArrayAble is a container instance implementing Collection 
+ *  
+ * @param any toArrayAble container eg. ArrayList
+ * @return String[] array
+ */
+String[] toArray(Object toArrayAble) {
+    return toArrayAble.toArray(new String[toArrayAble.size()]);
+} //}}}
+
+//{{{ interface List asList(String i1,String i2,String i3)
+/**
+ * Beanshells absence of varargs motivated shortcut for Arrays.asList( ...
+ *
+ * @param ix is list items of type String
+ * @return List
+ */
+List asList(String i1,String i2,String i3) {
+	return Arrays.asList(new String[]{i1,i2,i3});
+} //}}}
+
+//{{{ interface List asList(String i1,String i2)
+/**
+ * Beanshells absence of varargs motivated shortcut for Arrays.asList( ...
+ *
+ * @param ix is list items of type String
+ * @return List
+ */
+List asList(String i1,String i2) {
+	return Arrays.asList(new String[]{i1,i2});
+} //}}}
+
+//{{{ interface List asList(String i1)
+/**
+ * Beanshells absence of varargs motivated shortcut for Arrays.asList( ...
+ *
+ * @param ix is list items of type String
+ * @return List
+ */
+List asList(String i1) {
+	return Arrays.asList(new String[]{i1});
+} //}}}
+
+//{{{ String mEval(String expressionList)
+/**
+ * Convenient avoidance of 'Math' prefixing matematically functions, and build expression as serie af expression of which the value of rightmost 
+ * is returned. An example illustates:
+ *
+ * A spot, with a beam angle of 36 degreese is places 1.3 meter above a table. What is the diameter of the beam at table? 
+ * mEval("angle=36;height=1.3;2*height*tan(pi*angle/2/180)")
+ *
+ * @param semicolon delimited lists of numeric expressions or assigments. Space isn't allowed
+ * @return value of rightmost expression
+ */
+String mEval(String exp) {
+	return ""+BeanShell.eval(jEdit.getActiveView(),BeanShell.getNameSpace(),
+		exp.replaceAll("(tan|cos|sin|sqrt|atan|acos|asin|sqrt|pow|exp|log)\\(","Math.$1(").replaceAll("(?i)PI","Math.PI"));
+} //}}}
+
+//{{{ interface List readAllLines(File file)
+/**
+ * Iterabel, comparable, toArrayAble, random accessible list of utf-8 encoded file lines
+ *
+ * @param file to read from
+ * @return List of utf-8 encoded lines of file or an empty list on IO. If supressIOException
+ * is true an IOException just return an empty List.
+ */
+List readAllLines(File file, boolean supressIOException) {
+	List retval;
+	try {
+		retval = Files.readAllLines(file.toPath(),Charset.forName("UTF-8"));
+	} catch(IOException e) {
+		if (supressIOException) 
+			retval = new ArrayList();
+		else
+			throw e;
+	}
+	return retval;
+} //}}}
+
+//{{{ interface List readAllLines(String fileName)
+/**
+ * Iterabel, comparable, toArrayAble, random accessible list of utf-8 encoded file lines
+ *
+ * @param file name of file to read from
+ * @return  List of utf-8 encoded lines of file
+ */
+List readAllLines(String fileN) {
+	return readAllLines(new File(fileN),false);
+} //}}}
+
+//{{{ interface List  fileLines(String fileName, String startPattern, String endPattern)
+/**
+ * Lines of pattern delimited block. The pattern lines is not inclusive the block 
+ *
+ * @param fileName with lines
+ * @param startPattern matches the line before returned line 0
+ * @param endPattern matches the line after last line in returned list
+ * @return lines in pattern delimited block
+ */
+List  fileLines(String fileName, String startPattern, String endPattern) {
+	return Beam(Files.lines(new File(fileName).toPath()))
+		.filter(false,"item-> {"+
+			"if ( arg1 == true )"+
+			"    return item.matches(´"+endPattern+"´)  ? (arg1=false) : true;"+
+			"arg1 = item.matches(´"+startPattern+"´);"+
+			"return false; }")
+		.toList();	
+} //}}}
+
+//{{{ interface fileLines(String fileName, String blockId)
+/**
+ * Lines of pattern delimited block. The pattern lines is not inclusive the block 
+ *
+ * @param fileName with lines
+ * @param blockId forms parameter startPattern for calling fileLines(String fileName, String startPattern, String endPattern) 
+ * @return lines in pattern delimited block
+ */
+List fileLines(String fileName, String blockId) {
+	return fileLines(fileName,"/\\*\\*\\*"+blockId,"\\s*\\*\\*\\*/");
+} //}}}
+
+//{{{ interface List startupBeanshellFilesLines()
+/**
+ * All lines in  jEdit settings directory startup directory files
+ *
+ * @return List of lines in all jEdit settings directory startup directory files 
+ */
+public List startupBeanshellFilesLines() {
+	List lines;
+	for (File f : new File(sDir()+"/startup").listFiles())
+		if (null==lines) 
+			lines = readAllLines(f);
+		else
+			lines.addAll(readAllLines(f));
+	return lines;
+} //}}}
+
+//{{{ void saveAllStartupFiles(View view)
+/**
+ * saves all dirty files in jeditSettings/startup
+ *
+ * @param view context
+ */
+boolean saveAllStartupFiles(View view) {
+	boolean wasDirty;
+	for (Buffer b: jEdit.getBuffers()) 
+		if (ux(b.getPath()).startsWith(sDir()+"/startup/"))
+			if(b.isDirty()) {
+				wasDirty=true;
+				while(!b.save(view,null));
+			}
+	return wasDirty;
+} //}}}
+
+//{{{ void toFile(String fileName,thing) 
+/**
+ * Things being possible an array or iterable saved as file in charset utf-8
+ *
+ * @param fileName to hold thing
+ * @param thing to be saved as file in line broken toString() occurrence
+ */
+void toFile(String fileName,Object thing) {
+	toFile(fileName,thing,null);
+} //}}}
+
+//{{{ void toFile(String fileName,Object thing,Object filter) 
+/**
+ * Things being possible an array or iterable, converted saved as a file in charset utf-8
+ *
+ * @param fileName to hold thing
+ * @param thing to be saved as file in line broken toString() occurrence
+ * @param filter to transfer each line to something
+ */
+void toFile(String fileName,Object thing,Object function) {
+	OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(fileName),"utf-8"); 
+	if (thing.getClass().isArray() || thing instanceof AbstractCollection )
+		for (Object line : thing)
+			osw.write(""+(null==function ? line : function.apply(line))+"\n");
+	else osw.write(""+(null==function ? thing : function.apply(thing)));
+	osw.close();
+} //}}}
+
+//{{{ void appendToFile(String fileName, List lines)
+/**
+ *	Appends lines to file, charset utf-8
+ *
+ * @param fileName of file to which lines are appended
+ * @param lines to be appended
+ */
+void appendToFile(String fileName, List lines) {
+	List oldLines = readAllLines(new File(fileName),true);
+	oldLines.addAll(lines);
+	toFile(fileName,oldLines);
+} //}}}
+
+//{{{ interface List jimport(String className)
+
+// OS: Linux | Windows 
+/**
+ * Get package name of class. It is used for two purposes.
+ *  1. Insertion of import declaration
+ *  2. Getting api help from Oracle's api documentation
+ *
+ * It uses an extern script, 'jimport' or 'jimport.bat'
+ * A prioritized list of jars can be searched - shown below facilitates jedit plugin development
+ * The script shall be reachable from a system shell - being in system environment PATH.
+ *
+ * NOTE (for the uninitiated and forgetful)
+ * on linux, chmod +x jimport
+ * on windows, grep and tr from unxutils required (or their equals - test!)
+ */ 
+ // Linux - (change jeditSettings or perhaps other directories)
+ 
+ // | #!/bin/bash
+ // | if [ -z $1 ]; then
+ // |	exit 2
+ // | fi
+ // | echoImport() { 
+ // | 	if [ -f $2 ];then
+ // | 		class=`jar -tf $2|grep /${1}.class`
+ // | 		if [ -n "${class}" ];then
+ // | 			jarFile=${2##*/}
+ // | 			echo ${jarFile%.*}:${class}
+ // | 		fi
+ // | 			return 0
+ // | 	fi
+ // | }
+ // | 
+ // | jeditSettings=/home/bvirk/.jedit
+ // | 
+ // | echoImport $1 /usr/lib/java/jre/lib/rt.jar
+ // | echoImport $1 /usr/local/share/jEdit/5.5.0/jedit.jar
+ // | # echoImport $1 ${jeditSettings}/jars/TxtConvPlugin.jar
+ // | # echoImport $1 ${jeditSettings}/jars/txtmark.jar
+ // | # echoImport $1 ${jeditSettings}/jars/jsoup-1.11.3.jar 
+ 
+ 
+ 
+ 
+ 
+ 
+ // Windows with unxUtils installed (grep tr), .bat file
+ 
+ // | @echo off
+ // | if n%1==n exit 2
+ // | setlocal
+ // | goto main
+ // | 
+ // | :invokejar
+ // | if not exist %1 exit /b 1
+ // | FOR /F "usebackq tokens=*" %%b IN (`jar -tf %1 ^|grep /%2.class ^|tr -s "\r\n" " "`) DO set classes=%%b
+ // | IF NOT "%classes%"=="" ( 
+ // | 	echo %~n1:%classes%
+ // | 	set classes=
+ // | )
+ // | exit /b 0                                    
+ // | 
+ // | 
+ // | :main
+ // | if n%1==n goto endofprogram
+ // | call :invokejar C:\Programmer\java\jdk1.8.0\jre\lib\rt.jar %1
+ // | call :invokejar C:\Programmer\jEdit\jedit.jar %1
+ // | rem call :invokejar D:\home\dev\APPLIC~1\jEdit\jars\TxtConvPlugin.jar %1
+ // | rem call :invokejar D:\home\dev\APPLIC~1\jEdit\jars\txtmark.jar %1
+ // | rem call :invokejar D:\home\dev\APPLIC~1\jEdit\jars\jsoup-1.11.3.jar %1
+ // | 
+ // | :endofProgram
+ // | endlocal
+ 
+/**
+ * @param onlyOracle limits returned packages for those in rt.jar
+ * @param className 
+ * @return package name of class
+ */
+List jimport(String className) {
+	List classes = new ArrayList();
+	int scriptIsMissingRetval() {
+		return OperatingSystem.isUnix() ?  127 : 1;
+	}
+	if(OperatingSystem.isUnix() ||OperatingSystem.isWindows() ) {
+		String[] cmds = {
+			OperatingSystem.isUnix()
+				? "/bin/bash"
+				:"cmd.exe" 
+			,OperatingSystem.isUnix()
+				?"-c"
+				: "/c"
+			,"jimport "+className};
+		Process proc = Runtime.getRuntime().exec(cmds); 
+		BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line = br.readLine()) != null) {
+			String[] jarPacks = line.split(":");
+				for (String s: jarPacks[1].split(" "))
+					classes.add(jarPacks[0]+":"+s);
+		}
+		br.close();
+		int retval;
+		try {
+			proc.waitFor();
+		} catch (InterruptedException e ) {
+			retval=scriptMissingRetval();
+		}	
+		if (retval == 0)
+			retval = proc.exitValue();
+		if (retval == scriptIsMissingRetval())
+			classes.add("scriptNotFound: ");
+		return classes;
+	}
+} //}}}
+
+//{{{ String elSubst(String input,Properties properties) 
+/**
+ * el for the 'JSP Expression Language' - function elSubst replaces ${foo} in "some ${foo} thing" with the value of foo in some properties 
+ * It's a string substitution princip also used in Apache ant build files.
+ * This simple implementation below makes ${}whatever} to ${whatever} without dereferencing to any property value. 
+ *
+ * @param properties used to look values
+ * @param input string
+ * @return String being EL substituted
+ */
+String elSubst(String input,Properties properties) {
+	Pattern pat = Pattern.compile("\\$\\{([^}]+)\\}");
+	Matcher m = pat.matcher(input);
+	while (m.find()) {
+		input = input.substring(0,m.start(1)-2)+ properties.getProperty(m.group(1),"${}"+m.group(1)+"}") +input.substring(m.end(1)+1);
+		m =	pat.matcher(input);
+	}
+	return input.replaceAll("\\$\\{\\}([^}]+)\\}","\\${$1}");
+} //}}}
+
+//{{{ XThis UniProp(String fileName, String startPattern, String endPattern) 
+/**
+ * Reads properties from startpattern/endpattern lines delimited block in file. Return a Properties like object which getProperty/setProperty 
+ * methods gives indirect access to jEdit properties. Eg. if a value is ${jedit.<jedit property>}, where <jedit property>, should 
+ * be read as a placeholder for a jedit property, it is the values of that Jedit property that is accessed. 
+ * Note, too, the convenient mathingSortedKeys method.
+ *
+ * @param endPattern 
+ * @param startPattern
+ * @param fileName
+ * @return org.gjt.sp.jedit.bsh.XThis object
+ *
+ */
+org.gjt.sp.jedit.bsh.XThis UniProp(String fileName, String startPattern, String endPattern) {
+	String getProperty(String key) {
+		String val = prop.getProperty(key);
+		if (val != null && val.matches("\\$\\{jedit\\.[^\\}]+}"))
+			val = jEdit.getProperty(val.replaceAll("\\$\\{jedit\\.([^\\}]+)}","$1"));
+		return val;
+	}
+ 	void setProperty(String key,String val) {
+ 		String fval = prop.getProperty(key);
+		if (fval != null && fval.matches("\\$\\{jedit\\.[^\\}]+}")) {
+			jEdit.setProperty(fval.replaceAll("\\$\\{jedit\\.([^\\}]+)}","$1"),val);
+		} else
+			prop.setProperty(key,val); 
+ 	}
+	List matchingSortedKeys(String regex) {
+		ArrayList mk = new ArrayList();
+		for (s : prop.keySet())
+			if (s.matches(regex))
+				mk.add(s);
+		Collections.sort(mk);
+		return mk;
+	}
+	Properties properties() { return prop; }
+	Properties prop= new Properties();
+	boolean inBlk=false;
+	for (String line: readAllLines(fileName))
+		if (inBlk)
+			if (line.startsWith(endPattern))
+				inBlk=false;
+			else {
+				String [] kv =line.trim().split("=");
+				prop.setProperty(kv[0],kv[1]);
+			}
+		else
+			if (line.startsWith(startPattern))
+				inBlk=true;
+	return this;
+} //}}}
+
+//{{{ interface List startsWithPropertyKeys(String startsWith,Properties prop) 
+/**
+ * startswith key filtered list of properties key=value strings 
+ *
+ * @param startsWith common leftmost part of set of property key
+ * @param properties from which extracting those with common startswith keys
+ * @return list of key=value strings
+ */
+List startsWithPropertyKeys(String startsWith,Properties prop) {
+	List ar = new ArrayList();
+	for (s:prop.stringPropertyNames())
+		if (s.startsWith(startsWith))
+			ar.add(s+"="+prop.getProperty(s));
+	Collections.sort(ar);
+	return ar;
+} //}}}
+
+//{{{ interface List jEditSWP(String startsWith)
+/**
+ * startswith key filtered list of jEdit properties key=value strings 
+ *
+ * @param startsWith common leftmost part of set of property key
+ * @return list of key=value strings
+ */
+List jEditSWP(String startsWith) {
+	return startsWithPropertyKeys(startsWith,jEdit.getProperties());
+} //}}}
+
+//{{{ interface List systemSWP(String startsWith)
+/**
+ * startswith key filtered list of system properties key=value strings 
+ *
+ * @param startsWith common leftmost part of set of property key
+ * @return list of key=value strings
+ */
+List systemSWP(String startsWith) {
+	return startsWithPropertyKeys(startsWith,System.getProperties());
+} //}}}
+
+//{{{ void foundStartupFunction(String funcName,View view)
+/**
+ * foundStartupFunction opens file containing startup function and position carret at folding heading
+ * The function is identified by the commentline having the folding start pattern -
+ * if this doesn't match exactly the function isn't found.
+ * buffer gets locked - thus live with the inconvenient of unlocking and SOURCE IMMEDIATE! 
+ * using macro startup - thus, without manually saving.
+ *
+ * Resourcing a startup functions reveals the difference between updating and
+ defining - if the signature of a function is changed, two function exists 
+ until next time jEdit is started. Just remember to change all places where
+ function is used! in console use grep -nro in $JEDIT_SETTINGS and other *.bsh places
+ * (unxUtils in path in windows)
+ *
+ * @param funcname without signature (return type, parentheses or arguments) 
+ * @param view is 'predefined' view 
+ * @return boolean true if function name is found
+ */
+boolean foundStartupFunction(String funcName,View view) {
+	for (File f : new File(sDir()+"/startup").listFiles())
+		if (String.join(" ",readAllLines(f.getPath())).matches(".+?//\\{\\{\\{ ([\\w\\[\\]]+\\s+?)+"+funcName+"\\(.+")) {
+			if (jEdit.openFile(view, f.getPath()) != null) {
+				Buffer buffer = view.getBuffer();
+				if (!buffer.isLocked())
+					buffer.toggleLocked(view);
+				p(view.getBuffer().getName()); 
+				jEdit.setBooleanProperty("search.hypersearch.toggle",false);
+				jEdit.setBooleanProperty("search.keepDialog.toggle",false);
+				org.gjt.sp.jedit.search.SearchAndReplace sap = new org.gjt.sp.jedit.search.SearchAndReplace(); 
+				sap.setIgnoreCase(false);
+				sap.setRegexp(true);
+				sap.setAutoWrapAround(true);
+				sap.setSearchString("//\\{\\{\\{ ([\\w\\[\\]]+\\s+?)+"+funcName+"\\(.+");
+				sap.find(view);
+			}
+			return true;
+		}
+	return false; 
+} //}}}
+
+//{{{ TreeMap sourcedFuntions()
+/**
+ * List of function made available by running BeanShell.runScript with parameter ownNamespace beeing false as during startup 
+ *
+ * @return Treemap which (key,value) = (returntype methodname, ([method parameters,...]))
+ */
+TreeMap sourcedFuntions() {
+	String simpleName(String className) {
+		return className.matches(".+?\\[Ljava.+") 
+			? "String[]" 
+			:className.replaceAll("class ","").replaceAll("(\\w+\\.)+","");
+	}
+	TreeMap methods = new TreeMap();
+	for (org.gjt.sp.jedit.bsh.BshMethod m:BeanShell.getNameSpace().getMethods()) {
+		String parms="";
+		if (m.getParameterTypes().length >0) {
+			String [] parmA = new String[m.getParameterTypes().length];
+			
+			int i=0;
+			for (Class claz: m.getParameterTypes())  {
+				parmA[i++]= (claz==null? "uknown" : claz.getSimpleName());
+			}
+		
+			i=0;
+			for (s: m.getParameterNames())
+				if (null != s && i < parmA.length) {
+					parmA[i]=parmA[i] +" "+s;
+					i++;
+				}
+			parms=String.join(",",parmA);
+		}
+		if (null != m.getReturnType())
+			methods.put(simpleName(""+m.getReturnType())+" "+m.getName(),"("+parms+")");
+	}
+	return methods;
+} //}}}
+
+//{{{ String dateFormat(long unixtime, String format)
+/**
+ * wrapper around java.text.SimpleDateFormat
+ *
+ * @param unixtime milliseconds since the epoch (00:00:00 GMT, January 1, 1970)
+ * @param format of SimpleDateFormat
+ * @return String of date representation.
+ */
+String dateFormat(long unixtime, String format) {
+	return new java.text.SimpleDateFormat(format).format(new Date(unixtime)).toString();
+} //}}}
+
+//{{{ interface List hasSuffixInOrBelow(String dir,String suffix)
+/**
+ * Get list that list of files in dir or below that has a given extension. 
+ *
+ * @param dir is top dir where files with suffix recides  
+ * @param suffix is the filter that includes files
+ * @return List of File objects
+ */
+List hasSuffixInOrBelow(String dir,String suffix) {
+	List files = new ArrayList();
+	walkFileTree(new File(dir),FileVisitor(files,suffix,"item -> { if (item.getName().endsWith(´.´+arg2)) arg1.add(item); return true; }"));
+	return files;
+} //}}}
+
+//{{{ boolean isNewerOrSolitary(File file,String compareDir, String anotherSuffix)
+/**
+ * isNewerOrSolitary is used for decision for updating or creating a file with same barename as parameter file, but receding
+ * in compareDir and having suffix anotherSuffix
+ *
+ * @param file to compare
+ * @param compareDir of matching file 
+ * @param anotherSuffix than that of file 
+ * @return true if file is newer or there not exists some matching file in compareDir  
+ */
+boolean isNewerOrSolitary(File file,String compareDir, String anotherSuffix) {
+	return isNewerOrSolitary(file,new File(compareDir,file.getName().replaceAll("\\.\\w+$","."+anotherSuffix)));
+} //}}}
+
+//{{{ boolean isNewerOrSolitary(File file,File compareTo)
+
+/**
+ * isNewerOrSolitary is used for decision for updating or creating file compareTo
+ *
+ * @param file to compare
+ * @param compareTo of matching file
+ * @return true if file is newer than compareTo or compareTo don't exists.
+ */
+boolean isNewerOrSolitary(File file,File compareTo) {
+	return !compareTo.exists() || file.lastModified() > compareTo.lastModified();
+} //}}}
+
+//{{{ interface List externCmdOutput(String[] cmds)
+/**
+ *  Get a list of lines from an extern process
+ *
+ * @param cmds eg. {"sqlite3","/tmp/myDB.sqlite", "select name from persons"}
+ * @return List of lines from extern process
+ */
+List externCmdOutput(String[] cmds) {
+	List lines = new ArrayList();
+	Process proc = Runtime.getRuntime().exec(cmds); 
+	BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	while ((line = br.readLine()) != null) 
+		lines.add(line);
+	br.close();
+	return lines;
+} //}}}
+
+//{{{ String atCarretOrSelected(TextArea textArea)
+/**
+ * Gets word or string from textarea
+ * 
+ * @param textarea of activeView
+ * @return selected string, rightmost word to carret or null
+ */
+String atCarretOrSelected(TextArea textArea) {
+	return atCarretOrSelected(textArea,"\\w+\\b");
+} //}}}
+
+//{{{ String atCarretOrSelected(TextArea textArea, String match)
+/**
+ * Gets word or string from textarea
+ * 
+ * @param textarea of activeView
+ * @param match to select eg. one or several words should be returned
+ * @return selected string, rightmost word to carret or null
+ */
+String atCarretOrSelected(TextArea textArea,String match) {
+	String text = textArea.getSelectedText();
+	if (null == text) {
+		int carretPos = textArea.getCaretPosition();
+		textArea.goToEndOfWhiteSpace(true); 
+		text = textArea.getSelectedText();
+		textArea.setCaretPosition( carretPos,true);
+		if (null != text) {
+			Matcher m = Pattern.compile(match).matcher(text);
+			if (m.find()) 
+				text = m.group();
+		}
+	}
+	return text;
+} //}}}
+
+//{{{ String unicodeEscaped(String nonEscaped)
+/**
+ * Convert String to their unicode ecaped representation - it use is to make unambiguous strings to put in code 
+ * that otherwise spooks with a compiler.
+ *
+ * @param nonEscaped is a normal string - eg. "I ♥ jEdit" 
+ * @return a unicode escaped sting - eg. "\u0049\u0020\u2665\u0020\u006a\u0045\u0064\u0069\u0074"
+ */
+String unicodeEscaped(String nonEscaped) {
+	backslashUEscaped4digit(String hex) { 
+		hex = "000"+hex; 
+		return "\\u"+hex.substring(hex.length()-4,hex.length()); 
+	}
+	String result= "";
+	for (int pos=0; pos < nonEscaped.length(); pos++)
+		result +=backslashUEscaped4digit(Integer.toUnsignedString((int)nonEscaped.charAt(pos),16)); 
+	return "\""+result+"\"";
+} //}}}
+
+//{{{ void walkFileTree(File dir, XThis visitor, int maxDepth)
+/**
+ * Inspired by Files.walkFileTree - traverse a directory recursive
+ *
+ * @param dir is directory where walking starts
+ * @param visitor is a function object that has a method boolean continueVisitFile(File f)
+ * @param maxDepth is depth of recursion, -1 is unlimited
+ */
+void walkFileTree(File dir, XThis visitor, int maxDepth) {
+	for (File file: dir.listFiles()) 
+		if (file.isDirectory()) { 
+			if (maxDepth != 0 )
+				walkFileTree(file,visitor,maxDepth-1);
+		} else 
+			if (!visitor.continueVisitFile(file))
+				break;
+} //}}}
+
+//{{{ void walkFileTree(File dir, XThis visitor)
+/**
+ * Inspired by Files.walkFileTree - traverse a directory recursive to unlimited depth
+ *
+ * @param dir is directory where walking starts
+ * @param visitor is a function object that has a method boolean continueVisitFile(File f)
+ */
+void walkFileTree(File dir, XThis visitor) {
+	walkFileTree(dir, visitor,-1);
+} //}}}
+
+//{{{ String getClipboard()
+/**
+ * Gets clipboard textual content, if present
+ *
+ * @return String clipbord content or null
+ */
+String getClipboard() {
+	java.awt.datatransfer.Transferable tAble = Toolkit.getDefaultToolkit().getSystemClipboard().getContents( null );
+	import java.awt.datatransfer.DataFlavor;
+	return tAble.isDataFlavorSupported(DataFlavor.stringFlavor)
+		? (String)tAble.getTransferData( DataFlavor.stringFlavor )
+		: null; 
+} //}}}
+
+//{{{ int numLeft2Caret(View view, boolean delete, int defaultOnNoNumber)
+/**
+ * Get number left to caret
+ *
+ * @param view of JComponent in use
+ * @param delete desides buffer editing behavior
+ * @param defaultOnNoNumber return value if no number is found.
+ * @return integer left to caret, with any number af spaces between caret and
+ * number or defaultOnNoNumber if no number is found. Following happends to buffer
+ *	
+ *	input										result
+ *	---------------------------------------		--------------------
+ *	spaces follows number		delete=true		spaces are deleted
+ *	no spaces follows number	delete=true		number are deleted
+ *	spaces follows number		delete=false	spaces and number is selected
+ *	nospaces follows number		delete=false	spaces and number is selected
+ */ 
+int numLeft2Caret(View view, boolean delete, int defaultOnNoNumber) {
+	TextArea textArea = view.getTextArea();
+	int caretLinePos =textArea.getCaretPosition()-textArea.getLineStartOffset(textArea.getCaretLine());
+	String toCaret =textArea.getLineText(textArea.getCaretLine()).substring(0,caretLinePos);
+	Matcher m=Pattern.compile("\\d{1,2}\\s*$").matcher(toCaret);
+	if (m.find())  {
+		if (delete)
+			textArea.backspaceWord(true);
+		else
+			for (int i=0; i< m.group().length(); i++)
+				textArea.goToPrevCharacter(true);
+		return Integer.parseInt( m.group().trim());
+	} else
+		view.getStatus().setMessage("default: "+ defaultOnNoNumber+" returned");
+	return defaultOnNoNumber;
+
+} //}}}
+
+//{{{ List backWordsOrSelected(View view, boolean reverse)
+/**
+ * Get parameter from current line. In the following the string from start of 
+ * caretline to caret is called toCaretLine
+ *
+ * @param view of JComponent in use.
+ * @param reverse makes it possible 'swallow words' from caret moving towards
+ * start of line. In that way, words at start of line don't disturb - a function
+ * just uses the number of parameters it demands. 
+ * @return List with at least two items. Two main categories:
+ * 1. With selected text
+ * 	Two items - both being the selected text
+ * 
+ * 2. With no text selected
+ * 	  - Words of line, space delimited, becomes items - suitable as reversed.
+ * 	  - Delimiting with more than one space is permitted and only count as one.
+ * 	  - Double quotes surrounded strings counts as one item and inside such 
+ *	    strings no space reduction occurs 
+ * 	  - Single quote is just a character
+ *
+ * @see macro cyberkiss 
+ */
+List backWordsOrSelected(View view, boolean reverse) {
+	return backWordsOrSelected(view, reverse,null);
+} //}}}
+
+//{{{ List backWordsOrSelected(View view, boolean reverse,String pattern)
+/**
+ * Get parameter from current line. In the following the string from start of 
+ * caretline to caret is called toCaretLine
+ *
+ * @param view of JComponent in use.
+ * @param reverse makes it possible 'swallow words' from caret moving towards
+ * start of line. In that way, words at start of line don't disturb - a function
+ * just uses the number of parameters it demands. 
+ * @param pattern is used for identication of correct syntax so functions not get 
+ * input from lines they shouldn't have being invoked on.
+ * @return List with at least two items. Two main categories:
+ * 1. With selected text
+ * 	Two items - both being the selected text
+ * 
+ * 2. With no text selected
+ * 	Item 0 is toCaretLine
+ * 	Item 1 and futher items depends on result of toCaretLine.matches(pattern)
+ and whether toCaretline is empty
+ * 		false or empty caretLine
+ * 			Item1="" - no futher items
+ * 		true: 
+ * 			- Words of line, space delimited, becomes items - suitable as reversed.
+ * 			- Delimiting with more than one space is permitted and only count as one.
+ * 			- Double quotes surrounded strings counts as one item and inside such 
+ *			  strings no space reduction occurs 
+ * 			- Single quote is just a character
+ *
+ * @see macro cyberkiss 
+ */
+List backWordsOrSelected(View view, boolean reverse,String pattern) {
+	TextArea textArea = view.getTextArea();
+	String argText = textArea.getSelectedText();
+	List retval;
+	if (null == argText) {
+		int caretLinePos =textArea.getCaretPosition()-textArea.getLineStartOffset(textArea.getCaretLine());
+		argText =textArea.getLineText(textArea.getCaretLine()).substring(0,caretLinePos);
+		
+		if (pattern==null || argText.matches(pattern)) {
+			String line = argText.trim().replace("\t"," ").replaceAll(" +(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"," ");
+			retval = new ArrayList(Arrays.asList(line.split(" (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")));
+			if (reverse)
+				Collections.reverse(retval);
+		} else
+			retval = new ArrayList(asList(""));
+	} else
+		retval = new ArrayList(asList(argText));
+	retval.add(0,argText);
+	return retval;
+} //}}}
+
+//{{{ String password()
+/**
+ * Calls password(14) with length default to 14
+ *
+ * @return password which length is 14.
+ */
+String password() {
+	password(14);
+} //}}}
+
+//{{{ String password(int length)
+/**
+ * Makes a password, using random ASCII values between and inclusive from 33 to 95 
+ * The password is also copied to clipboard
+ * @param length of password
+ * @return password
+ */
+String password(int length) {
+	String pw="";
+	for (int i=0; i<length; i++) {
+		byte b =33 + (93*Math.random()).intValue();
+		pw += (char)b;
+	}
+	Registers.getRegister('$').setTransferable(new java.awt.datatransfer.StringSelection(pw));
+	return pw;
+} //}}}
+
+//{{{ void pa(Object egg) 
+/**
+ * This, as ... filtered best used, activity log print chicken, is the naken system bootstrap for writting a print utiliy. 
+ */
+public void pa(Object egg) { print("..."+egg); 
+} //}}}

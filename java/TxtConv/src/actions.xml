@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ACTIONS SYSTEM "actions.dtd">
+<ACTIONS>
+	<ACTION NAME="txtconv.conv2file">
+		<CODE>
+			plugin = jEdit.getPlugin("home.txtconv.TxtConvPlugin", true);
+			if (null == plugin) 	
+				Macros.message(view,"Unable to load plugin");
+			else 
+				plugin.conv2file(buffer);
+		</CODE>
+	</ACTION>
+	<ACTION NAME="txtconv.conv2buffer">
+		<CODE>
+			plugin = jEdit.getPlugin("home.txtconv.TxtConvPlugin", true);
+			if (null == plugin) 
+				Macros.message(view,"Unable to load plugin");
+			else 
+				plugin.conv2buffer(buffer);
+		</CODE>
+	</ACTION>
+</ACTIONS>

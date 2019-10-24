@@ -1,0 +1,44 @@
+# Needed properties
+plugin.home.txtconv.TxtConvPlugin.activate=defer
+plugin.home.txtconv.TxtConvPlugin.name=TxtConvert
+plugin.home.txtconv.TxtConvPlugin.author=Benny Andersen
+plugin.home.txtconv.TxtConvPlugin.usePluginHome=true
+plugin.home.txtconv.TxtConvPlugin.version=1.0
+plugin.home.txtconv.TxtConvPlugin.depend.0=jdk 1.6
+plugin.home.txtconv.TxtConvPlugin.depend.1=jedit 05.00.01.00
+plugin.home.txtconv.TxtConvPlugin.depend.2=plugin console.ConsolePlugin 5.1.3
+
+plugin.home.txtconv.TxtConvPlugin.description=Converting content in current buffer to a matching mode.
+plugin.home.txtconv.TxtConvPlugin.jars=txtmark.jar jsoup-1.11.3.jar
+
+
+
+# action tag name attribute
+plugin.home.txtconv.TxtConvPlugin.menu=txtconv.conv2file txtconv.conv2buffer
+txtconv.conv2file.label=convert to file
+txtconv.conv2buffer.label=convert to new buffer
+
+#options.home.txtconv.label=TxtConvert
+plugin.home.txtconv.TxtConvPlugin.option-group=	home.txtconv.html
+
+
+options.home.txtconv.html.label=html
+options.home.txtconv.html.code=new home.txtconv.TxtConvHtmlOptionPane();
+
+# used by convFactory
+options.txtconv.newfileSuffixOfMode.markdown=html
+options.txtconv.newfileSuffixOfMode.markdown.dependencychain=bsh->md->html
+
+# used by TxtConvPlugin
+options.txtconv.iconifyOnSavedOutput=false
+options.txtconv.basedir=
+options.txtconv.baseurl=
+options.txtconv.refreshOnFileResidesInBaseDir=true
+options.txtconv.mdleadfunction=linksReferences()
+
+# JOptionPane
+options.txtconv.joptionpane.message=file {0} could not be saved
+options.txtconv.joptionpane.title=File Accessibility
+
+# org.gjt.sp.util.Log.MESSAGE=3
+options.txtconv.printUrgency=3

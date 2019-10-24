@@ -1,0 +1,6 @@
+// key tip: A+d 
+/**
+ * Close buffer, dirty or not, without saving if it's name is "Untitled"
+ */
+if (buffer.getName().startsWith("Untitled"))
+	jEdit._closeBuffer(view,buffer);

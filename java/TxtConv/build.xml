@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<project name="txtConv" basedir="." >
+	<property name="classpath" value="/usr/local/share/jEdit/5.5.0/jedit.jar;jeditSettings/jars/txtmark.jar;jeditSettings/jars/jsoup-1.11.3.jar;jeditSettings/jars/Console.jar" />
+	<property name="zip.basedir"  value="jeditSettings/plugins/home.txtconv.TxtConvPlugin" />
+	<property name="zip.destfile"  value="${src.dir}/home/txtconv/snippets.zip" />
+	<property name="jar.todir"  value="jeditSettings/jars" />
+	<property name="doc.todir"  value="/var/www/htdocs/cyberkiss/TxtConv/doc" />  
+	<include file="../common.xml" as="common" />
+</project>

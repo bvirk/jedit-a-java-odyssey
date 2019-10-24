@@ -1,0 +1,112 @@
+// da-key tip A+LESS
+/**
+ * $JEDIT_SETTINGS/startup functions get sourced and then the functions is
+ * displayed in button clickable dialog OR a message telling 'startup is sourced' 
+ * appears in statusline.
+ * The former happends if the startupfile file with the most recent lastModified
+ * value is more than 10 seconds old.
+ *
+ * FAIL! even if Buffer.save(view,null) have returned true when invoked by this macro, a
+ * later, in same execution of this macro, getting of the file's lastmodified 
+ * using new File or buffer.getLastModified() returns sometime an elder stamp.
+ * BUT SOMETIMES IT WORKS???? just keep an eye on statusline when using this
+ * macro.
+ *
+ * In this way this macro contains two actions: just sourcing or 
+ * sourcing and clickable popup.
+ * 
+ * A click insert the function at carret position, a shift+click opens the file 
+ * containing the function for editing.
+
+ * It is importent to follow the folding commenting style - se documentation for
+ * startup function foundStartupFunction(funcName,view).
+ *
+ * After editing a startup file, running this macro sources the startup functions 
+ * - which also pops up errors reporting for convenient repeating the edit->source 
+ * cycle for getting an, at least, correct beanshell syntax.
+ * 
+ * All altered startupfiles, an only those in buffers, is saved if dirty - no need
+ * to save manually. Saving manually and wait 10 sescond before invoking this
+ * macro, skips sourcing (until jedit is restarted, obvious) 
+ * 
+ * Another use: Having the knowledge presents about which startup source file a 
+ * given function is defined in, the file can be opened using this macros shift-click
+ *
+ * @See cyberkiss "beanshell source" , foundStartupFunction(funcName,view)
+ */
+void sourceAndShow() {
+	saveAllStartupFiles(view);
+	long curLastModf;
+	long maxLastModf;
+	for (File f: new File(sDir()+"/startup").listFiles())  {
+		if (f.getName().indexOf("#") == -1) {
+			curLastModf = f.lastModified();
+			//p(f.getName()+" "+java.text.DateFormat.getTimeInstance().format(new Date(curLastModf)));
+			if (curLastModf > maxLastModf) 
+				maxLastModf=curLastModf; 
+			BeanShell.runScript(view,f.getPath(),null,false);
+		}
+	}
+	long sinceSaved = System.currentTimeMillis() - maxLastModf;
+	if (sinceSaved < 10000)
+		view.getStatus().setMessage(sinceSaved+"millis - Just sourcing");
+	else
+		functionsDialog();
+}
+
+void functionsDialog()
+{
+	
+	void addButtons() {
+		int col=0;
+		int row = rows;
+		for (String s:sNames.keySet()) {
+			JButton j= new JButton(s);
+			j.setToolTipText(s+sNames.get(s));
+			j.setHorizontalAlignment(SwingConstants.LEFT);
+			j.addActionListener(this);
+			buttoncolumn[col].add(j);
+			if (--row == 0) {
+				col++;
+				row=rows;
+			}
+		}
+	}
+	TreeMap sNames=sourcedFuntions();
+	int cols = 1+(sNames.size()-1)/35;
+	int rows = sNames.size()/cols+ ( sNames.size() % (sNames.size()/cols) > 0 ? 1 : 0);
+	dialog = new JDialog(view,"shift-click for edit"); //, title, false);
+	content = new JPanel(new BorderLayout());
+	dialog.setContentPane(content);
+	JPanel allColumns = new JPanel();
+	allColumns.setLayout(new GridLayout(1,cols));
+	JPanel[] buttoncolumn = new JPanel[cols];
+	for (int i=0; i<cols; i++) {
+		buttoncolumn[i] = new JPanel();
+		buttoncolumn[i].setLayout(new GridLayout(rows,1));
+		allColumns.add(buttoncolumn[i]);
+	}
+	addButtons();
+	content.add(allColumns, "South");
+	dialog.pack();
+	dialog.setLocationRelativeTo(view);
+	dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	dialog.setVisible(true);
+
+
+	public void actionPerformed(ActionEvent e) {
+		String[] buttonParts = e.getActionCommand().split(" ");
+		fName=buttonParts[buttonParts.length-1];
+		String fArgsList = sNames.get(e.getActionCommand());
+		dialog.dispose();
+		if (e.getModifiers() == 16) {
+			tcp=textArea.getCaretPosition();
+			buffer.insert(tcp,fName+fArgsList);
+			int fLen = fName.length();
+			textArea.setCaretPosition(tcp+fLen+1);
+			textArea.setSelection(new Selection.Range(tcp+fLen+1,tcp+fLen+fArgsList.length()-1));
+		} else
+			foundStartupFunction(fName.replaceAll("\\(.+",""),view);
+	}
+}
+sourceAndShow();

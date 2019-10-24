@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="commonBuild" basedir="." >
+	<property name="src.dir"     value="src"/>
+	<property name="build.dir"   value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="doc.dir" 	 value="doc"/>
+	<basename file="${basedir}.jar" property="jar.file" />
+
+	<target name="clean" >
+		<delete dir="${build.dir}" />
+		<delete dir="${doc.dir}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" classpath="${classpath}" />
+	</target>
+	
+	<target name="zip" if="${zip.destfile}">
+    	<zip destfile="${zip.destfile}" basedir="${zip.basedir}"/>
+    </target>
+    
+    <target name="copy-resources" depends="zip">
+		<copy todir="${classes.dir}" >
+			<fileset dir="${src.dir}" >
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+    </target>
+
+    <target name="jar" depends="compile,copy-resources" >
+    	<mkdir dir="${jar.dir}" />
+    	<antcall target="common.withmainclassjar" />
+    	<antcall target="common.withoutmainclassjar" />
+    	<antcall target="common.distribute-jar" />
+    </target>
+    
+    <target name="withmainclassjar" if="main-class" >
+    	<jar  destfile="${jar.dir}/${jar.file}" basedir="${classes.dir}" >
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="withoutmainclassjar" unless="main-class" >
+    	<jar  destfile="${jar.dir}/${jar.file}" basedir="${classes.dir}" />
+    </target>
+	
+	<target name="run" depends="jar" >
+		<java jar="${jar.dir}/${jar.file}" fork="true" />
+	</target>
+
+	<target name="distribute-jar" if="jar.todir">
+		<copy todir="${jar.todir}" file="${jar.dir}/${jar.file}" />
+	</target>
+	
+	<target name="doc" depends="compile" >
+    	<javadoc 
+    		sourcepath="${src.dir}" 
+    		destdir="${doc.dir}" 
+    		classpath="${classpath}" 
+    		noqualifier="all" 
+    		nohelp="true" 
+    		noindex="true" 
+    		notree="true"
+    		nonavbar="true">
+    	</javadoc>
+    	<antcall target="common.distribute-doc" />
+    </target>
+
+    <target name="distribute-doc" if="doc.todir">
+		<copy todir="${doc.todir}" >
+			<fileset dir="${doc.dir}" />
+		</copy>
+	</target>
+
+    
+	<target name="clean-build" depends="clean,jar" />
+	<target name="main" depends="clean,run" />
+</project>

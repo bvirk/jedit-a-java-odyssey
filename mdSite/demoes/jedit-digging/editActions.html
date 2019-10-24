@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="../../../css/site.css" rel="stylesheet" >
+<style>
+section {
+	padding-left: 50px;
+}</style>
+<script src="../../../js/jquery.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script>
+$(function() {
+	$('pre').addClass('prettyprint'); 
+	$('code').addClass('language-java'); 
+});
+                                                                                 </script>
+<script>
+(function( glObj) {
+	glObj.pages = [
+	 "readme.html (http://localhost/mdSite//nonGithubMarkdown/)"
+	,"topdependencies.html (http://localhost/mdSite//nonGithubMarkdown/)"
+	];
+}( window.myGlb = window.myGlb || {}));
+</script>
+<script>
+String.prototype.format = function () {
+  var args = arguments;
+  return this.replace(/\{(\d+)\}/g, function (m, n) { return args[n]; });
+};
+
+(function( glObj) {
+    
+	glObj.optionElement = function (value,content) {
+		return "<{0} class='optionclass' value='{1}'>{2}</{0}>".format("option",value,content);
+	}
+}( window.myGlb = window.myGlb || {}));
+
+$(function() {
+	function resizeFileSelect() {
+		var headerwidth = $("header").css("width");
+		$("#fileSelect").css("width",(headerwidth.substring(0,headerwidth.length-2).valueOf()-25)+"px");
+		$("#fileSelect").val(window.location.href);
+	}
+	$('.pop').click(function() {
+		var parent =$(this).parent();
+		var div = parent.next();
+		var vis = div.css('display');
+		if (vis == "none") {
+			$(this).html('&nbsp;&#9662;&nbsp;');
+			div.css('display','block');
+		} else {
+			div.css('display','none');
+			$(this).html('&nbsp;&#9656;&nbsp;');
+		}
+	});
+	$('header').click(function() {
+			window.open ("http://jedit.org",'_self',false);
+	});
+	$(window).on('resize', function() {
+		resizeFileSelect();
+	});
+	$('#fileSelect').change(
+		function() {
+			var newPage = $("#fileSelect option:selected").attr('value');
+			window.open (newPage,'_self',false);
+		});
+	for (var i in myGlb.pages)
+		$('#fileSelect').append(myGlb.optionElement(myGlb.pages[i].split(/ /)[1].replace(/[\(\)]/g,"")+myGlb.pages[i].split(/ /)[0],myGlb.pages[i]));
+	$("header").html("jEdit - "+window.location.href.replace(/.+\/([^/]+\.html)$/,"$1"));
+	resizeFileSelect();
+	
+});</script>
+<title>macros | startups</title>
+</head>
+<body>
+
+<div class="wrapper">
+<header>&nbsp;</header>
+<div id="bufsw">
+<label for="fileSelect">▢&nbsp;</label><select id="fileSelect"></select>
+</div>
+  <section> 
+  <article>
+<!-- head=siteJedit.css.html+adjustmargin.css+jquery.html+prettify.html+prettyClassify.js+sitePages()+eventsAndNav.js & body=pageJEdit.md & title=macros+|+startups -->
+<h3>Action Sets</h3>
+<pre><code>StringBuilder lines = new StringBuilder();  
+String[] permittedAS = {"Built-in Commands","Plugin: TxtConvPlugin","Plugin: Console","Docking Layouts"};
+
+for (ActionSet as : jEdit.getActionSets()) {
+    if (Arrays.asList(permittedAS).contains(as.getLabel())) {
+
+        //fLines.append("- &lt;a href=\"#").append(as.getLabel()).append("\"&gt;").append(as.getLabel()).append("&lt;/a&gt;\n");
+        fLines.append("- [").append(as.getLabel()).append("]\n");
+
+        lines.append("&lt;a id=\"").append(as.getLabel().replaceAll("\\W","")).append("\"&gt;&lt;/a&gt;\n### " ).append(as.getLabel()).append("\n\n");
+        for (EditAction ea : as.getActions()) 
+            lines.append("\t&lt;ACTION NAME=\"").append(ea.getLabel()).append("\"&gt;\n\t\t&lt;CODE&gt;\n\t\t\t")
+                 .append(ea.getCode()).append("\n\t\t&lt;/CODE&gt;\n\t&lt;/ACTION&gt;\n");
+        lines.append("\n---\n");
+    }
+}
+</code></pre>
+<ul>
+<li>[Built-in Commands]</li>
+<li>[Plugin: Console]</li>
+<li>[Docking Layouts]</li>
+</ul>
+<p><a id="BuiltinCommands"></a></p>
+<h3>Built-in Commands</h3>
+<pre><code>&lt;ACTION NAME="Toggle Page Break Marker"&gt;
+    &lt;CODE&gt;
+        jEdit.setBooleanProperty("view.pageBreaks", !jEdit.getBooleanProperty("view.pageBreaks"));
+EditBus.send(new PropertiesChanged(null));
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$About jEdit..."&gt;
+    &lt;CODE&gt;
+        new AboutDialog(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Update Activity Log on Disk"&gt;
+    &lt;CODE&gt;
+        Log.flushStream();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Text Area"&gt;
+    &lt;CODE&gt;
+        editPane.focusOnTextArea();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevParagraph(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Matching Bracket"&gt;
+    &lt;CODE&gt;
+        textArea.goToMatchingBracket();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to Last Visible Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToLastVisibleLine(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Next Word (Eat Whitespace)"&gt;
+    &lt;CODE&gt;
+        textArea.deleteWord(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Task Monitor"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("task-monitor");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Previous Word (Eat Whitespace after word)"&gt;
+    &lt;CODE&gt;
+        textArea.backspaceWord(true, true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select $Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.selectParagraph();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Overwrite Mode"&gt;
+    &lt;CODE&gt;
+        textArea.toggleOverwriteEnabled();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Paste $Register"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getRegisterStatusPrompt("paste-string-register"),
+        "Registers.paste(textArea,__char__,false);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Plugin $Options..."&gt;
+    &lt;CODE&gt;
+        new org.jedit.options.CombinedOptions(view, 1);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Select Fold"&gt;
+    &lt;CODE&gt;
+        textArea.selectFold();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Na$rrow to Fold"&gt;
+    &lt;CODE&gt;
+        textArea.narrowToFold();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Buffer Options..."&gt;
+    &lt;CODE&gt;
+        new BufferOptions(view,buffer);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Line Scroll $Down"&gt;
+    &lt;CODE&gt;
+        textArea.scrollDownLine();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Invert Selection"&gt;
+    &lt;CODE&gt;
+        textArea.invertSelection();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="HyperSearch Results (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("hypersearch-results");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Next Character"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextCharacter(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select $Line"&gt;
+    &lt;CODE&gt;
+        textArea.selectLine();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Expand Fo$lds With Level"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getProperty("view.status.expand-folds"),
+        "textArea.getDisplayManager().expandFolds(__char__);\n"
+        + "textArea.scrollToCaret(false);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Cut"&gt;
+    &lt;CODE&gt;
+        Registers.cut(textArea,'$');
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to Start of Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToStartOfLine(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Narro$w to Selection"&gt;
+    &lt;CODE&gt;
+        textArea.narrowToSelection();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to Start of Buffer"&gt;
+    &lt;CODE&gt;
+        textArea.goToBufferStart(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Previous Fold"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevFold(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Tabs to Spaces"&gt;
+    &lt;CODE&gt;
+        textArea.tabsToSpaces();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to First Visible Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToFirstVisibleLine(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Set view title..."&gt;
+    &lt;CODE&gt;
+        view.showUserTitleDialog();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="New in $Mode"&gt;
+    &lt;CODE&gt;
+        Mode[] modes = jEdit.getModes();
+    Mode currentMode = buffer.getMode();
+    String dialogTitle = jEdit.getProperty("new-file-in-mode.dialog.title");
+    String dialogMessage = jEdit.getProperty("new-file-in-mode.dialog.message");
+    Mode choice = (Mode)JOptionPane.showInputDialog(
+        view,
+        dialogMessage,
+        dialogTitle,
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        modes,
+        currentMode);
+    if(choice != null) {
+        Buffer newBuffer = jEdit.newFile(view);
+        view.goToBuffer(newBuffer);
+        newBuffer.setMode(choice);
+    }
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="null"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevMarker(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$File System Browser (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("vfs.browser");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle $Buffer Switcher"&gt;
+    &lt;CODE&gt;
+        b = !jEdit.getBooleanProperty("view.showBufferSwitcher");
+jEdit.setBooleanProperty("view.showBufferSwitcher", b);
+view.updateBufferSwitcherStates();
+if (b) editPane.focusBufferSwitcher();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Load docking layout of current mode"&gt;
+    &lt;CODE&gt;
+        DockingLayoutManager.loadCurrentModeLayout(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Fi$nd Next"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.setReverseSearch(false);
+    SearchAndReplace.find(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevLine(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Resca$n Macros"&gt;
+    &lt;CODE&gt;
+        Macros.loadMacros();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Go to Marker"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        buffer.getMarkerStatusPrompt("goto-marker"),
+        "editPane.goToMarker(__char__,false);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Insert Newline and Indent"&gt;
+    &lt;CODE&gt;
+        textArea.insertEnterAndIndent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Word"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevWord(true,false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Collapse $All Folds"&gt;
+    &lt;CODE&gt;
+        textArea.getDisplayManager().expandFolds(1);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="New Macro"&gt;
+    &lt;CODE&gt;
+        dialog = new VFSFileChooserDialog(view,
+        jEdit.getSettingsDirectory()+File.separator+"macros"+
+        File.separator+"New_Macro.bsh", VFSBrowser.SAVE_DIALOG,
+        false);
+    files = dialog.getSelectedFiles();
+    if (files == null || files.length != 1) return;
+    b = jEdit.newFile(view);
+    b.save(view, files[0]);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="null"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextMarker(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle Word Wrap"&gt;
+    &lt;CODE&gt;
+        buffer.toggleWordWrap(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Add Marker $With Shortcut"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        buffer.getMarkerStatusPrompt("add-marker"),
+        "buffer.addMarker(__char__,textArea.getCaretPosition());");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Next Word"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextWord(false,false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select $All"&gt;
+    &lt;CODE&gt;
+        textArea.selectAll();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete $Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.deleteParagraph();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Add/Remove Marker"&gt;
+    &lt;CODE&gt;
+        editPane.addMarker();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Record $Temporary Macro"&gt;
+    &lt;CODE&gt;
+        Macros.recordTemporaryMacro(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Expand $Fold Fully"&gt;
+    &lt;CODE&gt;
+        textArea.expandFold(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle $Line Numbers"&gt;
+    &lt;CODE&gt;
+        boolean shown = jEdit.getBooleanProperty("view.gutter.lineNumbers");
+    jEdit.setBooleanProperty("view.gutter.lineNumbers", !shown);
+    if (! shown)
+        jEdit.setBooleanProperty("view.gutter.enabled", !shown);
+    jEdit.propertiesChanged();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="C$opy Append"&gt;
+    &lt;CODE&gt;
+        Registers.append(textArea,'$',"\n",false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle S$tatus Bar"&gt;
+    &lt;CODE&gt;
+        boolean showing = view.getStatus().isShowing();
+    if (view.isPlainView())
+    {
+        jEdit.setBooleanProperty("view.status.plainview.visible", !showing);
+    }
+    else
+    {
+        jEdit.setBooleanProperty("view.status.visible", !showing);
+    }
+    jEdit.propertiesChanged();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Multiple Selection"&gt;
+    &lt;CODE&gt;
+        textArea.toggleMultipleSelectionEnabled();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Open..."&gt;
+    &lt;CODE&gt;
+        GUIUtilities.showVFSFileDialog(view,null,VFSBrowser.BROWSER_DIALOG,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Previous Marker"&gt;
+    &lt;CODE&gt;
+        editPane.goToPrevMarker(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Delete Lines"&gt;
+    &lt;CODE&gt;
+        textArea.deleteLine();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Page Scroll U$p"&gt;
+    &lt;CODE&gt;
+        textArea.scrollUpPage();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Global Scope BufferSets"&gt;
+    &lt;CODE&gt;
+        bufferSetManager = jEdit.getBufferSetManager();
+    bufferSetManager.setScope(BufferSet.Scope.global);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Go to Line..."&gt;
+    &lt;CODE&gt;
+        textArea.showGoToLineDialog();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Load docking layout ..."&gt;
+    &lt;CODE&gt;
+        DockingLayoutManager.load(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$File System Browser (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("vfs.browser");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to Start of White Space"&gt;
+    &lt;CODE&gt;
+        textArea.goToStartOfWhiteSpace(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to End of Buffer"&gt;
+    &lt;CODE&gt;
+        textArea.goToBufferEnd(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Replace $All"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.replaceAll(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Spaces to Tabs"&gt;
+    &lt;CODE&gt;
+        textArea.spacesToTabs();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="E$xpand All Folds"&gt;
+    &lt;CODE&gt;
+        textArea.getDisplayManager().expandAllFolds();
+    textArea.scrollToCaret(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Run $Other Macro..."&gt;
+    &lt;CODE&gt;
+        Macros.showRunScriptDialog(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Ignore $Case"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.setIgnoreCase(!SearchAndReplace.getIgnoreCase());
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Vertical Paste"&gt;
+    &lt;CODE&gt;
+        Registers.paste(textArea,'$',true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Activity Log (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("log-viewer");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="I$ncremental Search for Word"&gt;
+    &lt;CODE&gt;
+        view.quickIncrementalSearch(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevParagraph(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Previous Word"&gt;
+    &lt;CODE&gt;
+        textArea.backspaceWord();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Evaluate BeanShell Expression..."&gt;
+    &lt;CODE&gt;
+        BeanShell.showEvaluateDialog(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Co$py to Register"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getRegisterStatusPrompt("copy-string-register"),
+        "Registers.copy(textArea,__char__);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Scroll $to Current Line"&gt;
+    &lt;CODE&gt;
+        view.closeAllMenus();
+    if(!textArea.getDisplayManager().isLineVisible(
+        textArea.getCaretLine()))
+    {
+        textArea.getDisplayManager().expandFold(
+            textArea.getCaretLine(),true);
+    }
+    textArea.scrollToCaret(true);
+    textArea.requestFocus();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Last Visible Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToLastVisibleLine(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Activity Log"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("log-viewer");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Sele$ct Line Range..."&gt;
+    &lt;CODE&gt;
+        new SelectLineRange(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Vie$w Registers (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("view-registers");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Format Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.formatParagraph();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Paste Previo$us..."&gt;
+    &lt;CODE&gt;
+        new PasteFromListDialog("paste-previous",view,
+        HistoryModel.getModel("clipboard"));
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Reload Edit Modes"&gt;
+    &lt;CODE&gt;
+        jEdit.reloadModes();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete to $End of Line"&gt;
+    &lt;CODE&gt;
+        textArea.deleteToEndOfLine();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Options..."&gt;
+    &lt;CODE&gt;
+        return org.jedit.options.CombinedOptions.combinedOptions(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="H$yperSearch for Word"&gt;
+    &lt;CODE&gt;
+        view.quickHyperSearch(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Paste"&gt;
+    &lt;CODE&gt;
+        EditBus.send(new PositionChanging(editPane));
+    Registers.paste(textArea,'$',false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Page Scroll D$own"&gt;
+    &lt;CODE&gt;
+        textArea.scrollDownPage();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Task Monitor (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("task-monitor");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Top Docking Area"&gt;
+    &lt;CODE&gt;
+        wm.getTopDockingArea().showMostRecent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Next Text Area"&gt;
+    &lt;CODE&gt;
+        view.nextTextArea();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Reloa$d All"&gt;
+    &lt;CODE&gt;
+        jEdit.reloadAllBuffers(view,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="HyperSearch Results (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("hypersearch-results");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Undo"&gt;
+    &lt;CODE&gt;
+        buffer.undo(textArea);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Previous Character"&gt;
+    &lt;CODE&gt;
+        textArea.backspace();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$New"&gt;
+    &lt;CODE&gt;
+        jEdit.newFile(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="End"&gt;
+    &lt;CODE&gt;
+        textArea.end(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Search in $Directory..."&gt;
+    &lt;CODE&gt;
+        SearchDialog.showSearchDialog(view,textArea.getSelectedText(),
+        SearchDialog.DIRECTORY);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Shift Indent $Right"&gt;
+    &lt;CODE&gt;
+        textArea.shiftIndentRight();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Swa$p Caret and Marker"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        buffer.getMarkerStatusPrompt("swap-marker"),
+        "editPane.swapMarkerAndCaret(__char__);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Next Page"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextPage(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Close O$thers"&gt;
+    &lt;CODE&gt;
+        boolean closeAll = true;
+    if (jEdit.getBooleanProperty("closeAllConfirm"))
+    {
+        int answer = GUIUtilities.confirm(view, "closeothers", null, javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE);
+        closeAll = answer == javax.swing.JOptionPane.YES_OPTION;
+    }
+    if (closeAll)
+    {
+        org.gjt.sp.jedit.bufferset.BufferSet bufferSet = editPane.getBufferSet();
+        Buffer[] buffers = bufferSet.getAllBuffers();
+        for (Buffer buff:buffers)
+        {
+            if (buff != buffer)
+                jEdit.closeBuffer(editPane,buff);
+        }
+    }
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Home"&gt;
+    &lt;CODE&gt;
+        textArea.home(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Print..."&gt;
+    &lt;CODE&gt;
+        BufferPrinter1_7.print(view, buffer);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Shift Indent $Left"&gt;
+    &lt;CODE&gt;
+        textArea.shiftIndentLeft();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Start of White Space"&gt;
+    &lt;CODE&gt;
+        textArea.goToStartOfWhiteSpace(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$HyperSearch Bar"&gt;
+    &lt;CODE&gt;
+        view.quickHyperSearch(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Copy $Append to Register"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getRegisterStatusPrompt("copy-append-string-register"),
+        "Registers.append(textArea,__char__,\"\\n\",false);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Page"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevPage(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Next Page"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextPage(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Word Count..."&gt;
+    &lt;CODE&gt;
+        textArea.showWordCountDialog();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Previous Buffer"&gt;
+    &lt;CODE&gt;
+        editPane.prevBuffer();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Paste Special..."&gt;
+    &lt;CODE&gt;
+        new PasteSpecialDialog(view, textArea);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="E$xpand Abbreviation"&gt;
+    &lt;CODE&gt;
+        Abbrevs.expandAbbrev(view,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Go to Parent Fold"&gt;
+    &lt;CODE&gt;
+        textArea.goToParentFold();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Page"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevPage(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to Smart Home Position"&gt;
+    &lt;CODE&gt;
+        textArea.smartHome(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Next Character"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextCharacter(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Focus on Buffer S$witcher"&gt;
+    &lt;CODE&gt;
+        editPane.focusBufferSwitcher();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Close View"&gt;
+    &lt;CODE&gt;
+        jEdit.closeView(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Insert Tab"&gt;
+    &lt;CODE&gt;
+        textArea.userInput('\t');
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Next Bracket"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextBracket(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$View Scope BufferSets"&gt;
+    &lt;CODE&gt;
+        bufferSetManager = jEdit.getBufferSetManager();
+    bufferSetManager.setScope(BufferSet.Scope.view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Next Marker"&gt;
+    &lt;CODE&gt;
+        editPane.goToNextMarker(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Smart End"&gt;
+    &lt;CODE&gt;
+        textArea.smartEnd(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Line Comment"&gt;
+    &lt;CODE&gt;
+        textArea.lineComment();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Word (Eat Whitespace)"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevWord(false,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Run Tem$porary Macro"&gt;
+    &lt;CODE&gt;
+        Macros.runTemporaryMacro(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Word (Eat Whitespace after word)"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevWord(false,true,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Cut Append"&gt;
+    &lt;CODE&gt;
+        Registers.append(textArea,'$',"\n",true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevLine(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Remove all errors"&gt;
+    &lt;CODE&gt;
+        Log.throwables.clear();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$File System Browser"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("vfs.browser");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Insert Newline"&gt;
+    &lt;CODE&gt;
+        textArea.userInput('\n');
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="S$ave As..."&gt;
+    &lt;CODE&gt;
+        buffer.saveAs(view,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select $Word"&gt;
+    &lt;CODE&gt;
+        textArea.selectWord();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Find Pre$vious"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.setReverseSearch(true);
+    SearchAndReplace.find(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Show Context Menu"&gt;
+    &lt;CODE&gt;
+        textArea.showPopupMenu();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Collapse Fold"&gt;
+    &lt;CODE&gt;
+        textArea.collapseFold();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Previous Text Area"&gt;
+    &lt;CODE&gt;
+        view.prevTextArea();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Close Current Docking Area"&gt;
+    &lt;CODE&gt;
+        wm.closeCurrentArea();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Save docking layout of current mode"&gt;
+    &lt;CODE&gt;
+        DockingLayoutManager.saveCurrentModeLayout(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="E$xit"&gt;
+    &lt;CODE&gt;
+        jEdit.exit(view,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Start of Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToStartOfLine(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Save A$ll..."&gt;
+    &lt;CODE&gt;
+        jEdit.saveAllBuffers(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to End of Buffer"&gt;
+    &lt;CODE&gt;
+        textArea.goToBufferEnd(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle $Gutter"&gt;
+    &lt;CODE&gt;
+        boolean showing = jEdit.getBooleanProperty("view.gutter.enabled");
+    jEdit.setBooleanProperty("view.gutter.enabled", !showing);
+    jEdit.propertiesChanged();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Expand Fold One Level"&gt;
+    &lt;CODE&gt;
+        textArea.expandFold(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Regular E$xpressions"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.setRegexp(!SearchAndReplace.getRegexp());
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Vie$w Markers"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("view-markers");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to End of White Space"&gt;
+    &lt;CODE&gt;
+        textArea.goToEndOfWhiteSpace(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Bottom Docking Area"&gt;
+    &lt;CODE&gt;
+        wm.getBottomDockingArea().showMostRecent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to End of Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToEndOfLine(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Next Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextLine(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Save"&gt;
+    &lt;CODE&gt;
+        buffer.save(view,null,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Unsplit Current"&gt;
+    &lt;CODE&gt;
+        view.unsplitCurrent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Task Monitor (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("task-monitor");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to First Visible Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToFirstVisibleLine(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Center Caret on Screen"&gt;
+    &lt;CODE&gt;
+        textArea.centerCaret();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Indent Lines"&gt;
+    &lt;CODE&gt;
+        textArea.indentSelectedLines();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="HyperSearch Results"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("hypersearch-results");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Next Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextParagraph(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle $full-screen mode"&gt;
+    &lt;CODE&gt;
+        view.toggleFullScreen();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Scroll and Center Caret"&gt;
+    &lt;CODE&gt;
+        view.closeAllMenus();
+textArea.scrollAndCenterCaret();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Unsplit $All"&gt;
+    &lt;CODE&gt;
+        view.unsplit();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to End of White Space"&gt;
+    &lt;CODE&gt;
+        textArea.goToEndOfWhiteSpace(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Co$mplete Word"&gt;
+    &lt;CODE&gt;
+        CompleteWord.completeWord(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Close"&gt;
+    &lt;CODE&gt;
+        jEdit.closeBuffer(editPane,buffer);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="C$opy"&gt;
+    &lt;CODE&gt;
+        Registers.copy(textArea,'$');
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Next Fold"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextFold(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Word (Eat Whitespace)"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevWord(true,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Close All (global)"&gt;
+    &lt;CODE&gt;
+        boolean closeAll = true;
+    if (jEdit.getBooleanProperty("closeAllConfirm"))
+    {
+        int answer = GUIUtilities.confirm(view, "closeall", null, javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE);
+        closeAll = answer == javax.swing.JOptionPane.YES_OPTION;
+    }
+    if (closeAll)
+    {
+        jEdit.closeAllBuffers(view);
+    }
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Save docking layout ..."&gt;
+    &lt;CODE&gt;
+        DockingLayoutManager.saveAs(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Save a Cop$y As..."&gt;
+    &lt;CODE&gt;
+        buffer.saveAs(view,false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Replace in Selection"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.replace(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Recent Buffer"&gt;
+    &lt;CODE&gt;
+        view.getEditPane().recentBuffer();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Activity Log (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("log-viewer");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="jEdit $Help"&gt;
+    &lt;CODE&gt;
+        new HelpViewer();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Cu$t to Register"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getRegisterStatusPrompt("cut-string-register"),
+        "Registers.cut(textArea,__char__);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Next Word"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextWord(true,false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Split $Vertically"&gt;
+    &lt;CODE&gt;
+        view.splitVertically();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle Line Separator"&gt;
+    &lt;CODE&gt;
+        buffer.toggleLineSeparator(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Memory Status..."&gt;
+    &lt;CODE&gt;
+        jEdit.showMemoryDialog(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Paste $Deleted..."&gt;
+    &lt;CODE&gt;
+        new PasteFromListDialog("paste-deleted",view,
+        KillRing.getInstance());
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Plugin $Manager..."&gt;
+    &lt;CODE&gt;
+        PluginManager.showPluginManager(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Range Comment"&gt;
+    &lt;CODE&gt;
+        textArea.rangeComment();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Word"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevWord(false,false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select $None"&gt;
+    &lt;CODE&gt;
+        s = textArea.getSelectionAtOffset(textArea.getCaretPosition());
+    if(s == null)
+        textArea.selectNone();
+    else
+        textArea.removeFromSelection(s);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$EditPane Scope BufferSets"&gt;
+    &lt;CODE&gt;
+        bufferSetManager = jEdit.getBufferSetManager();
+    bufferSetManager.setScope(BufferSet.Scope.editpane);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Vie$w Markers (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("view-markers");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle E$xclusive BufferSets"&gt;
+    &lt;CODE&gt;
+        jEdit.setBooleanProperty("buffersets.exclusive",
+    !jEdit.getBooleanProperty("buffersets.exclusive"));
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="null"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextBracket(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Vie$w Markers (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("view-markers");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Split $Horizontally"&gt;
+    &lt;CODE&gt;
+        view.splitHorizontally();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Repeat Last Macro"&gt;
+    &lt;CODE&gt;
+        if(Macros.getLastMacro() == null)
+        view.getToolkit().beep();
+    else
+        Macros.getLastMacro().invoke(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Next Word"&gt;
+    &lt;CODE&gt;
+        textArea.deleteWord();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Global Options..."&gt;
+    &lt;CODE&gt;
+        new org.jedit.options.CombinedOptions(view, 0);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Search in Open $Buffers..."&gt;
+    &lt;CODE&gt;
+        SearchDialog.showSearchDialog(view,textArea.getSelectedText(),
+        SearchDialog.ALL_BUFFERS);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Find..."&gt;
+    &lt;CODE&gt;
+        SearchDialog.showSearchDialog(view,textArea.getSelectedText(),SearchDialog.CURRENT_BUFFER);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="To $Upper Case"&gt;
+    &lt;CODE&gt;
+        textArea.toUpperCase();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Right Docking Area"&gt;
+    &lt;CODE&gt;
+        wm.getRightDockingArea().showMostRecent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Next Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextLine(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Incremental Search Bar"&gt;
+    &lt;CODE&gt;
+        view.quickIncrementalSearch(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="null"&gt;
+    &lt;CODE&gt;
+        jEdit.newView(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Previous Character"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevCharacter(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Edit syntax style of token under caret"&gt;
+    &lt;CODE&gt;
+        StyleEditor.invokeForCaret(textArea);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Keyboard Tester..."&gt;
+    &lt;CODE&gt;
+        new GrabKeyDialog(view,null,null,jEdit.newFile(view));
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="null"&gt;
+    &lt;CODE&gt;
+        buffer.removeMarker(textArea.getCaretLine());
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Restore Split"&gt;
+    &lt;CODE&gt;
+        view.resplit();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Select Code Block"&gt;
+    &lt;CODE&gt;
+        textArea.selectBlock();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to Smart End Position"&gt;
+    &lt;CODE&gt;
+        textArea.smartEnd(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Action Bar"&gt;
+    &lt;CODE&gt;
+        view.actionBar();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Add Buffer to Favorites"&gt;
+    &lt;CODE&gt;
+        FavoritesVFS.addToFavorites(buffer.getPath(),VFSFile.FILE);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="null"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevBracket(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Insert Tab and Indent"&gt;
+    &lt;CODE&gt;
+        textArea.insertTabAndIndent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Character"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevCharacter(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Next Word (Eat Whitespace)"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextWord(true,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Left Docking Area"&gt;
+    &lt;CODE&gt;
+        wm.getLeftDockingArea().showMostRecent();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Re$place and Find Next"&gt;
+    &lt;CODE&gt;
+        if(SearchAndReplace.replace(view))
+        SearchAndReplace.find(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Select to Marker"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        buffer.getMarkerStatusPrompt("select-marker"),
+        "editPane.goToMarker(__char__,true);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Record Macro..."&gt;
+    &lt;CODE&gt;
+        Macros.recordMacro(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Cut Appe$nd to Register"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getRegisterStatusPrompt("cut-append-string-register"),
+        "Registers.append(textArea,__char__,\"\\n\",true);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select to End of Line"&gt;
+    &lt;CODE&gt;
+        textArea.goToEndOfLine(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Select Previous Word (Eat Whitespace after word)"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevWord(true,true,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Previous Word (Eat Whitespace)"&gt;
+    &lt;CODE&gt;
+        textArea.backspaceWord(true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="V$ertical Paste Register"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getRegisterStatusPrompt("vertical-paste-string-register"),
+        "Registers.paste(textArea,__char__,true);");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Toggle Docked $Areas"&gt;
+    &lt;CODE&gt;
+        wm.toggleDockAreas();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Evaluate $Selection"&gt;
+    &lt;CODE&gt;
+        BeanShell.evalSelection(view,textArea);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Redo"&gt;
+    &lt;CODE&gt;
+        buffer.redo(textArea);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete Next Character"&gt;
+    &lt;CODE&gt;
+        textArea.delete();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Stop Recording"&gt;
+    &lt;CODE&gt;
+        Macros.stopRecording(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Reload"&gt;
+    &lt;CODE&gt;
+        buffer.reload(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Previous Bracket"&gt;
+    &lt;CODE&gt;
+        textArea.goToPrevBracket(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Add Directory to Favorites"&gt;
+    &lt;CODE&gt;
+        FavoritesVFS.addToFavorites(buffer.getDirectory(),VFSFile.DIRECTORY);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Join Lines"&gt;
+    &lt;CODE&gt;
+        textArea.joinLines();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Close (global)"&gt;
+    &lt;CODE&gt;
+        jEdit.closeBuffer(view,buffer);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Whole Word"&gt;
+    &lt;CODE&gt;
+        SearchAndReplace.setWholeWord(!SearchAndReplace.getWholeWord());
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Line Scroll $Up"&gt;
+    &lt;CODE&gt;
+        textArea.scrollUpLine();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="To $Lower Case"&gt;
+    &lt;CODE&gt;
+        textArea.toLowerCase();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Next Paragraph"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextParagraph(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Start of Buffer"&gt;
+    &lt;CODE&gt;
+        textArea.goToBufferStart(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="New $View"&gt;
+    &lt;CODE&gt;
+        bsm = jEdit.getBufferSetManager();
+if (bsm.getScope() == BufferSet.Scope.global) {
+    jEdit.newView(view);
+}
+else {
+    View.ViewConfig config = new View.ViewConfig();
+    config.docking = view.getViewConfig().docking;
+    jEdit.newView(view,bsm.createUntitledBuffer(),config);
+}
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Vie$w Registers (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("view-registers");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Insert Next Character Literally"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().readNextChar(
+        jEdit.getProperty("view.status.insert-literal"),
+        "textArea.setSelectedText(String.valueOf(__char__));");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Remove Trailing $Whitespace"&gt;
+    &lt;CODE&gt;
+        textArea.removeTrailingWhiteSpace();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Evaluate $For Selected Lines..."&gt;
+    &lt;CODE&gt;
+        BeanShell.showEvaluateLinesDialog(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Re$peat Last Action"&gt;
+    &lt;CODE&gt;
+        view.getInputHandler().invokeLastAction();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Rectangular Selection"&gt;
+    &lt;CODE&gt;
+        textArea.toggleRectangularSelectionEnabled();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Clos$e All"&gt;
+    &lt;CODE&gt;
+        boolean closeAll = true;
+    if (jEdit.getBooleanProperty("closeAllConfirm"))
+    {
+        int answer = GUIUtilities.confirm(view, "closeall", null, javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE);
+        closeAll = answer == javax.swing.JOptionPane.YES_OPTION;
+    }
+    if (closeAll)
+    {
+        org.gjt.sp.jedit.bufferset.BufferSet bufferSet = editPane.getBufferSet();
+        Buffer[] buffers = bufferSet.getAllBuffers();
+        for (Buffer buff: buffers) {
+            jEdit.closeBuffer(editPane,buff);
+        }
+    }
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to $Next Buffer"&gt;
+    &lt;CODE&gt;
+        editPane.nextBuffer();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="A$dd Explicit Fold"&gt;
+    &lt;CODE&gt;
+        textArea.addExplicitFold();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Smart Home"&gt;
+    &lt;CODE&gt;
+        textArea.smartHome(false);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="$Tip of the Day"&gt;
+    &lt;CODE&gt;
+        new TipOfTheDay(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Vie$w Registers"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("view-registers");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Delete to $Start of Line"&gt;
+    &lt;CODE&gt;
+        textArea.deleteToStartOfLine();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Edit Favorites"&gt;
+    &lt;CODE&gt;
+        VFSBrowser.browseDirectory(view,"favorites:");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Ne$w Plain View"&gt;
+    &lt;CODE&gt;
+        jEdit.newView(view,buffer,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Re$move All Markers"&gt;
+    &lt;CODE&gt;
+        buffer.removeAllMarkers();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Go to Next Word (Eat Whitespace)"&gt;
+    &lt;CODE&gt;
+        textArea.goToNextWord(false,true);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+</code></pre>
+<hr />
+<p><a id="PluginConsole"></a></p>
+<h3>Plugin: Console</h3>
+<pre><code>&lt;ACTION NAME="Console (Toggle)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().toggleDockableWindow("console");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Console"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().showDockableWindow("console");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Browse Commando Directory"&gt;
+    &lt;CODE&gt;
+        directory = console.ConsolePlugin.getUserCommandDirectory();
+        if(directory == null)
+            GUIUtilities.error(view,"no-settings",null);
+        else
+            VFSBrowser.browseDirectory(view,directory);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Console (New Floating Instance)"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().floatDockableWindow("console");
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Run Last Command"&gt;
+    &lt;CODE&gt;
+        view.getDockableWindowManager().addDockableWindow("console");
+        console = view.getDockableWindowManager().getDockable("console");
+        console.runLastCommand();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Commando..."&gt;
+    &lt;CODE&gt;
+        new console.commando.CommandoDialog(view,null);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Clear console"&gt;
+    &lt;CODE&gt;
+        console = view.getDockableWindowManager().getDockable("console");
+      console.clear();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="CD to Selected Node"&gt;
+    &lt;CODE&gt;
+        changeToPvSelected(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Run Current Buffer..."&gt;
+    &lt;CODE&gt;
+        console.ConsolePlugin.run(view,buffer);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Compile Current Buffer..."&gt;
+    &lt;CODE&gt;
+        console.ConsolePlugin.compile(view,buffer);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="CD to Root"&gt;
+    &lt;CODE&gt;
+        changeToPvRoot(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Regen dynamic menus"&gt;
+    &lt;CODE&gt;
+        console.ConsolePlugin.rescanCommands();
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Run Project"&gt;
+    &lt;CODE&gt;
+        console.ConsolePlugin.runProject(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+&lt;ACTION NAME="Compile Project"&gt;
+    &lt;CODE&gt;
+        console.ConsolePlugin.compileProject(view);
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+</code></pre>
+<hr />
+<p><a id="DockingLayouts"></a></p>
+<h3>Docking Layouts</h3>
+<pre><code>&lt;ACTION NAME="load-perspective-view0"&gt;
+    &lt;CODE&gt;
+        jEdit.getAction(load-perspective-view0).invoke(view); 
+    &lt;/CODE&gt;
+&lt;/ACTION&gt;
+</code></pre>
+<hr />
+
+  </article>
+  </section>
+  <footer><div class="footleft">&#9666;</div><div class="footright">&#9656;</div></footer>
+</div>
+</body>
+</html>

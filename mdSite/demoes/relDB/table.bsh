@@ -1,0 +1,29 @@
+
+
+/***,sv,persons
+Emp ID ,Name Prefix ,First Name ,Middle Initial ,Last Name ,Gender ,E Mail
+677509 ,Drs.        ,Lois       ,H              ,Walker    ,F      ,lois.walker@hotmail.com
+940761 ,Ms.         ,Brenda     ,S              ,Robinson  ,F      ,brenda.robinson@gmail.com
+428945 ,Dr.         ,Joe        ,W              ,Robinson  ,M      ,joe.robinson@gmail.com
+408351 ,Drs.        ,Diane      ,I              ,Evans     ,F      ,diane.evans@yahoo.com
+193819 ,Mr.         ,Benjamin   ,R              ,Russell   ,M      ,benjamin.russell@charter.net
+499687 ,Mr.         ,Patrick    ,F              ,Bailey    ,M      ,patrick.bailey@aol.com
+539712 ,Ms.         ,Nancy      ,T              ,Baker     ,F      ,nancy.baker@bp.com
+380086 ,Mrs.        ,Carol      ,V              ,Murphy    ,F      ,carol.murphy@gmail.com
+477616 ,Hon.        ,Frances    ,B              ,Young     ,F      ,frances.young@gmail.com
+162402 ,Hon.        ,Diana      ,T              ,Peterson  ,F      ,diana.peterson@hotmail.co.uk
+231469 ,Mr.         ,Ralph      ,L              ,Flores    ,M      ,ralph.flores@yahoo.com
+153989 ,Prof.       ,Jack       ,C              ,Alexander ,M      ,jack.alexander@gmail.com
+386158 ,Mrs.        ,Melissa    ,Q              ,King      ,F      ,melissa.king@comcast.net
+***/
+
+StringBuilder output= new StringBuilder("<!-- head=jquery.html+prettify.html+prettyClassify.js -->\n\n<table>\n");
+
+String itemKind="<th>";
+for (String[] items : dsvLines(scriptPath,"persons")) {
+	output.append("<tr>"+itemKind+String.join(itemKind,items)+"</tr>"+"\n");
+	itemKind = "<td>";
+}
+
+toFile(scriptPath.replaceAll("\\.\\w+$",".md"),output+"</table>");
+

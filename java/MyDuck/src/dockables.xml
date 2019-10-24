@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE DOCKABLES SYSTEM "dockables.dtd">
+
+<DOCKABLES>
+	<DOCKABLE NAME="myduck" MOVABLE="TRUE" >
+		new home.myduck.MyDuck(view, position);
+	</DOCKABLE>
+</DOCKABLES>

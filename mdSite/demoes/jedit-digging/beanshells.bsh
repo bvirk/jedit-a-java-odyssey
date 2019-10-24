@@ -1,0 +1,61 @@
+/**
+ * 
+ * @library sDir()
+ * @plugin home.txtconv.TxtConvPlugin (using com.github.rjeschke.txtmark.*, org.jsoup.*) 
+ */
+
+Runnable page() {
+	StringBuilder lines = new StringBuilder();
+	//lines.append("<!-- head=siteJedit.css.html+jquery.html+prettify.html+prettyClassify.js+sitePages()+eventsAndNav.js & body=pageJEdit.md & title=macros+|+startups -->\n");
+	StringBuilder lines = pageheading(scriptPath, "// startPattern", "// endPattern",
+			 "<!-- head=siteJedit.css.html+jquery.html+prettify.html+prettyClassify.js+sitePages()+eventsAndNav.js & "
+			+"body=pageJEdit.md & title=macros+|+startups -->\n###&nbsp;&nbsp;&nbsp;&nbsp;Macroes and startups\n\n","");
+	
+		// startPattern
+		anId(String funcDesc) {
+			String[] fParts = funcDesc.split("\\s");
+			return fParts.length >= 3
+				? "id='"+fParts[2].replaceAll("\\(.+$","")+"'"
+				: "";
+		}
+		listFiles(String path,String crawled) {
+			for (File f : new File(path).listFiles()) 
+				if (f.isDirectory())
+					listFiles(path+"/"+f.getName(),crawled+f.getName()+"/");
+				else 
+					if (!f.getName().endsWith("#")) {
+						String pathN = f.getPath();
+						String macroType=pathN.substring(sDirLen,pathN.length()-f.getName().length()-1);
+						lines
+							.append("<"+"p class='macro'><a class='pop' href'#' id='"+ f.getName().replaceAll("\\.bsh$","") +"'>&nbsp;&#9656;&nbsp;</a>&nbsp;")
+							.append(crawled+f.getName()+" <span class='macroType'>("+macroType+")</span><"+"/p>\n")
+							.append("<d"+"iv class=\"desc\">\n"); 
+						for  (line: toArray(readAllLines(f.getPath()))) { 
+							if (line.trim().startsWith("//{{{"))
+								lines
+									.append("<"+"p class='function'><a class='pop' href='#' "+anId(line.trim()) +">&nbsp;&#9656;&nbsp;</a>&nbsp;&nbsp;&nbsp;"+line)
+									.append("<d"+"iv class=\"subdesc\">\n");
+							else
+								lines.append("\t\t"+line+"\n");
+							if (line.trim().endsWith("//}}}"))
+								lines.append("</d"+"iv>\n");
+						}
+						lines.append("</d"+"iv>\n");
+						lines.append("\n\n");
+					} 
+		}
+		int sDirLen;
+		void run() {
+			sDirLen= sDir().length();
+			
+			for (f: new String[]{"/macros","/startup"})
+				listFiles(sDir()+f,"");
+			String outFile = scriptPath.replaceAll("\\.\\w+$",".md");
+			toFile(outFile,lines.toString());
+			  
+		}
+		// endPattern
+	return this;
+}
+
+new Thread(page()).start();

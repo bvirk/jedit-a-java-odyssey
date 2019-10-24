@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="../../../js/jquery.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script>
+$(function() {
+	$('pre').addClass('prettyprint'); 
+	$('code').addClass('language-java'); 
+});
+                                                                                 </script>
+<title>join</title>
+</head>
+<body>
+<!-- head=jquery.html+prettify.html+prettyClassify.js&title=join --> 
+<table> 
+    <tbody>
+        <tr>
+            <th>supplierID</th>
+            <th>business name</th>
+            <th>contact person</th>
+            <th>product nr</th>
+            <th>product name</th>
+            <th>supplierID</th>
+        </tr> 
+        <tr>
+            <td>7</td>
+            <td>Pavlova, Ltd.</td>
+            <td>Ian Devling</td>
+            <td>1</td>
+            <td>Chai</td>
+            <td>7</td>
+        </tr> 
+        <tr>
+            <td>1</td>
+            <td>Exotic Liquids</td>
+            <td>Charlotte Cooper</td>
+            <td>2</td>
+            <td>Chang</td>
+            <td>1</td>
+        </tr> 
+        <tr>
+            <td>1</td>
+            <td>Exotic Liquids</td>
+            <td>Charlotte Cooper</td>
+            <td>3</td>
+            <td>Aniseed Syrup</td>
+            <td>1</td>
+        </tr> 
+        <tr>
+            <td>2</td>
+            <td>New Orleans Cajun Delights</td>
+            <td>Shelley Burke</td>
+            <td>4</td>
+            <td>Chef Anton's Cajun Seasoning</td>
+            <td>2</td>
+        </tr> 
+        <tr>
+            <td>2</td>
+            <td>New Orleans Cajun Delights</td>
+            <td>Shelley Burke</td>
+            <td>5</td>
+            <td>Chef Anton's Gumbo Mix</td>
+            <td>2</td>
+        </tr> 
+        <tr>
+            <td>3</td>
+            <td>Grandma Kelly's Homestead</td>
+            <td>Regina Murphy</td>
+            <td>6</td>
+            <td>Grandma's Boysenberry Spread</td>
+            <td>3</td>
+        </tr> 
+        <tr>
+            <td>3</td>
+            <td>Grandma Kelly's Homestead</td>
+            <td>Regina Murphy</td>
+            <td>7</td>
+            <td>Uncle Bob's Organic Dried Pears</td>
+            <td>3</td>
+        </tr> 
+        <tr>
+            <td>3</td>
+            <td>Grandma Kelly's Homestead</td>
+            <td>Regina Murphy</td>
+            <td>8</td>
+            <td>Northwoods Cranberry Sauce</td>
+            <td>3</td>
+        </tr> 
+        <tr>
+            <td>4</td>
+            <td>Tokyo Traders</td>
+            <td>Yoshi Nagase</td>
+            <td>9</td>
+            <td>Mishi Kobe Niku</td>
+            <td>4</td>
+        </tr> 
+        <tr>
+            <td>4</td>
+            <td>Tokyo Traders</td>
+            <td>Yoshi Nagase</td>
+            <td>10</td>
+            <td>Ikura</td>
+            <td>4</td>
+        </tr> 
+        <tr>
+            <td>5</td>
+            <td>Cooperativa de Quesos 'Las Cabras'</td>
+            <td>Antonio del Valle Saavedra </td>
+            <td>11</td>
+            <td>Queso Cabrales</td>
+            <td>5</td>
+        </tr> 
+        <tr>
+            <td>5</td>
+            <td>Cooperativa de Quesos 'Las Cabras'</td>
+            <td>Antonio del Valle Saavedra </td>
+            <td>12</td>
+            <td>Queso Manchego La Pastora</td>
+            <td>5</td>
+        </tr> 
+        <tr>
+            <td>6</td>
+            <td>Mayumi's</td>
+            <td>Mayumi Ohno</td>
+            <td>13</td>
+            <td>Konbu</td>
+            <td>6</td>
+        </tr> 
+        <tr>
+            <td>6</td>
+            <td>Mayumi's</td>
+            <td>Mayumi Ohno</td>
+            <td>14</td>
+            <td>Tofu</td>
+            <td>6</td>
+        </tr> 
+        <tr>
+            <td>6</td>
+            <td>Mayumi's</td>
+            <td>Mayumi Ohno</td>
+            <td>15</td>
+            <td>Genen Shouyu</td>
+            <td>6</td>
+        </tr> 
+        <tr>
+            <td>7</td>
+            <td>Pavlova, Ltd.</td>
+            <td>Ian Devling</td>
+            <td>16</td>
+            <td>Pavlova</td>
+            <td>7</td>
+        </tr> 
+        <tr>
+            <td>7</td>
+            <td>Pavlova, Ltd.</td>
+            <td>Ian Devling</td>
+            <td>17</td>
+            <td>Alice Mutton</td>
+            <td>7</td>
+        </tr> 
+        <tr>
+            <td>7</td>
+            <td>Pavlova, Ltd.</td>
+            <td>Ian Devling</td>
+            <td>18</td>
+            <td>Carnarvon Tigers</td>
+            <td>7</td>
+        </tr> 
+        <tr>
+            <td>8</td>
+            <td>Specialty Biscuits, Ltd.</td>
+            <td>Peter Wilson</td>
+            <td>19</td>
+            <td>Teatime Chocolate Biscuits</td>
+            <td>8</td>
+        </tr> 
+        <tr>
+            <td>8</td>
+            <td>Specialty Biscuits, Ltd.</td>
+            <td>Peter Wilson</td>
+            <td>20</td>
+            <td>Sir Rodney's Marmalade</td>
+            <td>8</td>
+        </tr> 
+        <tr>
+            <td>8</td>
+            <td>Specialty Biscuits, Ltd.</td>
+            <td>Peter Wilson</td>
+            <td>21</td>
+            <td>Sir Rodney's Scones</td>
+            <td>8</td>
+        </tr> 
+        <tr>
+            <td>9</td>
+            <td>PB Knäckebröd AB</td>
+            <td>Lars Peterson</td>
+            <td>22</td>
+            <td>Gustaf's Knäckebröd</td>
+            <td>9</td>
+        </tr> 
+        <tr>
+            <td>9</td>
+            <td>PB Knäckebröd AB</td>
+            <td>Lars Peterson</td>
+            <td>23</td>
+            <td>Tunnbröd</td>
+            <td>9</td>
+        </tr> 
+        <tr>
+            <td>10</td>
+            <td>Refrescos Americanas LTDA</td>
+            <td>Carlos Diaz</td>
+            <td>24</td>
+            <td>Guaraná Fantástica</td>
+            <td>10</td>
+        </tr> 
+        <tr>
+            <td>11</td>
+            <td>Heli Süßwaren GmbH &amp; Co. KG</td>
+            <td>Petra Winkler</td>
+            <td>25</td>
+            <td>NuNuCa Nuß-Nougat-Creme</td>
+            <td>11</td>
+        </tr> 
+        <tr>
+            <td>11</td>
+            <td>Heli Süßwaren GmbH &amp; Co. KG</td>
+            <td>Petra Winkler</td>
+            <td>26</td>
+            <td>Gumbär Gummibärchen</td>
+            <td>11</td>
+        </tr> 
+        <tr>
+            <td>11</td>
+            <td>Heli Süßwaren GmbH &amp; Co. KG</td>
+            <td>Petra Winkler</td>
+            <td>27</td>
+            <td>Schoggi Schokolade</td>
+            <td>11</td>
+        </tr> 
+        <tr>
+            <td>12</td>
+            <td>Plutzer Lebensmittelgroßmärkte AG</td>
+            <td>Martin Bein</td>
+            <td>28</td>
+            <td>Rössle Sauerkraut</td>
+            <td>12</td>
+        </tr> 
+        <tr>
+            <td>12</td>
+            <td>Plutzer Lebensmittelgroßmärkte AG</td>
+            <td>Martin Bein</td>
+            <td>29</td>
+            <td>Thüringer Rostbratwurst</td>
+            <td>12</td>
+        </tr> 
+        <tr>
+            <td>13</td>
+            <td>Nord-Ost-Fisch Handelsgesellschaft mbH</td>
+            <td>Sven Petersen</td>
+            <td>30</td>
+            <td>Nord-Ost Matjeshering</td>
+            <td>13</td>
+        </tr> 
+        <tr>
+            <td>14</td>
+            <td>Formaggi Fortini s.r.l.</td>
+            <td>Elio Rossi</td>
+            <td>31</td>
+            <td>Gorgonzola Telino</td>
+            <td>14</td>
+        </tr> 
+        <tr>
+            <td>14</td>
+            <td>Formaggi Fortini s.r.l.</td>
+            <td>Elio Rossi</td>
+            <td>32</td>
+            <td>Mascarpone Fabioli</td>
+            <td>14</td>
+        </tr> 
+        <tr>
+            <td>15</td>
+            <td>Norske Meierier</td>
+            <td>Beate Vileid</td>
+            <td>33</td>
+            <td>Geitost</td>
+            <td>15</td>
+        </tr> 
+        <tr>
+            <td>16</td>
+            <td>Bigfoot Breweries</td>
+            <td>Cheryl Saylor</td>
+            <td>34</td>
+            <td>Sasquatch Ale</td>
+            <td>16</td>
+        </tr> 
+        <tr>
+            <td>16</td>
+            <td>Bigfoot Breweries</td>
+            <td>Cheryl Saylor</td>
+            <td>35</td>
+            <td>Steeleye Stout</td>
+            <td>16</td>
+        </tr> 
+        <tr>
+            <td>17</td>
+            <td>Svensk Sjöföda AB</td>
+            <td>Michael Björn</td>
+            <td>36</td>
+            <td>Inlagd Sill</td>
+            <td>17</td>
+        </tr> 
+        <tr>
+            <td>17</td>
+            <td>Svensk Sjöföda AB</td>
+            <td>Michael Björn</td>
+            <td>37</td>
+            <td>Gravad lax</td>
+            <td>17</td>
+        </tr> 
+        <tr>
+            <td>18</td>
+            <td>Aux joyeux ecclésiastiques</td>
+            <td>Guylène Nodier</td>
+            <td>38</td>
+            <td>Côte de Blaye</td>
+            <td>18</td>
+        </tr> 
+        <tr>
+            <td>18</td>
+            <td>Aux joyeux ecclésiastiques</td>
+            <td>Guylène Nodier</td>
+            <td>39</td>
+            <td>Chartreuse verte</td>
+            <td>18</td>
+        </tr> 
+        <tr>
+            <td>19</td>
+            <td>New England Seafood Cannery</td>
+            <td>Robb Merchant</td>
+            <td>40</td>
+            <td>Boston Crab Meat</td>
+            <td>19</td>
+        </tr> 
+        <tr>
+            <td>19</td>
+            <td>New England Seafood Cannery</td>
+            <td>Robb Merchant</td>
+            <td>41</td>
+            <td>Jack's New England Clam Chowder</td>
+            <td>19</td>
+        </tr> 
+        <tr>
+            <td>20</td>
+            <td>Leka Trading</td>
+            <td>Chandra Leka</td>
+            <td>42</td>
+            <td>Singaporean Hokkien Fried Mee</td>
+            <td>20</td>
+        </tr> 
+        <tr>
+            <td>20</td>
+            <td>Leka Trading</td>
+            <td>Chandra Leka</td>
+            <td>43</td>
+            <td>Ipoh Coffee</td>
+            <td>20</td>
+        </tr> 
+        <tr>
+            <td>20</td>
+            <td>Leka Trading</td>
+            <td>Chandra Leka</td>
+            <td>44</td>
+            <td>Gula Malacca</td>
+            <td>20</td>
+        </tr> 
+        <tr>
+            <td>21</td>
+            <td>Lyngbysild</td>
+            <td>Niels Petersen</td>
+            <td>45</td>
+            <td>Røgede sild</td>
+            <td>21</td>
+        </tr> 
+        <tr>
+            <td>21</td>
+            <td>Lyngbysild</td>
+            <td>Niels Petersen</td>
+            <td>46</td>
+            <td>Spegesild</td>
+            <td>21</td>
+        </tr> 
+        <tr>
+            <td>22</td>
+            <td>Zaanse Snoepfabriek</td>
+            <td>Dirk Luchte</td>
+            <td>47</td>
+            <td>Zaanse koeken</td>
+            <td>22</td>
+        </tr> 
+        <tr>
+            <td>22</td>
+            <td>Zaanse Snoepfabriek</td>
+            <td>Dirk Luchte</td>
+            <td>48</td>
+            <td>Chocolade</td>
+            <td>22</td>
+        </tr> 
+        <tr>
+            <td>23</td>
+            <td>Karkki Oy</td>
+            <td>Anne Heikkonen</td>
+            <td>49</td>
+            <td>Maxilaku</td>
+            <td>23</td>
+        </tr> 
+        <tr>
+            <td>23</td>
+            <td>Karkki Oy</td>
+            <td>Anne Heikkonen</td>
+            <td>50</td>
+            <td>Valkoinen suklaa</td>
+            <td>23</td>
+        </tr> 
+        <tr>
+            <td>24</td>
+            <td>G'day, Mate</td>
+            <td>Wendy Mackenzie</td>
+            <td>51</td>
+            <td>Manjimup Dried Apples</td>
+            <td>24</td>
+        </tr> 
+        <tr>
+            <td>24</td>
+            <td>G'day, Mate</td>
+            <td>Wendy Mackenzie</td>
+            <td>52</td>
+            <td>Filo Mix</td>
+            <td>24</td>
+        </tr> 
+        <tr>
+            <td>24</td>
+            <td>G'day, Mate</td>
+            <td>Wendy Mackenzie</td>
+            <td>53</td>
+            <td>Perth Pasties</td>
+            <td>24</td>
+        </tr> 
+        <tr>
+            <td>25</td>
+            <td>Ma Maison</td>
+            <td>Jean-Guy Lauzon</td>
+            <td>54</td>
+            <td>Tourtière</td>
+            <td>25</td>
+        </tr> 
+        <tr>
+            <td>25</td>
+            <td>Ma Maison</td>
+            <td>Jean-Guy Lauzon</td>
+            <td>55</td>
+            <td>Pâté chinois</td>
+            <td>25</td>
+        </tr> 
+        <tr>
+            <td>26</td>
+            <td>Pasta Buttini s.r.l.</td>
+            <td>Giovanni Giudici</td>
+            <td>56</td>
+            <td>Gnocchi di nonna Alice</td>
+            <td>26</td>
+        </tr> 
+        <tr>
+            <td>26</td>
+            <td>Pasta Buttini s.r.l.</td>
+            <td>Giovanni Giudici</td>
+            <td>57</td>
+            <td>Ravioli Angelo</td>
+            <td>26</td>
+        </tr> 
+        <tr>
+            <td>27</td>
+            <td>Escargots Nouveaux</td>
+            <td>Marie Delamare</td>
+            <td>58</td>
+            <td>Escargots de Bourgogne</td>
+            <td>27</td>
+        </tr> 
+        <tr>
+            <td>28</td>
+            <td>Gai pâturage</td>
+            <td>Eliane Noz</td>
+            <td>59</td>
+            <td>Raclette Courdavault</td>
+            <td>28</td>
+        </tr> 
+        <tr>
+            <td>28</td>
+            <td>Gai pâturage</td>
+            <td>Eliane Noz</td>
+            <td>60</td>
+            <td>Camembert Pierrot</td>
+            <td>28</td>
+        </tr> 
+        <tr>
+            <td>29</td>
+            <td>Forêts d'érables</td>
+            <td>Chantal Goulet</td>
+            <td>61</td>
+            <td>Sirop d'érable</td>
+            <td>29</td>
+        </tr> 
+        <tr>
+            <td>29</td>
+            <td>Forêts d'érables</td>
+            <td>Chantal Goulet</td>
+            <td>62</td>
+            <td>Tarte au sucre</td>
+            <td>29</td>
+        </tr> 
+        <tr>
+            <td>7</td>
+            <td>Pavlova, Ltd.</td>
+            <td>Ian Devling</td>
+            <td>63</td>
+            <td>Vegie-spread</td>
+            <td>7</td>
+        </tr> 
+        <tr>
+            <td>12</td>
+            <td>Plutzer Lebensmittelgroßmärkte AG</td>
+            <td>Martin Bein</td>
+            <td>64</td>
+            <td>Wimmers gute Semmelknödel</td>
+            <td>12</td>
+        </tr> 
+        <tr>
+            <td>2</td>
+            <td>New Orleans Cajun Delights</td>
+            <td>Shelley Burke</td>
+            <td>65</td>
+            <td>Louisiana Fiery Hot Pepper Sauce</td>
+            <td>2</td>
+        </tr> 
+        <tr>
+            <td>2</td>
+            <td>New Orleans Cajun Delights</td>
+            <td>Shelley Burke</td>
+            <td>66</td>
+            <td>Louisiana Hot Spiced Okra</td>
+            <td>2</td>
+        </tr> 
+        <tr>
+            <td>16</td>
+            <td>Bigfoot Breweries</td>
+            <td>Cheryl Saylor</td>
+            <td>67</td>
+            <td>Laughing Lumberjack Lager</td>
+            <td>16</td>
+        </tr> 
+        <tr>
+            <td>8</td>
+            <td>Specialty Biscuits, Ltd.</td>
+            <td>Peter Wilson</td>
+            <td>68</td>
+            <td>Scottish Longbreads</td>
+            <td>8</td>
+        </tr> 
+        <tr>
+            <td>15</td>
+            <td>Norske Meierier</td>
+            <td>Beate Vileid</td>
+            <td>69</td>
+            <td>Gudbrandsdalsost</td>
+            <td>15</td>
+        </tr> 
+        <tr>
+            <td>7</td>
+            <td>Pavlova, Ltd.</td>
+            <td>Ian Devling</td>
+            <td>70</td>
+            <td>Outback Lager</td>
+            <td>7</td>
+        </tr> 
+        <tr>
+            <td>15</td>
+            <td>Norske Meierier</td>
+            <td>Beate Vileid</td>
+            <td>71</td>
+            <td>Fløtemysost</td>
+            <td>15</td>
+        </tr> 
+        <tr>
+            <td>14</td>
+            <td>Formaggi Fortini s.r.l.</td>
+            <td>Elio Rossi</td>
+            <td>72</td>
+            <td>Mozzarella di Giovanni</td>
+            <td>14</td>
+        </tr> 
+        <tr>
+            <td>17</td>
+            <td>Svensk Sjöföda AB</td>
+            <td>Michael Björn</td>
+            <td>73</td>
+            <td>Röd Kaviar</td>
+            <td>17</td>
+        </tr> 
+        <tr>
+            <td>4</td>
+            <td>Tokyo Traders</td>
+            <td>Yoshi Nagase</td>
+            <td>74</td>
+            <td>Longlife Tofu</td>
+            <td>4</td>
+        </tr> 
+        <tr>
+            <td>12</td>
+            <td>Plutzer Lebensmittelgroßmärkte AG</td>
+            <td>Martin Bein</td>
+            <td>75</td>
+            <td>Rhönbräu Klosterbier</td>
+            <td>12</td>
+        </tr> 
+        <tr>
+            <td>23</td>
+            <td>Karkki Oy</td>
+            <td>Anne Heikkonen</td>
+            <td>76</td>
+            <td>Lakkalikööri</td>
+            <td>23</td>
+        </tr> 
+        <tr>
+            <td>12</td>
+            <td>Plutzer Lebensmittelgroßmärkte AG</td>
+            <td>Martin Bein</td>
+            <td>77</td>
+            <td>Original Frankfurter grüne Soße</td>
+            <td>12</td>
+        </tr> 
+    </tbody>
+</table>
+</body>
+</html>

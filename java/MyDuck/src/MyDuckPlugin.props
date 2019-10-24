@@ -1,0 +1,9 @@
+plugin.home.myduck.MyDuckPlugin.activate=defer
+plugin.home.myduck.MyDuckPlugin.name=MyDuck
+plugin.home.myduck.MyDuckPlugin.author=Benny Andersen
+plugin.home.myduck.MyDuckPlugin.usePluginHome=true
+plugin.home.myduck.MyDuckPlugin.version=1.0
+plugin.home.myduck.MyDuckPlugin.depend.0=jdk 1.6
+plugin.home.myduck.MyDuckPlugin.depend.1=jedit 05.00.01.00
+plugin.home.myduck.MyDuckPlugin.description=Plugin to show minimals 'screws and bolts' and shortest possible 'path' to achive goal.
+myduck.title=20 GOTO 10
