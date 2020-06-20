@@ -13,10 +13,12 @@
  * This facilty is meant to deal with blocks of dsv data as tables, a sort of pure text database in a single file.
  */
 void formatDSV() {
-	dsvFormatBlocks(numLeft2Caret(textArea,true,1));
+	//int space=numLeft2Caret(view,true,1);
+	//p(space);
+	dsvFormatBlocks(numLeft2Caret(view,true,1));
 }
 
-/** 
+/**     
  * Formats delimiter seperated values block to lign up columns. All blocks in current buffer is column ligned up
  * formatted with the sammme columnspace - the parameter to dsvFormat, but coulumns width is individual to each block. 
  * 

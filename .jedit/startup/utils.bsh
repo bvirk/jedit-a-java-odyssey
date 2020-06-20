@@ -31,6 +31,17 @@ String ux(String possibleBackslashed) {
 	return possibleBackslashed.replaceAll("\\\\","/"); 
 } //}}}
 
+//{{{ String capitalized(String s)
+/**
+ * Capitalize a string. That means make the first character uppercase.
+ *
+ * @param s gets capitalized. s shall be of String or StringBuilder or any, 'has substring that returns a toString() able object, type.
+ * @return capitalized string
+ */
+String capitalized(Object s) {
+    return ""+s.substring(0,1).toUpperCase()+s.substring(1);
+} //}}}
+
 //{{{ String[] toArray(Object toArrayAble)
 /**
  * Shortcut for toArrayAble.toArray(String[]), where toArrayAble is a container instance implementing Collection 
@@ -42,29 +53,25 @@ String[] toArray(Object toArrayAble) {
     return toArrayAble.toArray(new String[toArrayAble.size()]);
 } //}}}
 
-//{{{ interface List asList(String i1,String i2,String i3)
+//{{{ String[] withInsertion(String[] list, String newCome, int insertIndex)
 /**
- * Beanshells absence of varargs motivated shortcut for Arrays.asList( ...
+ * Inserts a string in an array of strings
  *
- * @param ix is list items of type String
- * @return List
+ * @param list array of string
+ * @param newCome string to be inserted
+ * @param insertIndex where string is inserted
+ * @return array of strings with the inserted string
  */
-List asList(String i1,String i2,String i3) {
-	return Arrays.asList(new String[]{i1,i2,i3});
+String[] withInsertion(String[] list, String newCome, int insertIndex) {
+    String [] newList = new String[list.length+1];
+    for (int i,spread; i<=list.length;i++) 
+        newList[i] = i == insertIndex 
+            ? newCome.substring(spread++)
+            : list[i-spread];
+    return newList;
 } //}}}
 
-//{{{ interface List asList(String i1,String i2)
-/**
- * Beanshells absence of varargs motivated shortcut for Arrays.asList( ...
- *
- * @param ix is list items of type String
- * @return List
- */
-List asList(String i1,String i2) {
-	return Arrays.asList(new String[]{i1,i2});
-} //}}}
-
-//{{{ interface List asList(String i1)
+//{{{ interface List asList(String i1, ...)
 /**
  * Beanshells absence of varargs motivated shortcut for Arrays.asList( ...
  *
@@ -73,7 +80,23 @@ List asList(String i1,String i2) {
  */
 List asList(String i1) {
 	return Arrays.asList(new String[]{i1});
+}
+List asList(String i1,String i2) {
+	return Arrays.asList(new String[]{i1,i2});
+} 
+List asList(String i1,String i2,String i3) {
+	return Arrays.asList(new String[]{i1,i2,i3});
+} 
+List asList(String i1,String i2,String i3,String i4) {
+	return Arrays.asList(new String[]{i1,i2,i3,i4});
+} 
+List asList(String i1,String i2,String i3,String i4,String i5) {
+	return Arrays.asList(new String[]{i1,i2,i3,i4,i5});
 } //}}}
+
+List assList(Object i1,Object i2) {
+	return new ArrayList(Arrays.asList(new Object[]{i1,i2}));
+}
 
 //{{{ String mEval(String expressionList)
 /**
@@ -91,13 +114,55 @@ String mEval(String exp) {
 		exp.replaceAll("(tan|cos|sin|sqrt|atan|acos|asin|sqrt|pow|exp|log)\\(","Math.$1(").replaceAll("(?i)PI","Math.PI"));
 } //}}}
 
-//{{{ interface List readAllLines(File file)
+//{{{ String dkCapUnCameled(String aTxt)
+/**
+ * Capitalize, decodes camelcase or space and substitute danish letters.
+ * The danish letters is coded by escape substitution using dot
+ *
+ * .AE .OE .AA for   Æ,Ø and Å
+ * .ae .oe .aa for   æ,ø and å   
+ * 
+ * for words, starting with some of above, a coded leading space is coded like a uppercase of above.
+ *
+ * eg. "str.aalendeMed.OElledr.oedOg.AEbler." becomes
+ *
+ * Strålende med ølledrød og æbler.
+ *
+ * @param aTxt with lower camelcase substitution of space between words 
+ * @return Capitalized, un camelcased string 
+ */
+String dkCapUnCameled(String aTxt) {
+    StringBuilder txt= new StringBuilder(aTxt);
+    final String [][] natCodes = {{"Æ","AE"},{"Ø","OE"},{"Å","AA"},{"æ","ae"},{"ø","oe"},{"å","aa"}};   
+    int digInRow;
+    for (int startPos=0; startPos < txt.length()-1; startPos++) {
+        char chr = txt.charAt(startPos);
+        digInRow = Character.isDigit(chr) ? digInRow +1 : (digInRow > 0 ? (Character.isLetter(chr) ? -1 : 0 ) : 0); 
+        if (chr == '.') {
+            for (int i=0; i<6 ;i++)  
+                if (txt.substring(startPos+1,startPos+3).equals(natCodes[i][1])) {
+                    txt.delete(startPos,startPos+3);
+                    txt.insert(startPos,natCodes[i][0]);
+                    startPos--;
+                    break;
+                }
+        } else 
+            if (Character.isUpperCase(chr) || (digInRow == 1 || digInRow == -1)) {
+                txt.insert(startPos,' ');
+                txt.setCharAt(startPos+1,Character.toLowerCase(chr));
+                startPos++;
+            }
+    }
+    return capitalized(txt);
+} //}}}
+
+//{{{ interface List readAllLines(File file, boolean supressIOException)
 /**
  * Iterabel, comparable, toArrayAble, random accessible list of utf-8 encoded file lines
  *
  * @param file to read from
  * @return List of utf-8 encoded lines of file or an empty list on IO. If supressIOException
- * is true an IOException just return an empty List.
+ * is true a thrown IOException has the consequence of readLines returning an empty List.
  */
 List readAllLines(File file, boolean supressIOException) {
 	List retval;
@@ -110,6 +175,17 @@ List readAllLines(File file, boolean supressIOException) {
 			throw e;
 	}
 	return retval;
+} //}}}
+
+//{{{ List readAllLines(File file)
+/**
+ * Iterabel, comparable, toArrayAble, random accessible list of utf-8 encoded file lines
+ *
+ * @param file to read from
+ * @return List of utf-8 encoded lines of file or empty list on IOException.
+ */
+List readAllLines(File file) {
+	return readAllLines(file,true);
 } //}}}
 
 //{{{ interface List readAllLines(String fileName)
@@ -142,6 +218,78 @@ List  fileLines(String fileName, String startPattern, String endPattern) {
 		.toList();	
 } //}}}
 
+//{{{ String fileLinesString(String fileName, String blockName)
+/**
+ * Return block of lines, surrounded by the lines
+ *
+ *  /***blockName
+ *		and
+ * 	***/
+/**
+ * Where blockName above is replaced with the actual parameter.
+ *
+ * @param fileName with Lines
+ * @param blockName is what identifies the block
+ * @return lines as a string 
+ */
+String fileLinesString(String fileName, String blockId) {
+    return String.join("\n",toArray(fileLines(fileName,blockId)));
+} //}}}
+
+//{{{ String fileLinesString(String fileName, String blockId, Object [] parms, Properties cssProp)
+/**
+ * java.text.MessageFormat parameterizeable version of fileLines(String fileName, String blockName)
+ *
+ * @param fileName with Lines
+ * @param blockId is what identifies the block
+ * @param parms is an array of objects, referenced by their curly brace surrounding parameter number in one or more lines.
+ * @return lines as a string
+ */
+String fileLinesString(String fileName, String blockId, Object [] parms, Properties cssProp) {
+    StringBuilder lines = new StringBuilder();
+    boolean inScript;
+    for (String line : fileLines(fileName,blockId)) {
+    	if (inScript) {
+    		if (line.trim().equals("</script>")) {
+    			inScript=false;
+    		}
+    		lines.append(line).append("\n");
+    	} else {
+    		if (line.trim().equals("<script>"))
+    			inScript=true;
+    		lines.append(java.text.MessageFormat.format(line,parms)).append("\n");
+    	}
+    }
+    return classToStyle(lines.toString(),cssProp);
+} //}}}
+
+//{{{ String fileLinesString(String fileName, String blockId, Object [] parms)
+/**
+ * java.text.MessageFormat parameterizeable version of fileLines(String fileName, String blockName)
+ *
+ * @param fileName with Lines
+ * @param blockId is what identifies the block
+ * @param parms is an array of objects, referenced by their curly brace surrounding parameter number in one or more lines.
+ * @return lines as a string
+ */
+String fileLinesString(String fileName, String blockId, Object [] parms) {
+    StringBuilder lines = new StringBuilder();
+    boolean inScript;
+    for (String line : fileLines(fileName,blockId)) {
+    	if (inScript) {
+    		if (line.trim().equals("</script>")) {
+    			inScript=false;
+    		}
+    		lines.append(line).append("\n");
+    	} else {
+    		if (line.trim().equals("<script>"))
+    			inScript=true;
+    		lines.append(java.text.MessageFormat.format(line,parms)).append("\n");
+    	}
+    }
+    return lines.toString();
+} //}}}
+
 //{{{ interface fileLines(String fileName, String blockId)
 /**
  * Lines of pattern delimited block. The pattern lines is not inclusive the block 
@@ -152,6 +300,68 @@ List  fileLines(String fileName, String startPattern, String endPattern) {
  */
 List fileLines(String fileName, String blockId) {
 	return fileLines(fileName,"/\\*\\*\\*"+blockId,"\\s*\\*\\*\\*/");
+} //}}}
+
+//{{{ String fileLinesString(String fileName, String blockId, Properties cssProp)
+/**
+ * Replaces class attributes with style attributes in addition to fileLinesString(String fileName, String blockId
+ *
+ * @param fileName with lines
+ * @param blockId is what identifies the block
+ * @param cssProp that holds the css properties of class attribute values, if not found a style="" vould be the replacement result.
+ * @return lines as a string 
+ */
+String fileLinesString(String fileName, String blockId, Properties cssProp) {
+    return classToStyle(fileLinesString(fileName,blockId),cssProp);
+} //}}}
+
+//{{{ String classToStyle(String htmlWithClassAttributes, Properties cssProp) 
+/**
+ * Transforms class attributes to style attribute using stylesheet as properties
+ *
+ * @param htmlWithClassAttributes is input with class attributes
+ * @param cssProp is ths stylesheet as a property list - keys are classNames
+ * @return the converted string containing style attributes
+ */
+String classToStyle(String htmlWithClassAttributes, Properties cssProp) {
+	String html = htmlWithClassAttributes;
+	
+	Pattern pat = Pattern.compile("class=\"([^\"]+)\"");
+    Matcher m = pat.matcher(html);
+    while (m.find()) {
+		html = html.substring(0,m.start(1)-7)+ "style=\"" + cssProp.getProperty(m.group(1),"") +html.substring(m.end(1));
+		m =	pat.matcher(html);
+	} 
+	return html;
+} //}}}
+
+//{{{ Properties cssAsProperties(String fileName) 
+/**
+ * Represent, in a simple way, cacsading style sheet block as properties. It is only the trimmed, with dot removed, selector,
+ * that becomes the key and {, } and whitespace besides a single space is removed from value. 
+ * It is only meant to be used to replace class attributes with style attributes - a single class selector for each property.
+ *   
+ *   .bottomline {
+ *   	text-align:center; 
+ *   	vertical-align: bottom;
+ *   	font-weight: bold;
+ *   	font-size: 0.8em;
+ *   }     
+ *  
+/**  
+ *  Has property:  'bottomline' with value  'text-align:center; vertical-align: bottom; font-weight: bold; font-size: 0.8em;'
+ *
+ * @param fileName of file to find block css
+ * @return css  
+ */
+Properties cssAsProperties(String fileName) {
+    Properties prop = new Properties();
+    for (String k_curly_v : String.join("\n",toArray(readAllLines(fileName)))
+    			.replaceAll("\\n","").replaceAll("\\t"," ").replaceAll(" {2,}"," ").replaceAll("} *$","").split("}")) {
+        String [] kv = k_curly_v.split("\\{");
+        prop.setProperty(kv[0].replace(".","").trim(),kv[1].trim());
+    }
+    return prop;
 } //}}}
 
 //{{{ interface List startupBeanshellFilesLines()
@@ -443,6 +653,39 @@ List jEditSWP(String startsWith) {
 	return startsWithPropertyKeys(startsWith,jEdit.getProperties());
 } //}}}
 
+//{{{ void pop(String popn) 
+/**
+ * Descends into properties
+ *
+ * @param popn part of property name that starts after 'options.' 
+ */
+void pop(String popn) {
+    List pl = jEditSWP("options."+popn);
+    if (pl.size() == 1 ) {
+        setClip(pl.get(0));
+        p(pl.get(0));
+        p("Copied to clipboard");
+        return;
+    }
+    Map mKeys = new TreeMap();
+    for ( String k :pl) {
+        int dotI=k.indexOf(".",8+popn.length());
+        int obLast = k.indexOf("=",9);
+        if (dotI >-1 && dotI < obLast)
+            obLast=dotI;
+        mKeys.put(k.substring(8+popn.lastIndexOf("."),obLast),"");
+    }
+    StringBuffer m = new StringBuffer();
+    int maxLineLength=80;
+    int lineLength=0;
+    for (String k : mKeys.keySet()) {
+        m.append(k+" "+(lineLength>maxLineLength ? " \n" : " "));
+        lineLength += lineLength>maxLineLength ? -lineLength : k.length();
+    }
+    p(m);
+    
+} //}}}
+
 //{{{ interface List systemSWP(String startsWith)
 /**
  * startswith key filtered list of system properties key=value strings 
@@ -716,10 +959,32 @@ String getClipboard() {
  *	nospaces follows number		delete=false	spaces and number is selected
  */ 
 int numLeft2Caret(View view, boolean delete, int defaultOnNoNumber) {
+	return numLeft2Caret(view, delete, defaultOnNoNumber, "{1,2}");
+} //}}}
+
+//{{{ int numLeft2Caret(View view, boolean delete, int defaultOnNoNumber)
+/**
+ * Get number left to caret
+ *
+ * @param view of JComponent in use
+ * @param delete desides buffer editing behavior
+ * @param defaultOnNoNumber return value if no number is found.
+ * @param digitQuantifier regex quantifier to decide number of digits that mathes.
+ * @return integer left to caret, with any number af spaces between caret and
+ * number or defaultOnNoNumber if no number is found. Following happends to buffer
+ *	
+ *	input										result
+ *	---------------------------------------		--------------------
+ *	spaces follows number		delete=true		spaces are deleted
+ *	no spaces follows number	delete=true		number are deleted
+ *	spaces follows number		delete=false	spaces and number is selected
+ *	nospaces follows number		delete=false	spaces and number is selected
+ */ 
+int numLeft2Caret(View view, boolean delete, int defaultOnNoNumber, String digitQuantifier) {
 	TextArea textArea = view.getTextArea();
 	int caretLinePos =textArea.getCaretPosition()-textArea.getLineStartOffset(textArea.getCaretLine());
 	String toCaret =textArea.getLineText(textArea.getCaretLine()).substring(0,caretLinePos);
-	Matcher m=Pattern.compile("\\d{1,2}\\s*$").matcher(toCaret);
+	Matcher m=Pattern.compile("\\d"+digitQuantifier+"\\s*$").matcher(toCaret);
 	if (m.find())  {
 		if (delete)
 			textArea.backspaceWord(true);
@@ -817,24 +1082,176 @@ List backWordsOrSelected(View view, boolean reverse,String pattern) {
  * @return password which length is 14.
  */
 String password() {
-	password(14);
+	password(14,false);
 } //}}}
 
-//{{{ String password(int length)
+//{{{ String password(int length, boolean isHex)
 /**
  * Makes a password, using random ASCII values between and inclusive from 33 to 95 
  * The password is also copied to clipboard
  * @param length of password
+ * @param isHex if password should be with heximal digits
  * @return password
  */
-String password(int length) {
+String password(int length, boolean isHex) {
 	String pw="";
+	byte[] bytes = new byte[length];
+	new java.security.SecureRandom().nextBytes(bytes);
 	for (int i=0; i<length; i++) {
-		byte b =33 + (93*Math.random()).intValue();
-		pw += (char)b;
+		pw += isHex 
+		    ? Integer.toString(bytes[i]+128,16)
+		    : (char)((bytes[i]+128)%93+33);
 	}
-	Registers.getRegister('$').setTransferable(new java.awt.datatransfer.StringSelection(pw));
+	setClip(pw);
+	return pw.substring(0,length);
+} //}}}
+
+//{{{ String pass32(boolean isHex)
+/**
+ * 32 chacter long password in which timestamp of creation tine is mangled in.The time can be resolved using timeOfPass32
+ *
+ * @param ishex decides that that character should belong to 0-9a-f
+ * @return password
+ 
+ for future packing
+
+int base = (255*Math.random()).intValue();
+int sec = (255*Math.random()).intValue();
+int app = base ^ sec;
+
+p(new int[]{ base,sec,app,base ^ app } ); 
+
+ **/
+
+String pass32(boolean isHex) {
+    String hexUnixtime = Long.toString(System.currentTimeMillis()/1000L,16);
+    StringBuilder combined = new StringBuilder();
+    String h32 = password(32,isHex);
+    for (int i=0; i< 8; i++)
+        combined.append(hexUnixtime.substring(i,i+1)).append(h32.substring(4*i+1,4*(i+1)));
+    setClip(combined.toString());
+    return combined.toString();
+} //}}}
+
+//{{{ Date timeOfPass32(String pass) 
+/**
+ * Resolves in mangled timestamp of password
+ *
+ * @param pass is password, which timestamp has to be resolved
+ * @return timestamp as Date object
+ **/
+Date timeOfPass32(String pass) {
+    long l, hVal;
+    for (int i=0; i<8; i++) {
+        hVal = (int)pass.charAt(i*4);
+        l = l*16  + (hVal < 58 ? hVal- 48 : hVal - 87);
+    }
+    return new Date(1000*l);
+} //}}}
+
+//{{{ String base32RndStr(int length)
+/**
+ * base 32 string af random numbers
+ *
+ * @param length of string
+ * @return base 32 string af random numbers
+ **/
+String base32RndStr(int length) {
+    String pw="";
+    byte[] bytes = new byte[length];
+	new java.security.SecureRandom().nextBytes(bytes);
+	for (int i=0; i<length; i++) 
+		pw += Integer.toString(bytes[i]&31,32);
+	setClip(pw);
 	return pw;
+} //}}}
+
+//{{{ setClip(String clip)
+/**
+ * Puts a clip in clipboard
+ *
+ * @param clip to be putted in clipboard
+ */
+void setClip(String clip) {
+	Registers.getRegister('$').setTransferable(new java.awt.datatransfer.StringSelection(clip));
+} //}}}
+
+//{{{ List asciiTable()
+/**
+ * Ascii table
+ *
+ * @return list of lines of table with ascii values from 32-255
+ */
+List asciiTable() {
+	String spaces(int len) {
+		return new String(new char[len]).replace('\0',' ');
+	}
+    List lines = new ArrayList();
+    int spaceLen=2;
+    String line="    ";
+    for (String colHead : new String[]{ "0 ","4 ","8 ","c ","10","14","18","1c"})
+        line += colHead+spaces(spaceLen+2);
+    lines.add(line);
+    int lineLen=32;
+    for (int lineBeg = 32; lineBeg < 255; lineBeg +=lineLen) {
+        line = Integer.toString(lineBeg,16)+"  ";
+        for ( int chr = lineBeg; chr < lineBeg+lineLen; chr++) {
+            line += (char)chr;
+            if (chr % 4 == 3)
+                line += spaces(spaceLen);
+        }
+        lines.add(line.toString());
+    }
+    return lines;
+} //}}}
+
+//{{{ void showStat(View view,String mes)
+/**
+ * shows, execution asserted at time 'prg' in status line 
+ *
+ * @param view is a needed JComponent context 
+ * @param mes is the chown message
+ */
+void showStat(View view,String mes) {
+    view.getStatus().setMessage(mes);
+} //}}}
+
+//{{{ String now()
+/**
+ * Return current time of day in 24hour hh:mm:ss format
+ *
+ * @return current time of day in 24hour hh:mm:ss format 
+ */
+String now() {
+	return now("H:mm:ss");
+} //}}}
+
+//{{{ String now(String format)
+/**
+ * Returns current timestamp
+ *
+ * @param format of time appearence
+ * @return current formatted timestamp.
+ */
+String now(String format) {
+	return java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern(format)).toString();
+} //}}}
+
+//{{{ void iconifyAfter(int xMillis)
+/**
+ * Iconify jEdit after xMillis milliseconds
+ *
+ * @param xMillis is the sleeptime in milliseconds before jEdit is iconified.
+ */
+void iconifyAfter(int xMillis) {
+    threadObj() {
+        void run() {
+            Thread.currentThread().sleep(xMillis);
+            jEdit.getActiveView().setState(Frame.ICONIFIED);
+        }
+        return this;
+    }
+    new Thread(threadObj()).start();
 } //}}}
 
 //{{{ void pa(Object egg) 

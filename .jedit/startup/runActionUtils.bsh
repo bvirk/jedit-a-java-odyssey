@@ -29,6 +29,30 @@ void antTask(String target,View view,Buffer buffer) {
 	view.goToBuffer(buffer);
 } //}}}       
 
+void runPython(View view,Buffer buffer) {
+	jEdit.saveAllBuffers(view);	
+	runCommandInConsole(view,"System","python "+buffer.getPath());
+	view.goToBuffer(buffer);
+} //}}}
+
+//{{{ void runInConsoleSystem(String parm, View view, Buffer buffer, boolean switchDir)
+/**
+ *   Runs a command in console's system shell, prior saving all buffers optional switching to directory of current buffer
+ *
+ * @param parms is commands items for each run of make
+ * @param view is view
+ * @param buffer is current buffer
+ * @param switchDir desides if switching to directory of buffer
+ */
+void runInConsoleSystem(String command, View view, Buffer buffer, boolean switchDir) {
+	jEdit.saveAllBuffers(view);
+	new console.Shell.SwitchAction("System").invoke(jEdit.getActiveView());
+	if (switchDir)
+		runCommandInConsole(view,"System","cd "+ux(buffer.getPath()).replaceAll("[^/]+$",""));
+	runCommandInConsole(view,"System",command);
+	view.goToBuffer(buffer);
+} //}}}
+
 //{{{ void runNode(view,buffer)
 /**
  * Runs Node.js against current buffer. 
@@ -39,6 +63,19 @@ void antTask(String target,View view,Buffer buffer) {
 void runNode(View view,Buffer buffer) {
 	jEdit.saveAllBuffers(view);	
 	runCommandInConsole(view,"System","node "+buffer.getPath());
+	view.goToBuffer(buffer);
+} //}}}
+
+//{{{ void runPhp(view,buffer)
+/**
+ * Runs php against current buffer. 
+ *
+ * @param view
+ * @param buffer
+ */
+void runPhp(View view,Buffer buffer) {
+	jEdit.saveAllBuffers(view);	
+	runCommandInConsole(view,"System","php "+buffer.getPath());
 	view.goToBuffer(buffer);
 } //}}}
 

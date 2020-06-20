@@ -1,0 +1,268 @@
+/***preHtml
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{0}</title>
+<script>
+    (function() {
+       var blured=false;
+       window.onblur = (() => { setTimeout(() => blured=true,2000)});
+       window.onfocus = (() =>  {
+           if (blured) {
+               blured=false;
+               window.location.reload(true);
+               //window.location.href=\"#viewspot\";
+       }});
+    })();
+</script>
+</head>
+<body>
+
+<!--<sites.google.com>-->
+<table width="80%" ><tbody>
+	<tr>
+		<td "style=width:20px;"><a href="http://localhost/sites.google.com/site/amailuser/{1}"><img src="http://localhost/sites.google.com/site/amailuser/img/layout/{2}"></a></td>
+		<!-- <td "style=width:20px;"><a href="http://localhost/sites.google.com/site/amailuser/home.html"><span class="cworker">&#x1F477;</span></a></td> -->
+		<td colspan="2" style="text-align:center">
+			<h3>{3}</h3>
+		</td>
+		<td style="text-align:right;width:150px">
+			&nbsp; 
+		</td>
+	</tr>
+***/
+/*
+
+*/
+/***postHtml
+{0}
+<table  width="100%" height="100px">
+    <tr>
+        <td width="5%">&nbsp;</td>
+        <td class="bottomline" >Gerne ansat, indlejet, freelance og private med moms:</td>
+        <td class="bottomline" ><a href="http://localhost/sites.google.com/site/amailuser/2j09kb.html">BVirk v/Benny Andersen</a></td>
+        <td class="bottomline" >mobil 28569086</td>
+        <td class="bottomline" >cvr 29656061</td>
+        <td class="bottomline" ><a href="http://localhost/sites.google.com/site/amailuser/ombenny.html">om</a></td>
+        <td class="copyright"><a href="http://localhost/sites.google.com/site/amailuser/copyright.html" >&#169;</a></td>
+        <td width="10%"></td>
+    </tr>
+</table>
+<!--</sites.google.com>-->
+
+</body>
+</html>
+***/
+
+/***booksPostHtml
+{0}
+<table  width="100%" height="100px">
+    <tr>
+        <td width="15%">&nbsp;</td>
+        <td class="bottomline" >Privat salg ved</td>
+        <td class="bottomline" ><a href="http://localhost/sites.google.com/site/amailuser/gn7e3g.html">Benny Andersen</a></td>
+        <td class="bottomline" >mobil 28569086</td>
+        <td width="15%">&nbsp;</td>
+    </tr>
+</table>
+<!--</sites.google.com>-->
+
+</body>
+</html>
+***/
+
+/***topHeadline
+<!-- HEADLINE -->
+<tr>
+    <td></td>
+    <td colspan='2' class="commonheadline">
+        <h3>{0}</h3>
+    </td>
+    <td></td>
+</tr>
+***/
+
+/***interHeadline
+
+<!-- HEADLINE -->
+<tr>
+    <td></td>
+    <td colspan="2" class="preheadline"></td>
+    <td></td>
+</tr>
+<tr>
+    <td></td>
+    <td colspan="2" class="commonheadline">
+        <h3>{0}</h3>
+    </td>
+    <td></td>
+</tr>
+***/
+
+/***imageRow
+
+<!--IMAGE-ROW-->
+<tr>
+    <td></td>
+    <td colspan="2" class="imagerow">
+        <a href="http://localhost/sites.google.com/site/amailuser/img/{0}"><img src="http://localhost/sites.google.com/site/amailuser/img/{1}"></a>
+    </td><td></td>
+<tr>
+***/
+
+/***descRow
+
+<!--DESC-ROW-->
+</tr>
+    <td></td>
+    <td colspan="2" class="descrow">
+	    {0}
+	</td><td></td>
+</tr>
+***/
+
+/***spacer
+
+<!--SPACER-->
+<tr>
+    <td></td><td height="20px" colspan="2" class="spacer" >
+    </td><td></td>
+</tr>
+***/
+
+/***footer
+
+<!--FOOTER -->
+<tr>
+    <td></td>
+    <td colspan='2' class="footer">
+    </td><td></td>
+</tr>
+***/
+
+//<%
+/**
+Properties ued for siteGoogle
+
+options.gsite.basedir=/home/bvirk/Documents/devel/sites.google.com/site/amailuser
+options.gsite.selimg=/home/bvirk/Documents/devel/sites.google.com/site/amailuser/img/selected
+options.gsite.title=some title
+**/
+String sitesGoogleBaseDir() { return jEdit.getProperty("options.gsite.basedir"); }
+String sitesGoogleScriptPath() { return sDir()+"/startup/sitesGoogle.bsh"; }
+
+
+//XThis somePics(String headLine, String[] picsWithDesc) {
+//        return this;
+//}
+
+XThis somePics(String headLine, String picFolder, String[] picsWithDesc) {
+        return this;
+}
+
+XThis somePics(String headLine, String picFolder, List picsWithDesc) {
+        return this;
+}
+
+
+String postHtml(Properties cssProp) {
+    return postHtml("postHtml",cssProp,true);
+}
+
+String postHtml(String snippetName,Properties cssProp) {
+    return postHtml(snippetName,cssProp,true);
+}
+
+String postHtml(String snippetName,Properties cssProp, boolean finishTable) {
+    Object[] snip = { (finishTable ? "</tbody></table>" : "") };
+    return fileLinesString(sitesGoogleScriptPath(),snippetName,snip, cssProp);
+}
+
+
+void toHtml(String fileName, String title, String pageHeadLine, List xthisArr ) {
+    XThis [] tpA = new XThis[xthisArr.size()];
+    toHtml(fileName, title, pageHeadLine, xthisArr.toArray(tpA) );
+}
+
+void toHtml(String fileName, String title, String pageHeadLine, String homeUrl, String leftTopImage, String notUsed, String postHtml, List xthisArr ) { 
+    
+    Properties cssProp = cssAsProperties(sitesGoogleBaseDir()+"/all.css");
+    String html = fileLinesString(sitesGoogleScriptPath(),"preHtml",new Object[] {title,homeUrl,leftTopImage,pageHeadLine},cssProp);
+    
+    boolean atTop=true;
+    for (XThis tpics : xthisArr)  {
+        html += fileLinesString(sitesGoogleScriptPath(),(atTop ? "topHeadline" : "interHeadline")
+            ,new Object[] {tpics.headLine},cssProp);
+        atTop=false;
+        boolean beyondFirst;
+        for (String picDesc : tpics.picsWithDesc) {
+            if (beyondFirst)
+                html+=fileLinesString(sitesGoogleScriptPath(),"spacer",cssProp);
+            else
+                beyondFirst=true;
+            for (String pdItem : picAndDesc(picDesc)) {
+                String snipName;
+                String snipItem;
+                String snipThumbItem;
+                if (pdItem.endsWith(".jpg") ||pdItem.endsWith(".png") ||pdItem.endsWith(".gif")) {
+                    snipName = "imageRow";
+                    snipItem = tpics.picFolder+pdItem;
+                    snipThumbItem=tpics.picFolder+"thumbs/"+pdItem;
+                } else {
+                    snipName ="descRow";
+                    snipItem = pdItem;
+                }
+                html += fileLinesString(sitesGoogleScriptPath(),snipName,new Object[] {snipItem,snipThumbItem},cssProp);
+                
+            }
+        }
+    }
+    if (!atTop)
+        html += fileLinesString(sitesGoogleScriptPath(),"footer",cssProp);
+    toFile(fileName,html+postHtml(postHtml,cssProp));
+}
+
+void toHtml(String fileName, String title, String pageHeadLine, XThis [] tpArr ) { 
+    
+    Properties cssProp = cssAsProperties(sitesGoogleBaseDir()+"/all.css");
+    String html = fileLinesString(sitesGoogleScriptPath(),"preHtml",new Object[] {title,"bvirk.html","cworker.png",pageHeadLine},cssProp);
+    
+    boolean atTop=true;
+    for (XThis tpics : tpArr) {
+        html += fileLinesString(sitesGoogleScriptPath(),(atTop ? "topHeadline" : "interHeadline")
+            ,new Object[] {tpics.headLine},cssProp);
+        atTop=false;
+        boolean beyondFirst;
+        for (String picDesc : tpics.picsWithDesc) {
+            if (beyondFirst)
+                html+=fileLinesString(sitesGoogleScriptPath(),"spacer",cssProp);
+            else
+                beyondFirst=true;
+            for (String pdItem : picAndDesc(picDesc)) {
+                String snipName;
+                String snipItem;
+                String snipThumbItem;
+                if (pdItem.endsWith(".jpg") ||pdItem.endsWith(".png") ||pdItem.endsWith(".gif")) {
+                    snipName = "imageRow";
+                    snipItem = tpics.picFolder+pdItem;
+                    snipThumbItem=tpics.picFolder+"thumbs/"+pdItem;
+                } else {
+                    snipName ="descRow";
+                    snipItem = pdItem;
+                }
+                html += fileLinesString(sitesGoogleScriptPath(),snipName,new Object[] {snipItem,snipThumbItem},cssProp);
+                
+            }
+        }
+    }
+    if (!atTop)
+        html += fileLinesString(sitesGoogleScriptPath(),"footer",cssProp);
+    toFile(fileName,html+postHtml(cssProp));
+}
+
+String [] picAndDesc(String pad) {
+    if (pad.indexOf(";;") >=0 )
+        return pad.split(";;");
+    return new String[] {pad,dkCapUnCameled(pad.replaceAll("\\.[^\\.]+$",""))};
+}

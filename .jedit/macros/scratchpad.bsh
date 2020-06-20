@@ -16,7 +16,7 @@ import org.gjt.sp.jedit.bsh.XThis;
  * command bar, console or menues->macro to something as reflectoric ad typing a space, is the justification for 
  * having a open_scratchpad macro.
  *
- * ad 2.
+ * ad 2. something to be saved
  * Added to the de facto ways of executing macroes using menues->macros or command bar is a file mode depent action 
  * chosen from macro actionsdialog. For beanshell files (suffix .bsh), executing is a made an option. Subsequent running  
  * actionsDialog has prior chosen action for a mode as default - a return key repeats.
@@ -25,5 +25,10 @@ import org.gjt.sp.jedit.bsh.XThis;
  *
  * The print facility, documented in $JEDIT_SETTINGS/startup/bshConsole.bsh, tells the purphose of below cls(0). 
  ***/
-cls(0);  //meant to stay permanent
-
+cls(Math.random());  //meant to stay permanent
+//p(base32RndStr(6));
+//p(password(64,true));
+String value = System.getProperty("sun.boot.library.path");
+p(value);        
+p(systemSWP("sun"));
+//textArea.getStatus().message="Git Commited";

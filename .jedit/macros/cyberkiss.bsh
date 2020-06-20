@@ -18,12 +18,8 @@ void cyberkiss() {
 	else
 		text = words.get(1);
 	if (null != text) {
-		presentSelection(Arrays.asList(new String[]{
-			 "import"
-			,"api-help"
-			,"beanshell source"
-			,"java keyword"
-			,"duckduckgo"
+	    List menuItems = new ArrayList (Arrays.asList(new String[]{
+	    	 "duckduckgo"
 			,"google"
 			,"en-da"
 			,"da-en"
@@ -32,10 +28,54 @@ void cyberkiss() {
 			,"da.glosbe"
 			,"en.glosbe"
 			,"thesaurus"
-			,"findvej"
-			,"phone"
-			,"md file"
-			}),text);
+        		    }));
+		switch (buffer.getName().replaceAll("^.+\\.","").replaceAll("-\\d","")) {
+        
+		case "java":
+            menuItems.addAll(asList(
+                 "import"
+                ,"api-help"
+                ,"java keyword"
+                ));
+            break;
+        case "bsh":
+            menuItems.addAll(asList(
+                 "import"
+                ,"api-help"
+                ,"java keyword"
+                ,"eval beanshell"
+                ,"beanshell source"
+                ));
+            break;
+        case "Untitled":
+            menuItems.addAll(asList(
+                 "youtube playlist"
+                ,"findvej"
+                ,"findrute"
+                ,"phone"
+                ));
+            break;
+        case "csv":
+            menuItems.addAll(asList(
+                "cvr"));
+            break;
+        case "php":
+            menuItems.addAll(asList(
+                "php function"));
+            break;
+        case "html":
+            menuItems.addAll(asList(
+                "md file"
+                ));
+        case "py":
+            menuItems.addAll(asList(
+                "python keyword"
+                ));
+            break;
+        
+        }
+
+	    presentSelection(menuItems,text);
 	}
 }
 
@@ -47,13 +87,18 @@ void cyberkiss() {
  */
 void presentSelection(List menues, String kiss) {
 	command(String choice) {
-		switch (choice) {
+		//p("in switch, choice="+choice);
+	    switch (choice) {
+		    
 			case "import":
 				doImport(kiss);
 				break;
 			case "api-help":
 				apiHelp(kiss);
 				break;
+			case "eval beanshell":
+			    BeanShell.eval(view,BeanShell.getNameSpace(),"p("+kiss+");");
+			    break;
 			case "beanshell source":
 				if (!foundStartupFunction(kiss,view))
 					view.getStatus().setMessage(funcName+" ?");
@@ -71,8 +116,23 @@ void presentSelection(List menues, String kiss) {
 				else
 					view.getStatus().setMessage(kiss+" ?" );
 				break;
+			case "python keyword":
+				url = pythonWordUrl(kiss);
+				p("python url="+url);
+				if (url.size() > 1)
+					if (url.size() == 2) 
+						browseThat(url.get(0));
+					else {
+						actionsDialog(this,numSeqSplitLast(url),view);
+					}
+				else
+					view.getStatus().setMessage(kiss+" ?" );
+				break;
 			case "duckduckgo":
 				browseThat("https://duckduckgo.com/?q="+kiss.replaceAll(" ","+").replaceAll(":","%3a"));
+				break;
+			case "php function":
+				browseThat("https://www.php.net/manual/en/function."+kiss+".php");
 				break;
 			case "google":
 				browseThat("https://google.dk/search?q="+kiss.replaceAll(" ","+").replaceAll(":","%3a"));
@@ -80,8 +140,15 @@ void presentSelection(List menues, String kiss) {
 			case "findvej":
 				browseThat("https://findvej.dk/"+kiss);
 				break;
+			case "findrute":
+				String[] words = kiss.trim().replaceAll("  +"," ").split(" "); 
+				browseThat("https://www.google.com/maps/dir/"+words[0]+"+"+words[1]+","+words[2]+"/"+words[3]+"+"+words[4]+","+words[5]);
+				break;
 			case "phone":
 				browseThat("https://118.dk/search/go?what="+kiss);
+				break;
+			case "cvr":
+				browseThat("https://datacvr.virk.dk/data/visenhed?enhedstype=virksomhed&id="+kiss+"&soeg="+kiss+"&language=da");
 				break;
 			case "en-da":
 				browseThat("https://translate.google.com/#en/da/"+kiss.replaceAll(" ","%20"));
@@ -103,6 +170,9 @@ void presentSelection(List menues, String kiss) {
 				break;
 			case "thesaurus":
 				browseThat("https://www.thesaurus.com/browse/"+kiss);
+				break;
+			case "youtube playlist":
+				browseThat("https://www.youtube.com/playlist?list="+kiss);
 				break;
 			case "md file":
 				openMdFileInBaseDir(kiss);
@@ -153,6 +223,23 @@ List javaKeywordUrl(String keyword) {
 }
 
 
+List pythonWordUrl(String keyword) { 
+	List urls = Arrays.stream(new String[] {
+		 "if=n0/the-if-statement"
+		,"else=n0/the-if-statement"
+		,"while=n0/the-while-statement"
+		,"for=n0/the-for-loop"
+		,"break=n0/break-statement"
+		}).filter(Predicate(keyword,"item-> item.startsWith(arg1+´=´)")).map(Mapper(
+			 "item->item.replaceAll(´^\\w+?=´,´´)"
+			+".replaceAll(´^n0/´,´https://python.swaroopch.com/control_flow.html#´)"
+			
+			)).collect(Collectors.toList());
+		urls.add(keyword);
+		return urls;
+}
+
+
 numSeqSplitLast(List keyWTrailedUrls) {
 	String keyW = keyWTrailedUrls.remove(keyWTrailedUrls.size()-1);
 	return NumSeq(keyWTrailedUrls,keyW); 
@@ -161,7 +248,7 @@ numSeqSplitLast(List keyWTrailedUrls) {
 void browseThat(String url) {
 	String[] cmd = { 
 		OperatingSystem.isUnix()
-			? "seamonkey" 
+			? "firefox" 
 			: OperatingSystem.isWindows()
 					? "\"C:\\Programmer\\Mozilla Firefox\\firefox.exe\""
 					: null
@@ -174,10 +261,8 @@ void browseThat(String url) {
 
 String OSUrl(String key) {
 	String [] linux = { 
-	 "rt=http://eee/java8/api/"
-	,"nashorn=https://docs.oracle.com/javase/8/docs/jdk/api/nashorn/"
-	,"jedit=file:///usr/local/share/jEdit/5.5.0/doc/api/"
-	,"jsoup-1.11.3=https://jsoup.org/apidocs/"
+	 "rt=https://docs.oracle.com/javase/8/docs/api/"
+	,"jedit=file:///usr/share/doc/jedit/api/" 
 	};
 	
 	String [] windows = { 

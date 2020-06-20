@@ -49,7 +49,9 @@ void println(Object thing) {
  * @param thing to print at a line
  */ 
 void p(Object thing) {
-	if (thing.getClass().isArray() || thing instanceof AbstractCollection )
+	if (thing == null)
+		println("null");
+	else if (thing.getClass().isArray() || thing instanceof AbstractCollection )
 		p(thing,spacer());
 	else
 		println(thing);
@@ -89,7 +91,7 @@ void p(Object thing,Object spacer) {
 	if (thing.getClass().isArray() || thing instanceof AbstractCollection ) {
 		println(spacer.apply("{"+thing.getClass().getName(),true));
 		for (Object line : thing)
-			p(line,spacer);
+			p(line == null ? "null" : line,spacer);
 		println(spacer.apply("}",false));
 	} else 
 		println(spacer.apply(""+thing));

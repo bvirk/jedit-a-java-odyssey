@@ -110,7 +110,7 @@ List htmlTable(String url, int tableElementsIndex, int maxRows, String[] selFiel
 	return records;
 } //}}}
 
-//{{{ interface List List textAreaBlocksRanges(TextArea textArea, String beforeLinesPattern, String afterLinesPattern)
+//{{{ interface List textAreaBlocksRanges(TextArea textArea, String beforeLinesPattern, String afterLinesPattern)
 /**
  * Get list of list of line numbers in textArea (current buffer).
  * Line blocks are surrounded by beforeLinesPattern and afterLinesPattern 
@@ -177,3 +177,22 @@ List  dsvLines(String fileName, String table) {
 			+"return items; }")
 		.toList();	
 } //}}}
+
+//{{{ interface List  dsvLines(String fileName, String delim)
+/**
+ * As dsvLines(String fileName, String table), but read all lines from file and requires delim being specified.
+ *
+ * @param fileNameis is the file from which all lines are read
+ * @param delim is fiels seperator
+ * @return List of String[] representing arrays of fields in a list of 'records'
+ */
+List  dsvLines(String fileName, String delim) {
+	return Beam(Files.lines(new File(fileName).toPath()))
+		.map(delim,"item-> {"
+			+"String[] items= item.split(arg1 +´(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)´);"
+			+"for(int i=0; i < items.length; i++) "
+			+"    items[i]=items[i].trim().replaceAll(´^\"(.*)\"$´,´$1´).replace(´\"\"´,´\"´);"
+			+"return items; }")
+		.toList();
+} //}}}
+

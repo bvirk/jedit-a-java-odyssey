@@ -19,6 +19,12 @@ label36.java.xml.props.bsh._7Warning=setUrgency
 label36.java.xml.props.bsh._9Error=setUrgency
 label40.js.<html><b><u>Node_js<u></b></html>=label
 label41.js.r_un=runNode
+label50.c.cpp.<html><b><u>Make<u></b></html>=label
+label51.c.cpp.r_un=runMake
+label60.py.<html><b><u>Python<u></b></html>=label
+label61.py.p_ython=runPython
+label70.php.<html><b><u>Php<u></b></html>=label
+label71.php._php=runPhp
 action.anttarget.latest=${jedit.options.actionthatbuffer}
 *///
 /**
@@ -64,8 +70,19 @@ void actionsDlg(String suffix) {
 			case "runNode":
 				runNode(view,buffer);
 				break;
+			case "runPhp":
+				runPhp(view,buffer);
+				break;
+			case "runPython":
+			    //runPython(view,buffer);
+			    String pyScript=buffer.getPath();
+			    runInConsoleSystem("python3 "+pyScript+ " "+jEdit.getProperty("options.python.runargs"),view,buffer,true);
+				break;
+			case "runMake":
+			    runInConsoleSystem("make && make run",view,buffer,true);
+			    break;
 			case "setUrgency":
-				jEdit.getPlugin("home.txtconv.TxtConvPlugin",true).setPrintUrgency(
+			    jEdit.getPlugin("home.txtconv.TxtConvPlugin",true).setPrintUrgency(
 					Integer.parseInt(parm.get(up.getProperty(keyLatestActionLetter)).substring(0,1)));
 				break;
 			default:
